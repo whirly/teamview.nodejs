@@ -3,10 +3,12 @@ import { IPlayer } from '../../shared/models';
 export interface IMongoosePlayer extends IPlayer, Document {}
 
 const PlayerSchema = new Schema({
-    idMpg: { type: Number },
+    idMpg: { type: String },
     firstName: { type: String },
     lastName: { type: String },
-    role: { type: String },
+    role: { type: Number },
+    value: { type: Number },
+    team: { type: Schema.Types.ObjectId, ref: "Team" },
 
     performances: [{
         day: { type: Number },
