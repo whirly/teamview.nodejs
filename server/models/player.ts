@@ -1,6 +1,6 @@
-import mongoose, { Document, Schema } from 'mongoose';
+import mongoose, { Schema } from 'mongoose';
 import { IPlayer } from '../../shared/models';
-export interface IMongoosePlayer extends IPlayer, Document {}
+export interface IMongoosePlayer extends IPlayer {}
 
 const PlayerSchema = new Schema({
     idMpg: { type: String },

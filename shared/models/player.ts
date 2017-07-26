@@ -1,4 +1,6 @@
 import {ITeam} from "./team";
+import * as mongoose from "mongoose";
+
 export enum PlayerPosition {
     Goal = 1,
     Defender = 2,
@@ -6,7 +8,7 @@ export enum PlayerPosition {
     Striker = 4
 }
 
-export interface IPlayer {
+export interface IPlayer extends mongoose.Document {
     idMpg?: string;
     firstName?: string;
     lastName?: string;
@@ -21,5 +23,4 @@ export interface IPlayer {
         goalAgainst?: number;
         value?: number;
     }];
-
 }

@@ -25,7 +25,7 @@ async function handler(args: IArgs): Promise<void> {
     let players = JSON.parse( response );
 
     // On commence par s'occuper des joueurs
-    for( let player of players ) {
+    for ( let player of players ) {
 
         let existingPlayer = await models.Player.findOne( { idMpg: player.id } );
 
@@ -43,9 +43,7 @@ async function handler(args: IArgs): Promise<void> {
                     team.players.push( existingPlayer );
                     await team.save();
                 }
-            }
-            else
-            {
+            } else {
                 // La team n'existe pas encore
                 team = await models.Team.create({
                     idMpg: player.teamid,
@@ -60,8 +58,7 @@ async function handler(args: IArgs): Promise<void> {
             existingPlayer.teamId = team._id;
             await existingPlayer.save();
 
-        }
-        else {
+        } else {
             logger.info("Adding " + player.firstname + " " + player.lastname);
 
             let playerNew = await models.Player.create({
