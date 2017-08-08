@@ -11,6 +11,7 @@ const PlayerSchema = new Schema({
     team: { type: Schema.Types.ObjectId, ref: "Team" },
 
     performances: [{
+        idTeam: { type: String },
         day: { type: Number },
         performance: { type: Schema.Types.ObjectId, ref: "PlayerPerformance" },
         value: { type: Number }

@@ -3,5 +3,8 @@ export interface IPlayerPerformance {
     place?: number,
     rate?: number,
     goalFor?: number,
-    goalAgainst?: number
+    goalAgainst?: number,
+    cardYellow: boolean,
+    cardRed: boolean,
+    sub: boolean
 }

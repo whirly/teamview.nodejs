@@ -1,5 +1,6 @@
 import {ITeam} from "./team";
 import * as mongoose from "mongoose";
+import {IPlayerPerformance} from "./player-performance";
 
 export enum PlayerPosition {
     Goal = 1,
@@ -17,10 +18,9 @@ export interface IPlayer extends mongoose.Document {
     teamId: ITeam;
 
     performances?: [{
+        idTeam?: string;
         day?: number;
-        rate?: number;
-        goalFor?: number;
-        goalAgainst?: number;
+        performance?: IPlayerPerformance;
         value?: number;
     }];
 }
