@@ -5,7 +5,7 @@ export interface IMongooseFixture extends IFixture, Document {}
 
 const FixtureSchema = new Schema({
     day: { type: Number },
-    idMpg: { type: Number },
+    idMpg: { type: String },
     home: {
         team: { type: Schema.Types.ObjectId, ref: "Team" },
         formation: { type: String },

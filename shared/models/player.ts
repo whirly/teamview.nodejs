@@ -9,6 +9,13 @@ export enum PlayerPosition {
     Striker = 4
 }
 
+export interface IPlayerSpecificPerformance {
+    idTeam?: string;
+    day?: number;
+    performance?: IPlayerPerformance;
+    value?: number;
+}
+
 export interface IPlayer extends mongoose.Document {
     idMpg?: string;
     firstName?: string;
@@ -17,10 +24,5 @@ export interface IPlayer extends mongoose.Document {
     value?: number;
     teamId: ITeam;
 
-    performances?: [{
-        idTeam?: string;
-        day?: number;
-        performance?: IPlayerPerformance;
-        value?: number;
-    }];
+    performances?: IPlayerSpecificPerformance[];
 }

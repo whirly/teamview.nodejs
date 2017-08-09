@@ -1,8 +1,8 @@
 {
-  "name": "@mitm/ng-express-base",
+  "name": "teamview",
   "version": "1.0.0",
-  "description": "Une seed de base pour Angular + Express",
-  "license": "UNLICENSED",
+  "description": "Un logiciel d'analyse de statistiques pour mon petit gazon",
+  "license": "BSD",
   "scripts": {
     "cli": "node dist/server/cli.bundle.js",
     "start": "node dist/server/main.bundle.js",

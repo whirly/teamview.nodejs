@@ -4,7 +4,7 @@ import { StreamOptions } from 'morgan';
 const logger = new winston.Logger({
     transports: [
         new winston.transports.Console({
-            level: 'debug',
+            level: 'info',
             json: false,
             colorize: true,
             timestamp: process.env.WEBPACK_ENV == 'production'

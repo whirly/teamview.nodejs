@@ -1,4 +1,7 @@
 export interface IPlayerPerformance {
+    player?: string,
+    team?: string,
+    day?: number,
     position?: string,
     place?: number,
     rate?: number,
