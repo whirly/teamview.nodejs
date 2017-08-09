@@ -6,28 +6,23 @@
     "target": "es5",
     "module": "es2015",
     "moduleResolution": "node",
+    "lib": ["es7", "dom"],
     "declaration": false,
     "removeComments": true,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "sourceMap": true,
-    "typeRoots": ["node_modules/@types"],
+    "strict": true,
+    "strictNullChecks": false,
     "allowSyntheticDefaultImports": true,
-    "noImplicitAny": true,
     "noUnusedLocals": true,
     "noUnusedParameters": false
   },
   "exclude": [
     "node_modules",
-    "**/*.ngfactory.ts",
-    "**/*.shim.ts",
     "client/main.*.ts",
     "client/polyfills.*.ts"
   ],
-  "angularCompilerOptions": {
-    "genDir": "./compiled",
-    "skipMetadataEmit" : true
-  },
   "awesomeTypescriptLoaderOptions": {
     "forkChecker": true,
     "useWebpackText": true

@@ -38,8 +38,9 @@ const ENV_AGNOSTIC_CONFIG = {
             'process.env': clientExposedEnv
         }),
         new webpack.ContextReplacementPlugin(
-            /angular(\\|\/)core(\\|\/)(esm(\\|\/)src|src)(\\|\/)linker/,
-            fromRoot('client')
+            /angular(\\|\/)core(\\|\/)@angular/,
+            fromRoot('client'),
+            {}
         ),
         new HtmlWebpackPlugin({
             template: fromRoot('client/index.html')
@@ -66,7 +67,7 @@ const ENV_AGNOSTIC_CONFIG = {
                 enforce: 'pre',
                 test: /\.ts$/,
                 loader: 'tslint-loader',
-                options: { configFile: fromRoot('configuration/tslint-client.json') }
+                options: { configFile: fromRoot('client/tslint.json') }
             },
             //=> Loaders
             {
@@ -114,10 +115,10 @@ const PRODUCTION_CONFIG = {
     devtool: false,
 
     plugins: [
-        /*new AotPlugin({
+        new AotPlugin({
             tsConfigPath: fromRoot('tsconfig.json'),
             entryModule: fromRoot('client/app/app.module#AppModule')
-        }),*/
+        }),
         new webpack.optimize.UglifyJsPlugin({
             compress: { warnings: false },
             comments: false, // also strips licenses
@@ -131,8 +132,7 @@ const PRODUCTION_CONFIG = {
 
     module: {
         rules: [
-            //{ test: /\.ts$/, loader: '@ngtools/webpack' }
-            { test: /\.ts$/, loaders: ['awesome-typescript-loader', 'angular2-template-loader', 'angular2-router-loader'] }
+            { test: /\.ts$/, loader: '@ngtools/webpack' }
         ]
     },
 };

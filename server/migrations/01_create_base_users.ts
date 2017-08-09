@@ -1,12 +1,9 @@
-import { Model } from 'mongoose';
-import * as models from '../models';
+import { User, UserRole } from '../models';
 
-export const COLLECTIONS_TO_EMPTY: Array<Model<any>> = [
-    models.User, models.UserRole
-];
+export const name = 'create_base_users';
 
-export async function createData(): Promise<void> {
-    const [userRole, adminRole] = await models.UserRole.create([
+export async function migrate(): Promise<void> {
+    const [userRole, adminRole] = await UserRole.create([
         {
             name: 'user',
             isDefault: true,
@@ -16,9 +13,9 @@ export async function createData(): Promise<void> {
             name: 'admin',
             permissions: ['users#create', 'users#list-read', 'users#update', 'users#delete']
         }
-    ] as models.IMongooseUserRole[]);
+    ]);
 
-    await models.User.create([
+    await User.create([
         {
             firstName: 'Jean-Charles',
             lastName: 'Dupont',
@@ -33,5 +30,10 @@ export async function createData(): Promise<void> {
             role: adminRole._id,
             password: 'admin'
         }
-    ] as models.IMongooseUser[]);
+    ]);
+}
+
+export async function rollback(): Promise<void> {
+    await User.remove({ $or: [{ email: 'test@test.com' }, { email: 'admin@admin.com' }] });
+    await UserRole.remove({ $or: [{ name: 'user' }, { name: 'admin' }] });
 }

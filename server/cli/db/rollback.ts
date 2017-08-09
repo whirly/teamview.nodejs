@@ -2,7 +2,21 @@ import { CommandModule } from 'yargs';
 import logger from '../../logger';
 import { connectDatabase, disconnectFromDatabase } from '../../mongoose';
 import { Migration } from '../../models/migration';
-import { MIGRATIONS } from '../../migrations';
+import { Migrations } from '../../migrations';
+
+const command: CommandModule = {
+    command: 'db:rollback',
+    describe: 'Rollback migrations on database schema and datas',
+    builder: {
+        number: {
+            alias: 'n',
+            type: 'number',
+            desc: 'Number of migrations to rollback (0 for no limit)',
+            default: 1
+        }
+    },
+    handler
+};
 
 interface IArgs {
     number: number;
@@ -19,7 +33,7 @@ async function handler(args: IArgs): Promise<void> {
     logger.info(`Found ${appliedMigrations.length} applied migrations, rollback ${migrationsLimit} of them maximum.`);
 
     for (const migrationMark of appliedMigrations) {
-        const migration = MIGRATIONS.find(mig => mig.name == migrationMark._id);
+        const migration = Migrations.find(mig => mig.name == migrationMark._id);
         if (!migration) {
             throw new Error(`Could not find a migration named ${migration.name}!`);
         }
@@ -41,16 +55,4 @@ async function handler(args: IArgs): Promise<void> {
     logger.info(`Terminated, ${migrationsCount} migrations have been reverted.`);
 }
 
-export default {
-    command: 'db:rollback',
-    describe: 'Rollback migrations on database schema and datas',
-    builder: {
-        number: {
-            alias: 'n',
-            type: 'number',
-            desc: 'Number of migrations to rollback (0 for no limit)',
-            default: 1
-        }
-    },
-    handler
-} as CommandModule;
+export default command;

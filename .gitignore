@@ -3,9 +3,3 @@ node_modules/
 .env
 
 \.idea/
-
-\.vs/Teamview/v15/
-
-Teamview\.njsproj
-
-Teamview\.sln

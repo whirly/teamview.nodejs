@@ -1,24 +1,24 @@
-import WatchIgnorePlugin from 'watch-ignore-webpack-plugin';
-import { fromRoot } from './configuration/environment';
+import webpack from 'webpack';
+import client from './webpack/webpack.config.client';
+import server from './webpack/webpack.config.server';
+
+const sides = { client, server };
 
 export default function(env) {
-    if(!env || !env.side) {
-        console.error('Please pass CLI argument --env.side=server|client');
-        process.exit(1);
+    //=> Compile one side on-demand
+    if (env && env.side) {
+        return sides[env.side];
     }
 
-    switch (env.side) {
-        case 'server': return setIgnoredSide(require('./configuration/webpack.config.server').default, 'client');
-        case 'client': return setIgnoredSide(require('./configuration/webpack.config.client').default, 'server');
-    }
+    //=> Compile all sides
+    return Object.values(sides);
 };
 
 function setIgnoredSide(configuration, ignoredSide) {
-    const ignorePlugin = new WatchIgnorePlugin([
-        fromRoot(ignoredSide), fromRoot('dist')
-    ]);
+    const ignoreSide = new webpack.IgnorePlugin(/.*/, ignoredSide);
+    const ignoreDist = new webpack.IgnorePlugin(/.*/, /dist(\\|\/)/);
 
-    configuration.plugins.push(ignorePlugin);
+    configuration.plugins.push(ignoreSide, ignoreDist);
 
     return configuration;
 }

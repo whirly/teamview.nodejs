@@ -1,5 +1,6 @@
 import express from 'express';
 import * as jwt from 'jsonwebtoken';
+import * as pify from 'pify';
 import { IMongooseUser, User } from '../models';
 import { NoSuchUserError, InvalidPasswordError } from './auth-errors';
 import localAuthenticationRouter from './local';
@@ -40,7 +41,7 @@ export async function getUserFromEmailAndPassword(email: string, password: strin
 
 export async function getUserFromJwtToken(token: IJwtToken|string): Promise<IMongooseUser> {
     if (typeof token == 'string') {
-        token = jwt.verify(token, process.env.SERVER_SECRET);
+        token = await pify(jwt.verify)(token, process.env.SERVER_SECRET);
     }
 
     const payload = token as IJwtToken;

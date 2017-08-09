@@ -149,7 +149,6 @@ async function processPlayers( day: number, data: any ): Promise<IFixturePlayer[
         await playerDb.save();
     }
 
-    console.log( fixturePlayers );
     return fixturePlayers;
 }
 

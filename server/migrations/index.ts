@@ -1,3 +1,5 @@
+import * as Migration01CreateBaseUsers from './01_create_base_users';
+
 export interface IMigration {
     name: string;
 
@@ -5,4 +7,6 @@ export interface IMigration {
     rollback(): Promise<void>;
 }
 
-export const MIGRATIONS: IMigration[] = [];
+export const Migrations: IMigration[] = [
+    Migration01CreateBaseUsers
+];

@@ -1,6 +1,7 @@
 import { Resolver, ResolveParams as GqlComposeResolveParams } from 'graphql-compose';
-import { getUserFromJwtToken, IJwtToken } from './index';
 import { IMongooseUserRole } from '../models/user-role';
+import { getUserFromJwtToken, IJwtToken } from './index';
+import { NoAnonymousAccessError, UnmetPermissionsError } from './auth-errors';
 
 export interface IContext {
     jwt?: IJwtToken;
@@ -12,10 +13,6 @@ export type ResolveParams = GqlComposeResolveParams<any, IContext>;
 export interface IResolversMap {
     [resolverName: string]: Resolver<any, IContext>;
 }
-
-const noAnonymousError = new Error('Anonymous users aren\'t allowed to perform this operation');
-
-const unmetPermsError = new Error('Access denied, user doesn\'t have needed permissions to perform this operation.');
 
 /**
  * Attaches the user to context.user if a JWT token is present in the request.
@@ -36,7 +33,7 @@ export function attachUser(resolvers: IResolversMap): IResolversMap {
  */
 export function requireUser(resolvers: IResolversMap): IResolversMap {
     return wrapResolvers(resolvers, async ({ context }) => {
-        if (isAnonymousContext(context)) throw noAnonymousError;
+        if (isAnonymousContext(context)) throw new NoAnonymousAccessError();
         if (context.user) return;
 
         context.user = await getUserFromJwtToken(context.jwt);
@@ -49,11 +46,11 @@ export function requireUser(resolvers: IResolversMap): IResolversMap {
  */
 export function requirePermission(permission: string, resolvers: IResolversMap): IResolversMap {
     return wrapResolvers(resolvers, async ({ context }) => {
-        if (isAnonymousContext(context)) throw noAnonymousError;
+        if (isAnonymousContext(context)) throw new NoAnonymousAccessError();
 
         const user = context.user || await getUserFromJwtToken(context.jwt);
 
-        if (!user.hasPermission(permission)) throw unmetPermsError;
+        if (!user.hasPermission(permission)) throw new UnmetPermissionsError();
 
         context.user = user;
     });
@@ -65,11 +62,11 @@ export function requirePermission(permission: string, resolvers: IResolversMap):
  */
 export function requirePermissions(permissions: string[], resolvers: IResolversMap): IResolversMap {
     return wrapResolvers(resolvers, async ({ context }) => {
-        if (isAnonymousContext(context)) throw noAnonymousError;
+        if (isAnonymousContext(context)) throw new NoAnonymousAccessError();
 
         const user = context.user || await getUserFromJwtToken(context.jwt);
 
-        if (!user.hasPermissions(...permissions)) throw unmetPermsError;
+        if (!user.hasPermissions(...permissions)) throw new UnmetPermissionsError();
 
         context.user = user;
     });

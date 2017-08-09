@@ -29,8 +29,8 @@ const ENV_AGNOSTIC_CONFIG = {
         }),
         new webpack.DefinePlugin({
             // The server uses the .env file or real env vars, but we'll override
-            // process.env.WEBPACK_ENV to match the mode in which the server is built.
-            'process.env.WEBPACK_ENV': JSON.stringify(process.env.WEBPACK_ENV)
+            // process.env.NODE_ENV to match the mode in which the server is built.
+            'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV)
         }),
     ],
 
@@ -40,7 +40,7 @@ const ENV_AGNOSTIC_CONFIG = {
                 enforce: 'pre',
                 test: /\.ts$/,
                 loader: 'tslint-loader',
-                options: { configFile: fromRoot('configuration/tslint.json') }
+                options: { configFile: fromRoot('tslint.json') }
             },
             {
                 test: /\.ts$/,

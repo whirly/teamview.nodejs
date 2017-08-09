@@ -1,4 +1,4 @@
-import mongoose from 'mongoose';
+import mongoose, { Collection } from 'mongoose';
 import logger from './logger';
 
 // tslint:disable:only-arrow-functions
@@ -7,7 +7,7 @@ import logger from './logger';
 mongoose.Promise = Promise;
 
 //=> Setup logging of queries
-mongoose.set('debug', function(collection: string, method: string, ...methodArgs: Object[]) {
+mongoose.set('debug', function(this: Collection, collection: string, method: string, ...methodArgs: any[]) {
     // Basically extracted from https://goo.gl/OYCxAV (otherwise, Mongoose writes directly to stderr).
     const args: string[] = [];
     for (let j = methodArgs.length - 1; j >= 0; --j) {

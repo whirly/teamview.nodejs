@@ -21,13 +21,11 @@ connectDatabase(process.env.MONGO_URL).catch((error) => {
     process.exit(1);
 });
 
-//=> Enable CORS in dev mode so the front can reach the API
-if (process.env.WEBPACK_ENV == 'development') {
-    app.use(cors());
-}
+//=> Enable CORS
+app.use(cors());
 
 //=> Logging of HTTP requests with morgan
-const morganFormat = process.env.WEBPACK_ENV == 'production'
+const morganFormat = process.env.NODE_ENV == 'production'
     ? ':remote-addr - :method :url [:status], resp. :response-time ms, :res[content-length] bytes, referrer ":referrer"'
     : 'dev';
 
@@ -37,7 +35,7 @@ app.use(morgan(morganFormat, { stream: morganStreamWriter }));
 app.use(bodyParser.json());
 
 //=> Serve static assets
-if (process.env.WEBPACK_ENV == 'production') {
+if (process.env.NODE_ENV == 'production') {
     app.use(forwardToGzippedScripts);
 }
 
@@ -52,5 +50,5 @@ app.use(attachJwtToken(), graphqlRouter);
 //=> Start the HTTP server
 app.listen(port, () => {
     logger.info(`🌍 Up and running @ http://${os.hostname()}:${port}`);
-    logger.info(`Built for: ${process.env.WEBPACK_ENV}`);
+    logger.info(`Built for: ${process.env.NODE_ENV}`);
 });
