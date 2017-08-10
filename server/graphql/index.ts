@@ -9,19 +9,23 @@ import * as user from './graphql-user';
 import * as userRole from './graphql-user-role';
 import * as team from './graphql-team';
 import * as player from './graphql-player';
+import * as performance from './graphql-performance';
+import * as fixture from './graphql-fixture';
 
 const router = express.Router();
 
 GQC.rootQuery().addFields({
     ...account.QUERIES,
     ...user.QUERIES, ...userRole.QUERIES,
-    ...team.QUERIES, ...player.QUERIES
+    ...team.QUERIES, ...player.QUERIES,
+    ...performance.QUERIES, ...fixture.QUERIES
 });
 
 GQC.rootMutation().addFields({
     ...account.MUTATIONS,
     ...user.MUTATIONS, ...userRole.MUTATIONS,
-    ...team.MUTATIONS, ...player.MUTATIONS
+    ...team.MUTATIONS, ...player.MUTATIONS,
+    ...performance.MUTATIONS, ...fixture.MUTATIONS
 });
 
 const schema = GQC.buildSchema();

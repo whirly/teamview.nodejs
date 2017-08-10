@@ -1,8 +1,8 @@
 import mongoose, { Document, Schema } from 'mongoose';
-import { IPlayerPerformance } from '../../shared/models';
-export interface IMongoosePlayerPerformance extends IPlayerPerformance, Document {}
+import { IPerformance } from '../../shared/models';
+export interface IMongoosePlayerPerformance extends IPerformance, Document {}
 
-const PlayerPerformanceSchema = new Schema({
+const PerformanceSchema = new Schema({
     player: { type: Schema.Types.ObjectId, ref: 'Player' },
     team: { type: Schema.Types.ObjectId, ref: 'Team' },
     day: { type: Number },
@@ -16,4 +16,4 @@ const PlayerPerformanceSchema = new Schema({
     sub: { type: Boolean }
 });
 
-export const PlayerPerformance = mongoose.model<IMongoosePlayerPerformance>( 'PlayerPerformance', PlayerPerformanceSchema );
+export const Performance = mongoose.model<IMongoosePlayerPerformance>( 'Performance', PerformanceSchema );

@@ -10,13 +10,13 @@ export const TYPE_COMPOSER = type;
 
 type.addRelation('players', () => ({
     resolver: playerType.get('$findByIds'),
-    args: { _ids: (source: IMongooseTeam ) => source.players },
+    prepareArgs: { _ids: (source: IMongooseTeam ) => source.players },
     projection: { players: 1 }
 }));
 
 type.addRelation('fixtures', () => ({
     resolver: fixtureType.get('$findByIds'),
-    args: { _ids: (source: IMongooseTeam ) => source.fixtures },
+    prepareArgs: { _ids: (source: IMongooseTeam ) => source.fixtures },
     projection: { fixtures: 1 }
 }));
 

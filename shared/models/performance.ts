@@ -1,4 +1,4 @@
-export interface IPlayerPerformance {
+export interface IPerformance {
     player?: string,
     team?: string,
     day?: number,

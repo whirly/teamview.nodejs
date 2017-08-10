@@ -2,8 +2,7 @@
 import logger from '../../logger';
 import { connectDatabase, disconnectFromDatabase } from '../../mongoose';
 import * as models from '../../models';
-import {IFixturePlayer} from "../../../shared/models/fixture";
-import {IPlayerPerformance} from "../../../shared/models/player-performance";
+import {IPerformance} from "../../../shared/models/performance";
 import {PlayerPosition} from "../../../shared/models/player";
 
 let request = require('request-promise');
@@ -75,7 +74,7 @@ async function processPlayer( baseUrl: string )
             existingPlayer.team = team._id;
 
             // On nettoie les performances vu qu'elle vont être reconstruite
-            existingPlayer.performances = new Array<IPlayerPerformance>();
+            existingPlayer.performances = new Array<IPerformance>();
 
             await existingPlayer.save();
             numberOfPlayers++;
@@ -126,9 +125,9 @@ function getRoleForPosition( position: string ): PlayerPosition {
     return PlayerPosition.Goal;
 }
 
-async function processPlayers( day: number, data: any ): Promise<IFixturePlayer[]>
+async function processPlayers( day: number, data: any ): Promise<IPerformance[]>
 {
-    let fixturePlayers = [];
+    let performances = [];
 
     for( let playerID in data.players ) {
 
@@ -149,7 +148,7 @@ async function processPlayers( day: number, data: any ): Promise<IFixturePlayer[
             });
         }
         // Check if we already got this performance
-        let performancePrevious = await models.PlayerPerformance.findOne({player: player, day: day});
+        let performancePrevious = await models.Performance.findOne({player: player, day: day});
 
         // we did not have this one, we create it
         if (!performancePrevious) {
@@ -157,7 +156,7 @@ async function processPlayers( day: number, data: any ): Promise<IFixturePlayer[
 
             // Pour l'instant on stocke juste les perfs
             // Mais on pourrait réfléchir à récupérer les starts pour voir ce qu'on pourrait faire.
-            let playerPerformance = await models.PlayerPerformance.create({
+            let playerPerformance = await models.Performance.create({
                 player: player,
                 team: team,
                 day: day,
@@ -171,10 +170,7 @@ async function processPlayers( day: number, data: any ): Promise<IFixturePlayer[
                 sub: playerInfos.info.sub == 1
             });
 
-            fixturePlayers.push({
-                player: player,
-                playerPerformance: playerPerformance
-            });
+            performances.push( playerPerformance );
 
             // On stocke aussi la performance dans les infos du joueurs.
             player.performances.push(playerPerformance);
@@ -182,7 +178,7 @@ async function processPlayers( day: number, data: any ): Promise<IFixturePlayer[
         }
     }
 
-    return fixturePlayers;
+    return performances;
 }
 
 async function processMatches( baseUrl: string )
@@ -238,8 +234,8 @@ async function processMatches( baseUrl: string )
                 }
 
                 // Populate players and their performance
-                fixture.home.players = await processPlayers(i, matchDetailed.Home);
-                fixture.away.players = await processPlayers(i, matchDetailed.Away);
+                fixture.home.performances = await processPlayers(i, matchDetailed.Home);
+                fixture.away.performances = await processPlayers(i, matchDetailed.Away);
 
                 await fixture.save();
 

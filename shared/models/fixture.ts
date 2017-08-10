@@ -1,16 +1,10 @@
 import {ITeam} from "./team";
-import {IPlayer} from "./player";
-import {IPlayerPerformance} from "./player-performance";
-
-export interface IFixturePlayer {
-    player: IPlayer;
-    playerPerformance: IPlayerPerformance;
-}
+import {IPerformance} from "./performance";
 
 export interface IFixtureSide {
     team?: ITeam;
     formation?: String;
-    players: IFixturePlayer[]
+    performances: IPerformance[]
 }
 
 export interface IFixture {
