@@ -1,1 +1,14 @@
-<router-outlet></router-outlet>
+<div id="sidebar" class="ui inverted vertical menu sticky fixed top full-height">
+    <div class="item">
+        <a class="ui logo" href="/backoffice">
+            TeamView
+        </a>
+    </div>
+    <a class="item" [routerLink]="['components']"><b>Equipes</b></a>
+    <a class="item" [routerLink]="['models']"><b>Joueurs</b></a>
+</div>
+<div class="layouts pushable">
+    <div class="ui basic segment" id="content">
+        <router-outlet></router-outlet>
+    </div>
+</div>

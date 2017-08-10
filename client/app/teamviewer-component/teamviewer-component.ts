@@ -1,4 +1,7 @@
 import {Component, OnInit} from "@angular/core";
+import {TeamService} from "../services/team.service";
+import {ITeam} from "../../../shared/models/team";
+import {Observable} from "rxjs/Observable";
 
 @Component({
     selector: 'teamview-teamviewer',
@@ -7,11 +10,14 @@ import {Component, OnInit} from "@angular/core";
 })
 
 export class TeamViewerComponent implements OnInit {
-    constructor() {
+    public listTeams: Observable<ITeam[]>;
+    public currentTeam: Observable<ITeam>;
 
+    constructor( private teamService: TeamService ) {
     }
 
     public async ngOnInit() {
-
+        this.listTeams = this.teamService.list;
+        this.currentTeam = this.listTeams.map(teams => teams[0]);
     }
 }

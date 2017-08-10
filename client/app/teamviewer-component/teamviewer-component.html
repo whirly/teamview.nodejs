@@ -1,1 +1,9 @@
-<h1>COMPOSANT</h1>
+<team-selector></team-selector>
+<div class="ui grid">
+    <div class="ui three column grid">
+        <div class="three wide column"></div>
+        <div class="eight wide column">{{ (currentTeam|async)?.name }}</div>
+        <div class="four wide column">
+        </div>
+    </div>
+</div>

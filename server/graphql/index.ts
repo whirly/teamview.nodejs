@@ -7,17 +7,21 @@ import logger from '../logger';
 import * as account from './graphql-account';
 import * as user from './graphql-user';
 import * as userRole from './graphql-user-role';
+import * as team from './graphql-team';
+import * as player from './graphql-player';
 
 const router = express.Router();
 
 GQC.rootQuery().addFields({
     ...account.QUERIES,
-    ...user.QUERIES, ...userRole.QUERIES
+    ...user.QUERIES, ...userRole.QUERIES,
+    ...team.QUERIES, ...player.QUERIES
 });
 
 GQC.rootMutation().addFields({
     ...account.MUTATIONS,
-    ...user.MUTATIONS, ...userRole.MUTATIONS
+    ...user.MUTATIONS, ...userRole.MUTATIONS,
+    ...team.MUTATIONS, ...player.MUTATIONS
 });
 
 const schema = GQC.buildSchema();
@@ -39,6 +43,7 @@ router.use('/graphiql', graphiqlExpress({
 }));
 
 function formatError(error: GraphQLError): GraphQLError {
+    console.log( error );
     (error as any).type = error.originalError.constructor.name;
 
     if (error.originalError instanceof AuthenticationError) {

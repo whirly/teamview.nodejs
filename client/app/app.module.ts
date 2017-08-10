@@ -9,11 +9,15 @@ import { NgReduxRouterModule, NgReduxRouter, routerReducer } from '@angular-redu
 import { ApolloClient } from 'apollo-client';
 import { ApolloModule } from 'apollo-angular';
 
+import { SuiModule } from 'ng2-semantic-ui';
+
 import { AppComponent } from './app.component';
 import { APP_ROUTES } from './app.routes';
 import apolloClient from './apollo-client';
 
 import { TeamViewerComponent } from './teamviewer-component/teamviewer-component';
+import { TeamSelectorComponent } from './team-selector-component/team-selector-component';
+import {TeamService} from "./services/team.service";
 
 export function provideApolloClient(): ApolloClient {
     return apolloClient;
@@ -22,7 +26,8 @@ export function provideApolloClient(): ApolloClient {
 @NgModule({
     declarations: [
         AppComponent,
-        TeamViewerComponent
+        TeamViewerComponent,
+        TeamSelectorComponent
     ],
     imports: [
         //=> Angular official modules
@@ -31,9 +36,10 @@ export function provideApolloClient(): ApolloClient {
 
         //=> Third-party modules
         NgReduxModule, NgReduxRouterModule,
-        ApolloModule.forRoot(provideApolloClient)
+        ApolloModule.forRoot(provideApolloClient),
+        SuiModule
     ],
-    providers: [],
+    providers: [TeamService],
     bootstrap: [AppComponent]
 })
 export class AppModule {

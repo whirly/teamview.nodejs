@@ -291,6 +291,10 @@
   version "0.0.28"
   resolved "https://registry.yarnpkg.com/@types/pify/-/pify-0.0.28.tgz#682b6c33a1d05748b86f029bdab6f62aa73ff506"
 
+"@types/popper.js@~1.10.0":
+  version "1.10.0"
+  resolved "https://registry.yarnpkg.com/@types/popper.js/-/popper.js-1.10.0.tgz#2f3d72c951060b0366171ebe0bc6e6d7777233ab"
+
 "@types/serve-static@*":
   version "1.7.31"
   resolved "https://registry.yarnpkg.com/@types/serve-static/-/serve-static-1.7.31.tgz#15456de8d98d6b4cff31be6c6af7492ae63f521a"
@@ -1173,6 +1177,10 @@ boom@2.x.x:
   dependencies:
     hoek "2.x.x"
 
+bowser@^1.7.0:
+  version "1.7.1"
+  resolved "https://registry.yarnpkg.com/bowser/-/bowser-1.7.1.tgz#a4de8f18a1a0dc9531eb2a92a1521fb6a9ba96a5"
+
 brace-expansion@^1.1.7:
   version "1.1.8"
   resolved "https://registry.yarnpkg.com/brace-expansion/-/brace-expansion-1.1.8.tgz#c07b211c7c952ec1f8efd51a77ef0d1d3990a292"
@@ -1936,6 +1944,10 @@ dashdash@^1.12.0:
   dependencies:
     assert-plus "^1.0.0"
 
+date-fns@2.0.0-alpha.1:
+  version "2.0.0-alpha.1"
+  resolved "https://registry.yarnpkg.com/date-fns/-/date-fns-2.0.0-alpha.1.tgz#f45e477cf3414269d97fb1aae899035f3b308474"
+
 date-now@^0.1.4:
   version "0.1.4"
   resolved "https://registry.yarnpkg.com/date-now/-/date-now-0.1.4.tgz#eaf439fd4d4848ad74e5cc7dbef200672b9e345b"
@@ -2184,6 +2196,10 @@ ee-first@1.1.1:
 electron-to-chromium@^1.2.7:
   version "1.3.15"
   resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.3.15.tgz#08397934891cbcfaebbd18b82a95b5a481138369"
+
+element-closest@^2.0.2:
+  version "2.0.2"
+  resolved "https://registry.yarnpkg.com/element-closest/-/element-closest-2.0.2.tgz#72a740a107453382e28df9ce5dbb5a8df0f966ec"
 
 elliptic@^6.0.0:
   version "6.4.0"
@@ -2523,7 +2539,7 @@ extend-shallow@^2.0.1:
   dependencies:
     is-extendable "^0.1.0"
 
-extend@~3.0.0:
+extend@^3.0.1, extend@~3.0.0:
   version "3.0.1"
   resolved "https://registry.yarnpkg.com/extend/-/extend-3.0.1.tgz#a755ea7bc1adfcc5a31ce7e762dbaadc5e636444"
 
@@ -4308,6 +4324,18 @@ nested-error-stacks@^1.0.0:
   dependencies:
     inherits "~2.0.1"
 
+ng2-semantic-ui@^0.9.4:
+  version "0.9.4"
+  resolved "https://registry.yarnpkg.com/ng2-semantic-ui/-/ng2-semantic-ui-0.9.4.tgz#de25a1ba9691deac6923dbc30fd5cc8742346e06"
+  dependencies:
+    "@types/popper.js" "~1.10.0"
+    bowser "^1.7.0"
+    date-fns "2.0.0-alpha.1"
+    element-closest "^2.0.2"
+    extend "^3.0.1"
+    popper.js "~1.10.6"
+    rxjs "^5.0.1"
+
 no-case@^2.2.0:
   version "2.3.1"
   resolved "https://registry.yarnpkg.com/no-case/-/no-case-2.3.1.tgz#7aeba1c73a52184265554b7dc03baf720df80081"
@@ -4840,6 +4868,10 @@ pinkie-promise@^2.0.0:
 pinkie@^2.0.0:
   version "2.0.4"
   resolved "https://registry.yarnpkg.com/pinkie/-/pinkie-2.0.4.tgz#72556b80cfa0d48a974e80e77248e80ed4f7f870"
+
+popper.js@~1.10.6:
+  version "1.10.8"
+  resolved "https://registry.yarnpkg.com/popper.js/-/popper.js-1.10.8.tgz#0fd6343e68aa8c1cc8cfe35e02c673500a1bc609"
 
 portfinder@^1.0.9, portfinder@~1.0.12:
   version "1.0.13"
