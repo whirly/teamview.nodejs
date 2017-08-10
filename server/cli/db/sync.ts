@@ -3,7 +3,8 @@ import logger from '../../logger';
 import { connectDatabase, disconnectFromDatabase } from '../../mongoose';
 import * as models from '../../models';
 import {IFixturePlayer} from "../../../shared/models/fixture";
-import {IPlayerSpecificPerformance} from "../../../shared/models/player";
+import {IPlayerPerformance} from "../../../shared/models/player-performance";
+import {PlayerPosition} from "../../../shared/models/player";
 
 let request = require('request-promise');
 
@@ -28,11 +29,34 @@ async function processPlayer( baseUrl: string )
         if( existingPlayer ) {
             let team = await models.Team.findOne({idMpg: player.teamid});
 
+            // On a trouvé la team en question, on va donc rajouter notre joueur
+            if( team ) {
+                // Est ce que notre joueur n'est pas déjà dans cette équipe ?
+                if( team.players.findIndex( item => item.equals( player.teamid )) == -1 )
+                {
+                    // On l'ajoute
+                    team.players.push( existingPlayer );
+                    await team.save();
+                }
+
+
+            } else {
+                // La team n'existe pas encore, on la créé
+                team = await models.Team.create({
+                    idMpg: player.teamid,
+                    name: player.club
+                });
+
+                // On ajoute notre joueur
+                team.players.push( existingPlayer );
+                await team.save();
+            }
+
             // On vérifie si le gus a pas changé d'équipe en fait.
-            if( player.teamid != existingPlayer.teamId )
+            if( team._id != existingPlayer.team )
             {
                 // Il a changé d'équipe, on va le virer de son ancienne équipe
-                let teamPrevious = await models.Team.findOne( { idMpg: existingPlayer.teamId });
+                let teamPrevious = await models.Team.findById( existingPlayer.team );
 
                 // Si cette équipe existe encore.
                 if( teamPrevious )
@@ -44,33 +68,14 @@ async function processPlayer( baseUrl: string )
                 }
             }
 
-            // On a trouvé la team en question
-            if( team ) {
-                // Est ce que notre joueur n'est pas déjà dans cette équipe ?
-                if( team.players.findIndex( item => item.equals( existingPlayer._id )) == -1 )
-                {
-                    // On l'ajoute
-                    team.players.push( existingPlayer );
-                    await team.save();
-                }
-
-
-            } else {
-                // La team n'existe pas encore
-                team = await models.Team.create({
-                    idMpg: player.teamid,
-                    name: player.club
-                });
-            }
-
             // On met à jour le joueur avec les infos qui sont susceptibles d'avoir changé (valeur, role, équipe)
             // Et on sauvegarde le tout.
             existingPlayer.value = player.quotation;
             existingPlayer.role = player.position;
-            existingPlayer.teamId = team._id;
+            existingPlayer.team = team._id;
 
             // On nettoie les performances vu qu'elle vont être reconstruite
-            existingPlayer.performances = new Array<IPlayerSpecificPerformance>();
+            existingPlayer.performances = new Array<IPlayerPerformance>();
 
             await existingPlayer.save();
             numberOfPlayers++;
@@ -93,7 +98,7 @@ async function processPlayer( baseUrl: string )
                 });
             }
 
-            playerNew.teamId = team._id;
+            playerNew.team = team._id;
             await playerNew.save();
 
             team.players.push(playerNew);
@@ -111,42 +116,70 @@ function findTactic( matchSide: any ): string
     return matchSide.players[ Object.keys( matchSide.players )[ 0 ]].info.formation_used;
 }
 
+function getRoleForPosition( position: string ): PlayerPosition {
+    if( position == "Goalkeeper" ) return PlayerPosition.Goal;
+    if( position == "Defender" ) return PlayerPosition.Defender;
+    if( position == "Midfielder" ) return PlayerPosition.Midfield;
+    if( position == "Striker" ) return PlayerPosition.Striker;
+
+    // Si je n'ai pas réussi à lire la position du mec, on va dire qu'il est goal.
+    return PlayerPosition.Goal;
+}
+
 async function processPlayers( day: number, data: any ): Promise<IFixturePlayer[]>
 {
     let fixturePlayers = [];
 
     for( let playerID in data.players ) {
 
-        let player = data.players[ playerID ];
-        let playerDb = await models.Player.findOne({idMpg: playerID});
+        let playerInfos = data.players[ playerID ];
+        let player = await models.Player.findOne({idMpg: playerID});
 
-        let playerPerformance = await models.PlayerPerformance.create({
-            player: playerID,
-            team: data.id,
-            day: day,
-            position: player.info.position,
-            place: player.info.formation_place,
-            rate: player.info.note_final_2015,
-            goalFor: player.info.goals,
-            goalAgainst: player.info.own_goals,
-            cardYellow: player.info.yellow_card > 0,
-            cardRed: player.info.red_card > 0,
-            sub: player.info.sub == 1
-        });
+        // Le joueur peut ne pas exister, parce que ce monsieur a quitté le championnat.
+        // Merci à Valentin Eysseric d'avoir été le premier :)
+        if( !player ) {
+            // On créer une enveloppe player
+            player = await models.Player.create({
+                idMpg: playerID,
+                firstName: "", // le paquet d'infos ne comporte que le nom de famille pour l'affichage tactique
+                lastName: playerInfos.info.lastname,
+                role: getRoleForPosition( playerInfos.info.position ),
+                value: 0,
+                team: null
+            });
+        }
+        // Check if we already got this performance
+        let performancePrevious = await models.PlayerPerformance.findOne({player: player, day: day});
 
-        fixturePlayers.push({
-            player: playerDb,
-            playerPerformance: playerPerformance._id
-        });
+        // we did not have this one, we create it
+        if (!performancePrevious) {
+            let team = await models.Team.findOne({idMpg: data.id});
 
-        playerDb.performances.push({
-            idTeam: data.id,
-            day: day,
-            performance: playerPerformance._id,
-            value: -1
-        });
+            // Pour l'instant on stocke juste les perfs
+            // Mais on pourrait réfléchir à récupérer les starts pour voir ce qu'on pourrait faire.
+            let playerPerformance = await models.PlayerPerformance.create({
+                player: player,
+                team: team,
+                day: day,
+                position: playerInfos.info.position,
+                place: playerInfos.info.formation_place,
+                rate: playerInfos.info.note_final_2015,
+                goalFor: playerInfos.info.goals,
+                goalAgainst: playerInfos.info.own_goals,
+                cardYellow: playerInfos.info.yellow_card > 0,
+                cardRed: playerInfos.info.red_card > 0,
+                sub: playerInfos.info.sub == 1
+            });
 
-        await playerDb.save();
+            fixturePlayers.push({
+                player: player,
+                playerPerformance: playerPerformance
+            });
+
+            // On stocke aussi la performance dans les infos du joueurs.
+            player.performances.push(playerPerformance);
+            await player.save();
+        }
     }
 
     return fixturePlayers;
@@ -188,11 +221,11 @@ async function processMatches( baseUrl: string )
                         day: i,
                         idMpg: match.toString(),
                         home: {
-                            team: teamHome._id,
+                            team: teamHome,
                             formation: findTactic(matchDetailed.Home)
                         },
                         away: {
-                            team: teamAway._id,
+                            team: teamAway,
                             formation: findTactic(matchDetailed.Away)
                         }
                     });
@@ -209,6 +242,12 @@ async function processMatches( baseUrl: string )
                 fixture.away.players = await processPlayers(i, matchDetailed.Away);
 
                 await fixture.save();
+
+                teamAway.fixtures.push( fixture );
+                teamHome.fixtures.push( fixture );
+
+                await teamAway.save();
+                await teamHome.save();
             }
         }
     }

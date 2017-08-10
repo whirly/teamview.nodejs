@@ -22,6 +22,7 @@ export class TeamService {
                           lastName
                           role
                           value
+                            
                         }
                         fixtures {
                           day

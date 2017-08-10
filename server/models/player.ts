@@ -10,12 +10,7 @@ const PlayerSchema = new Schema({
     value: { type: Number },
     team: { type: Schema.Types.ObjectId, ref: "Team" },
 
-    performances: [{
-        idTeam: { type: String },
-        day: { type: Number },
-        performance: { type: Schema.Types.ObjectId, ref: "PlayerPerformance" },
-        value: { type: Number }
-    }]
+    performances: [{ type: Schema.Types.ObjectId, ref: "PlayerPerformance" }]
 });
 
 export const Player = mongoose.model<IMongoosePlayer>('Player', PlayerSchema );

@@ -9,15 +9,15 @@ const type = composeWithMongoose(Team);
 export const TYPE_COMPOSER = type;
 
 type.addRelation('players', () => ({
-    resolver: playerType.get('$findMany'),
-    prepareArgs: { _id: (source: IMongooseTeam ) => source.players },
-    projection: { players: true }
+    resolver: playerType.get('$findByIds'),
+    args: { _ids: (source: IMongooseTeam ) => source.players },
+    projection: { players: 1 }
 }));
 
 type.addRelation('fixtures', () => ({
-    resolver: fixtureType.get('$findMany'),
-    prepareArgs: { _id: (source: IMongooseTeam ) => source.fixtures },
-    projection: { fixtures: true }
+    resolver: fixtureType.get('$findByIds'),
+    args: { _ids: (source: IMongooseTeam ) => source.fixtures },
+    projection: { fixtures: 1 }
 }));
 
 export const QUERIES = {
