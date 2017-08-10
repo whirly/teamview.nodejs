@@ -13,13 +13,16 @@ import { AppComponent } from './app.component';
 import { APP_ROUTES } from './app.routes';
 import apolloClient from './apollo-client';
 
+import { TeamViewerComponent } from './teamviewer-component/teamviewer-component';
+
 export function provideApolloClient(): ApolloClient {
     return apolloClient;
 }
 
 @NgModule({
     declarations: [
-        AppComponent
+        AppComponent,
+        TeamViewerComponent
     ],
     imports: [
         //=> Angular official modules

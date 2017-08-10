@@ -75,7 +75,33 @@ const ENV_AGNOSTIC_CONFIG = {
                 loader: 'html-loader',
                 options: { minimize: false },
                 exclude: [fromRoot('client/index.html')]
-            }
+            },
+            {
+                test: /\.scss$/,
+                loaders: ['exports-loader?module.exports.toString()', 'css-loader?sourceMap', 'resolve-url-loader', 'sass-loader?sourceMap']
+            },
+            {
+                test: /node_modules.*\.css$/,
+                loaders: ['style-loader', 'css-loader', 'resolve-url-loader']
+            },
+            // Images
+            {
+                test: /\.(jpe?g|png|gif|svg)$/i,
+                use: [
+                    {
+                        loader: 'file-loader',
+                        options: { hash: 'sha512', digest: 'hex', name: '[hash].[ext]' }
+                    },
+                    {
+                        loader: 'image-webpack-loader',
+                        options: { bypassOnDebug: true, optipng: { optimizationLevel: 7 }, gifsicle: { interlaced: false } }
+                    }
+                ]
+            },
+            // Fonts
+            { test: /\.woff(2)?(\?v=[0-9]\.[0-9]\.[0-9])?$/, loader: 'url-loader', options: { limit: 10000, mimetype: 'application/font-woff' }},
+            { test: /\.(ttf|eot|svg|ico)(\?v=[0-9]\.[0-9]\.[0-9])?$/, loader: 'file-loader' },
+
         ]
     },
 
