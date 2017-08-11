@@ -63,7 +63,27 @@ export class TeamService {
                           }
                         }
                         fixtures {
-                          day      
+                            day
+                            home {
+                                formation
+                                performances {
+                                    goalFor
+                                    goalAgainst
+                                }
+                                team {
+                                    name
+                                }
+                            }
+                            away {
+                                formation
+                                performances {
+                                    goalFor
+                                    goalAgainst
+                                }
+                                team {
+                                    name
+                                }
+                            }
                         }
                     }
             }`;

@@ -5,6 +5,7 @@ import {ActivatedRoute, ParamMap} from "@angular/router";
 import _ from "lodash";
 import {IPlayer} from "../../../shared/models/player";
 import {IPerformance} from "../../../shared/models/performance";
+import {IFixture} from "../../../shared/models/fixture";
 
 @Component({
     selector: 'teamview-teamviewer',
@@ -39,7 +40,6 @@ export class TeamViewerComponent implements OnInit {
 
                 this.activePlayers = _.sortBy( this.activePlayers, [ 'role', 'lastName' ]);
 
-
                 this.inactivePlayers = _.reject( this.currentTeam.players, player => {
                     return player.performances.length > 0;
                 });
@@ -48,9 +48,28 @@ export class TeamViewerComponent implements OnInit {
             });
     }
 
-    public getPerformanceFor( player: IPlayer, day: number ) : string
+    // La méthode pour générer les entêtes de colonnes, on va simplement récupérer l'adversaire du jour
+    public getColumnHeaderFor( day: number ): string
     {
-        let performanceThisDay = player.performances.find( (performance: IPerformance) => {
+        const fixtureThisDay: IFixture = this.currentTeam.fixtures.find( (fixture: IFixture) => {
+            return fixture.day == day;
+        });
+
+        // Si on a l'info
+        if( fixtureThisDay )
+        {
+            return fixtureThisDay.home.team.name + " - " + fixtureThisDay.away.team.name;
+        }
+        else
+        {
+            // Nous
+            return day.toString();
+        }
+    }
+
+    public getPerformanceFor( player: IPlayer, day: number ): string
+    {
+        const performanceThisDay: IPerformance = player.performances.find( (performance: IPerformance) => {
             return performance.day == day;
         });
 
@@ -64,12 +83,12 @@ export class TeamViewerComponent implements OnInit {
         }
     }
 
-    public getRange( value: Number):Array<number> {
+    public getRange( value: number): Array<number> {
         let a = [];
 
         for( let i =0; i < value; i++ )
         {
-            a.push(i+1)
+            a.push(i+1);
         }
 
         return a;

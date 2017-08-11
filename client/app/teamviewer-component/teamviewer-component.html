@@ -21,7 +21,7 @@
         <thead>
             <tr>
                 <th>Nom</th>
-                <th *ngFor="let i of getRange(38)">{{ i }}</th>
+                <th *ngFor="let i of getRange(38)"><div suiPopup popupText="{{ getColumnHeaderFor( i ) }}">{{ i }}</div></th>
             </tr>
         </thead>
         <tbody>

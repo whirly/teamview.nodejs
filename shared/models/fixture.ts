@@ -3,12 +3,13 @@ import {IPerformance} from "./performance";
 
 export interface IFixtureSide {
     team?: ITeam;
-    formation?: String;
-    performances: IPerformance[]
+    formation?: string;
+    performances: IPerformance[];
 }
 
 export interface IFixture {
+    day: number;
     idMpg?: number;
-    home?: IFixtureSide,
-    away?: IFixtureSide
+    home?: IFixtureSide;
+    away?: IFixtureSide;
 }
