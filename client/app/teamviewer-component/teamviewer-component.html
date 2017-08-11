@@ -19,7 +19,15 @@
 <div class="ui column">
     <table class="ui celled table">
         <tbody>
-        <tr *ngFor="let player of currentTeam.players">
+        <tr *ngFor="let player of activePlayers">
+            <td>{{ player.firstName }} {{ player.lastName }}</td>
+        </tr>
+        </tbody>
+    </table>
+
+    <table class="ui celled table">
+        <tbody>
+        <tr *ngFor="let player of inactivePlayers">
             <td>{{ player.firstName }} {{ player.lastName }}</td>
         </tr>
         </tbody>
