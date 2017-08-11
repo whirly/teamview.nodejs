@@ -1,9 +1,27 @@
 <team-selector></team-selector>
 <div class="ui grid">
     <div class="ui three column grid">
-        <div class="three wide column"></div>
-        <div class="eight wide column">{{ (currentTeam|async)?.name }}</div>
+        <div class="three wide column">
+            <div class="emblem {{ currentTeam.name }}"></div>
+        </div>
+
+        <div class="eight wide column">
+            <h1 class="team-title">
+                {{ currentTeam.name }}
+            </h1>
+        </div>
+
         <div class="four wide column">
         </div>
     </div>
+</div>
+
+<div class="ui column">
+    <table class="ui celled table">
+        <tbody>
+        <tr *ngFor="let player of currentTeam.players">
+            <td>{{ player.firstName }} {{ player.lastName }}</td>
+        </tr>
+        </tbody>
+    </table>
 </div>

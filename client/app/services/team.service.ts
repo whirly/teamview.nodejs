@@ -34,4 +34,43 @@ export class TeamService {
 
         }).map(res => res.data.teams);
     }
+
+    public getByName( name: string ): Observable<ITeam> {
+
+        const teamByName = gql`
+            query ($name: String!) {
+                	team( filter: { name: $name }) {
+                        _id
+                        name
+                        players {
+                          firstName
+                          lastName
+                          role
+                          value
+                          performances {
+                            team
+                            day
+                            position
+                            place
+                            rate
+                            goalFor
+                            goalAgainst
+                            cardYellow
+                            cardRed
+                            sub
+                          }
+                        }
+                        fixtures {
+                          day      
+                        }
+                    }
+            }`;
+
+        return this.apollo.watchQuery<{ team: ITeam }>( {
+            query: teamByName,
+            variables: {
+                name: name
+            }
+        }).map( res => res.data.team );
+    }
 }

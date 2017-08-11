@@ -263,6 +263,8 @@ declare module 'graphql-compose' {
 
         getFieldType(fieldName: any): any;
 
+        getFieldTC(fieldName: any): any;
+
         getFields(): any;
 
         getInputType(): any;

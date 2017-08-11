@@ -49,6 +49,7 @@ const ENV_AGNOSTIC_CONFIG = {
 
     module: {
         rules: [
+            // Styles
             //=> Disable any linking with server code!
             {
                 test: /(\\|\/)server(\\|\/)/,
@@ -76,10 +77,8 @@ const ENV_AGNOSTIC_CONFIG = {
                 options: { minimize: false },
                 exclude: [fromRoot('client/index.html')]
             },
-            {
-                test: /\.scss$/,
-                loaders: ['exports-loader?module.exports.toString()', 'css-loader?sourceMap', 'resolve-url-loader', 'sass-loader?sourceMap']
-            },
+            { test: /\.global\.scss$/, loaders: ['style-loader?sourceMap', 'css-loader?sourceMap', 'resolve-url-loader', 'sass-loader?sourceMap'] }, // global styles
+            { test: /^(?!.*global).*\.scss$/, loaders: ['exports-loader?module.exports.toString()', 'css-loader?sourceMap', 'resolve-url-loader', 'sass-loader?sourceMap'] }, // scoped styles
             {
                 test: /node_modules.*\.css$/,
                 loaders: ['style-loader', 'css-loader', 'resolve-url-loader']

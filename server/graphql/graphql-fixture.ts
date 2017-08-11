@@ -1,26 +1,47 @@
 import { composeWithMongoose } from 'graphql-compose-mongoose';
 import {Fixture} from "../models";
-import {IMongooseFixture} from "../models/fixture";
 import { TYPE_COMPOSER as teamType } from './graphql-team';
 import { TYPE_COMPOSER as performanceType } from './graphql-performance';
+import {IFixtureSide} from "../../shared/models/fixture";
 
 const type = composeWithMongoose(Fixture);
 
 export const TYPE_COMPOSER = type;
 
-type.addRelation('home.team', () => ({
-    resolver: teamType.get('$findById'),
-    prepareArgs: { _id: (source: IMongooseFixture ) => source.home.team },
-    projection: { team: 1 }
+const typeHomeTC = type.getFieldTC('home');
+const typeAwayTC = type.getFieldTC('away');
+
+typeHomeTC.addRelation('team', () => ({
+    resolver: () => teamType.getResolver('findById'),
+    prepareArgs: { _id: (source: IFixtureSide) => source.team },
+    projection: { team: true }
 }));
 
+typeHomeTC.addRelation('performances', () => ({
+    resolver: () => performanceType.getResolver('findByIds'),
+    prepareArgs: { _ids: (source: IFixtureSide) => source.performances },
+    projection: { performances: true }
+}));
 
+typeAwayTC.addRelation('team', () => ({
+    resolver: () => teamType.getResolver('findById'),
+    prepareArgs: { _id: (source: IFixtureSide) => source.team },
+    projection: { team: true }
+}));
+
+typeAwayTC.addRelation('performances', () => ({
+    resolver: () => performanceType.getResolver('findByIds'),
+    prepareArgs: { _ids: (source: IFixtureSide) => source.performances },
+    projection: { performances: true }
+}));
+
+/*
 type.addRelation('home.performances', () => ({
     resolver: performanceType.get('$findByIds'),
     prepareArgs: { _ids: (source: IMongooseFixture ) => source.home.performances },
     projection: { performances: 1 }
 }));
-
+*/
 
 export const QUERIES = {
     fixtureById: type.get('$findById'),

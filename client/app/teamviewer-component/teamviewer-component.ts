@@ -1,7 +1,7 @@
 import {Component, OnInit} from "@angular/core";
 import {TeamService} from "../services/team.service";
 import {ITeam} from "../../../shared/models/team";
-import {Observable} from "rxjs/Observable";
+import {ActivatedRoute, ParamMap} from "@angular/router";
 
 @Component({
     selector: 'teamview-teamviewer',
@@ -10,14 +10,20 @@ import {Observable} from "rxjs/Observable";
 })
 
 export class TeamViewerComponent implements OnInit {
-    public listTeams: Observable<ITeam[]>;
-    public currentTeam: Observable<ITeam>;
 
-    constructor( private teamService: TeamService ) {
+    public currentTeam: ITeam = <ITeam> {
+        idMpg: 0,
+        name: ""
+    };
+
+    constructor( private teamService: TeamService, private route: ActivatedRoute ) {
     }
 
-    public async ngOnInit() {
-        this.listTeams = this.teamService.list;
-        this.currentTeam = this.listTeams.map(teams => teams[0]);
+    public async ngOnInit()
+    {
+
+        this.route.paramMap.switchMap( ( params: ParamMap ) =>
+            this.teamService.getByName( params.get('name')))
+            .subscribe( ( team: ITeam ) => this.currentTeam = team );
     }
 }

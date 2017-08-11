@@ -1,6 +1,6 @@
 import mongoose, { Document, Schema } from 'mongoose';
 import { IPerformance } from '../../shared/models';
-export interface IMongoosePlayerPerformance extends IPerformance, Document {}
+export interface IMongoosePerformance extends IPerformance, Document {}
 
 const PerformanceSchema = new Schema({
     player: { type: Schema.Types.ObjectId, ref: 'Player' },
@@ -16,4 +16,4 @@ const PerformanceSchema = new Schema({
     sub: { type: Boolean }
 });
 
-export const Performance = mongoose.model<IMongoosePlayerPerformance>( 'Performance', PerformanceSchema );
+export const Performance = mongoose.model<IMongoosePerformance>( 'Performance', PerformanceSchema );
