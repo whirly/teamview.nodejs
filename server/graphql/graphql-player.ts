@@ -7,11 +7,11 @@ const type = composeWithMongoose(Player);
 
 export const TYPE_COMPOSER = type;
 
-type.addRelation('performances', () => ({
+type.addRelation('performances', {
     resolver: () => performanceType.getResolver('findByIds'),
     prepareArgs: { _ids: (source: IMongoosePlayer ) => source.performances },
     projection: { performances: 1 }
-}));
+});
 
 
 export const QUERIES = {

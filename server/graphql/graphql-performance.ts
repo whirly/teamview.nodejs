@@ -9,17 +9,17 @@ const type = composeWithMongoose(Performance);
 
 export const TYPE_COMPOSER = type;
 
-type.addRelation('player', () => ({
+type.addRelation('player', {
     resolver: () => playerType.getResolver('findById'),
     prepareArgs: { _id: (source: IMongoosePerformance ) => source.player },
     projection: { player: true }
-}));
+});
 
-type.addRelation('team', () => ({
+type.addRelation('team', {
     resolver: () => teamType.getResolver('findById'),
     prepareArgs: { _id: (source: IMongoosePerformance ) => source.team },
     projection: { team: true }
-}));
+});
 
 export const QUERIES = {
     performanceById: type.get('$findById'),

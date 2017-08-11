@@ -10,11 +10,11 @@ const type = composeWithMongoose(User, {
 
 export const TYPE_COMPOSER = type;
 
-type.addRelation('role', () => ({
+type.addRelation('role', {
     resolver: userRoleType.get('$findById'),
     prepareArgs: { _id: (source: IMongooseUser) => source.role },
     projection: { role: true }
-}));
+});
 
 type.addResolver({
     name: 'currentUser',

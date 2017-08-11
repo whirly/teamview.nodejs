@@ -8,17 +8,17 @@ const type = composeWithMongoose(Team);
 
 export const TYPE_COMPOSER = type;
 
-type.addRelation('players', () => ({
+type.addRelation('players', {
     resolver: () => playerType.getResolver('findByIds'),
     prepareArgs: { _ids: (source: IMongooseTeam ) => source.players },
     projection: { players: true }
-}));
+});
 
-type.addRelation('fixtures', () => ({
+type.addRelation('fixtures', {
     resolver: () => fixtureType.getResolver('findByIds'),
     prepareArgs: { _ids: (source: IMongooseTeam ) => source.fixtures },
     projection: { fixtures: 1 }
-}));
+});
 
 export const QUERIES = {
     teamById: type.get('$findById'),
