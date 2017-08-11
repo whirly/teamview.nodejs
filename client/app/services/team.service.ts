@@ -42,13 +42,15 @@ export class TeamService {
                 	team( filter: { name: $name }) {
                         _id
                         name
-                        players {
+                        players( sort: _ID_ASC ) {
                           firstName
                           lastName
                           role
                           value
                           performances {
-                            team
+                            team {
+                                name
+                            }
                             day
                             position
                             place
