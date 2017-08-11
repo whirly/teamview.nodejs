@@ -4,6 +4,7 @@ import {ITeam} from "../../../shared/models/team";
 import {ActivatedRoute, ParamMap} from "@angular/router";
 import _ from "lodash";
 import {IPlayer} from "../../../shared/models/player";
+import {IPerformance} from "../../../shared/models/performance";
 
 @Component({
     selector: 'teamview-teamviewer',
@@ -46,4 +47,32 @@ export class TeamViewerComponent implements OnInit {
                 this.inactivePlayers = _.sortBy( this.inactivePlayers, [ 'role', 'lastName' ]);
             });
     }
+
+    public getPerformanceFor( player: IPlayer, day: number ) : string
+    {
+        let performanceThisDay = player.performances.find( (performance: IPerformance) => {
+            return performance.day == day;
+        });
+
+        if( performanceThisDay )
+        {
+            return performanceThisDay.rate.toString();
+        }
+        else
+        {
+            return "-";
+        }
+    }
+
+    public getRange( value: Number):Array<number> {
+        let a = [];
+
+        for( let i =0; i < value; i++ )
+        {
+            a.push(i+1)
+        }
+
+        return a;
+    }
+
 }
