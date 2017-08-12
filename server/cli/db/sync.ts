@@ -73,9 +73,6 @@ async function processPlayer( baseUrl: string )
             existingPlayer.role = player.position;
             existingPlayer.team = team._id;
 
-            // On nettoie les performances vu qu'elle vont être reconstruite
-            existingPlayer.performances = new Array<IPerformance>();
-
             await existingPlayer.save();
             numberOfPlayers++;
 
@@ -194,7 +191,9 @@ async function processMatches( baseUrl: string )
 
             // Si le champ score est vide, c'est que le match n'a pas encore été joué, on ne le traite donc pas
             // ... pour l'instant du moins, ça serait intéressant de voir ce qu'on pourrait faire avec les cotes
-            if ( match.home.score != "" ) {
+            if ( match.home.score != "" && match.home.scoretmp == undefined ) {
+
+                logger.info( match.home.club + " - " + match.away.club + " " + match.home.score.toString() + ":" + match.away.score.toString()  );
 
                 // Process each match
                 const matchInfos = await request(baseUrl + "championship/match/" + match.id);
@@ -202,7 +201,6 @@ async function processMatches( baseUrl: string )
 
                 // Là sur le coup, je n'ai pas compris pourquoi les ids sont préfixés de "match_" ... bon ben on le vire.
                 matchDetailed.id = matchDetailed.id.slice(5);
-
 
                 // find teams
                 let teamAway = await models.Team.findOne({idMpg: matchDetailed.Away.id}).populate("players fixtures").exec();
