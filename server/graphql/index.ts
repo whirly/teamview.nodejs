@@ -47,7 +47,6 @@ router.use('/graphiql', graphiqlExpress({
 }));
 
 function formatError(error: GraphQLError): GraphQLError {
-    console.log( error );
     (error as any).type = error.originalError.constructor.name;
 
     if (error.originalError instanceof AuthenticationError) {

@@ -1,11 +1,13 @@
 import {Component, OnInit} from "@angular/core";
 import {TeamService} from "../services/team.service";
-import {ITeam} from "../../../shared/models/team";
 import {ActivatedRoute, ParamMap} from "@angular/router";
 import _ from "lodash";
+
 import {IPlayer} from "../../../shared/models/player";
 import {IPerformance} from "../../../shared/models/performance";
 import {IFixture} from "../../../shared/models/fixture";
+import {ITeam} from "../../../shared/models/team";
+import * as player_helpers from "../../../shared/models/player_helpers";
 
 @Component({
     selector: 'teamview-teamviewer',
@@ -15,10 +17,11 @@ import {IFixture} from "../../../shared/models/fixture";
 
 export class TeamViewerComponent implements OnInit {
 
-    public currentTeam: ITeam = <ITeam> {
+    public currentTeam: ITeam = {
         idMpg: 0,
-        name: ""
-    };
+        name: "",
+        fixtures: []
+    } as ITeam;
 
     public activePlayers: IPlayer[];
     public inactivePlayers: IPlayer[];
@@ -33,7 +36,7 @@ export class TeamViewerComponent implements OnInit {
             this.teamService.getByName( params.get('name')))
             .subscribe( ( team: ITeam ) => {
                 this.currentTeam = team;
-
+                console.log( team );
                 this.activePlayers = _.filter( this.currentTeam.players, player => {
                     return player.performances.length > 0;
                 });
@@ -51,42 +54,45 @@ export class TeamViewerComponent implements OnInit {
     // La méthode pour générer les entêtes de colonnes, on va simplement récupérer l'adversaire du jour
     public getColumnHeaderFor( day: number ): string
     {
-        const fixtureThisDay: IFixture = this.currentTeam.fixtures.find( (fixture: IFixture) => {
-            return fixture.day == day;
-        });
+        if( this.currentTeam.fixtures ) {
+            const fixtureThisDay: IFixture = this.currentTeam.fixtures.find((fixture: IFixture) => {
+                return fixture.day == day;
+            });
 
-        // Si on a l'info
-        if( fixtureThisDay )
-        {
-            return fixtureThisDay.home.team.name + " - " + fixtureThisDay.away.team.name;
+            // Si on a l'info
+            if (fixtureThisDay) {
+                return fixtureThisDay.home.team.name + " - " + fixtureThisDay.away.team.name;
+            }
+            else {
+                // Nous
+                return day.toString();
+            }
         }
-        else
-        {
-            // Nous
-            return day.toString();
-        }
+
+        return day.toString();
     }
 
     public getPerformanceFor( player: IPlayer, day: number ): string
     {
-        const performanceThisDay: IPerformance = player.performances.find( (performance: IPerformance) => {
-            return performance.day == day;
-        });
+        if( player )
+        {
+            const performanceThisDay: IPerformance = player.performances.find( (performance: IPerformance) => {
+                return performance.day == day;
+            });
 
-        if( performanceThisDay )
-        {
-            return performanceThisDay.rate.toString();
+            if( performanceThisDay )
+            {
+                return performanceThisDay.rate.toString();
+            }
         }
-        else
-        {
-            return "-";
-        }
+
+        return "-";
     }
 
-    public getRange( value: number): Array<number> {
+    public getRange( value: number): number[] {
         let a = [];
 
-        for( let i =0; i < value; i++ )
+        for( let i =0; i < this.currentTeam.fixtures.length; i++ )
         {
             a.push(i+1);
         }
@@ -94,4 +100,29 @@ export class TeamViewerComponent implements OnInit {
         return a;
     }
 
+    public getAverageForPlayer( player: IPlayer ): string {
+        return player_helpers.getAveragePerformance( player ).toString();
+    }
+
+    public getGoalAgainst( player: IPlayer ): string {
+        const goal: number = player_helpers.getGoalAgainst( player );
+
+        if( goal > 0 ) {
+            return goal.toString();
+        }
+        else {
+            return "-";
+        }
+    }
+
+    public getGoalFor( player: IPlayer ): string {
+        const goal: number = player_helpers.getGoalFor( player );
+
+        if( goal > 0 ) {
+            return goal.toString();
+        }
+        else {
+            return "-";
+        }
+    }
 }

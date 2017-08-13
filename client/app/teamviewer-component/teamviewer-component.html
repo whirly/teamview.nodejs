@@ -17,17 +17,27 @@
 </div>
 
 <div class="ui column">
-    <table class="ui celled table">
+    <table class="ui celled structured table">
         <thead>
             <tr>
-                <th>Nom</th>
-                <th *ngFor="let i of getRange(38)"><div suiPopup popupText="{{ getColumnHeaderFor( i ) }}">{{ i }}</div></th>
+                <th rowspan="2">Nom</th>
+                <th colspan="3">Résumé</th>
+                <th colspan="38">Matchs</th>
+            </tr>
+            <tr>
+                <th class="center aligned">M</th>
+                <th class="center aligned">BP</th>
+                <th class="center aligned">BC</th>
+                <th  class="center aligned" *ngFor="let i of getRange(38)"><div suiPopup popupText="{{ getColumnHeaderFor( i ) }}">{{ i }}</div></th>
             </tr>
         </thead>
         <tbody>
             <tr *ngFor="let player of activePlayers">
                 <td>{{ player.firstName }} {{ player.lastName }}</td>
-                <td *ngFor="let i of getRange(38)">{{ getPerformanceFor( player, i ) }}</td>
+                <td class="center aligned">{{ getAverageForPlayer( player ) }}</td>
+                <td class="center aligned">{{ getGoalFor( player ) }}</td>
+                <td class="center aligned">{{ getGoalAgainst( player )}}</td>
+                <td class="center aligned" *ngFor="let i of getRange(38)">{{ getPerformanceFor( player, i ) }}</td>
             </tr>
         </tbody>
     </table>
