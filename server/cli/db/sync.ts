@@ -200,7 +200,7 @@ async function processMatches( baseUrl: string )
                 let matchDetailed = JSON.parse(matchInfos);
 
                 // Là sur le coup, je n'ai pas compris pourquoi les ids sont préfixés de "match_" ... bon ben on le vire.
-                matchDetailed.id = matchDetailed.id.slice(5);
+                matchDetailed.id = matchDetailed.id.slice(6);
 
                 // find teams
                 let teamAway = await models.Team.findOne({idMpg: matchDetailed.Away.id}).populate("players fixtures").exec();
@@ -213,7 +213,7 @@ async function processMatches( baseUrl: string )
                 if (!fixture) {
                     fixture = await models.Fixture.create({
                         day: i,
-                        idMpg: match.toString(),
+                        idMpg: matchDetailed.id.toString(),
                         home: {
                             team: teamHome,
                             formation: findTactic(matchDetailed.Home)
@@ -223,25 +223,19 @@ async function processMatches( baseUrl: string )
                             formation: findTactic(matchDetailed.Away)
                         }
                     });
+
+                    // Populate players and their performance
+                    fixture.home.performances = await processPlayers(i, matchDetailed.Home);
+                    fixture.away.performances = await processPlayers(i, matchDetailed.Away);
+
+                    await fixture.save();
+
+                    teamAway.fixtures.push(fixture);
+                    teamHome.fixtures.push(fixture);
+
+                    await teamAway.save();
+                    await teamHome.save();
                 }
-                else {
-                    // This fixture could exists before the match was played
-                    // So in every case we update the tactic and players
-                    fixture.home.formation = findTactic(matchDetailed.Home);
-                    fixture.away.formation = findTactic(matchDetailed.Away);
-                }
-
-                // Populate players and their performance
-                fixture.home.performances = await processPlayers(i, matchDetailed.Home);
-                fixture.away.performances = await processPlayers(i, matchDetailed.Away);
-
-                await fixture.save();
-
-                teamAway.fixtures.push( fixture );
-                teamHome.fixtures.push( fixture );
-
-                await teamAway.save();
-                await teamHome.save();
             }
         }
     }
