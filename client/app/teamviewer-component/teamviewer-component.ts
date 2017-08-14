@@ -82,7 +82,14 @@ export class TeamViewerComponent implements OnInit {
 
             if( performanceThisDay )
             {
-                return performanceThisDay.rate.toString();
+                let label: string = performanceThisDay.rate.toString();
+                label += "*".repeat( performanceThisDay.goalFor );
+
+                if( performanceThisDay.sub ) {
+                    label = ">" + label;
+                }
+
+                return label;
             }
         }
 
@@ -92,7 +99,7 @@ export class TeamViewerComponent implements OnInit {
     public getRange( value: number): number[] {
         let a = [];
 
-        for( let i =0; i < this.currentTeam.fixtures.length; i++ )
+        for( let i = 0; i < this.currentTeam.fixtures.length; i++ )
         {
             a.push(i+1);
         }
