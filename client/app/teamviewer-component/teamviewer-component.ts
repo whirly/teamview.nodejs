@@ -36,7 +36,7 @@ export class TeamViewerComponent implements OnInit {
             this.teamService.getByName( params.get('name')))
             .subscribe( ( team: ITeam ) => {
                 this.currentTeam = team;
-                console.log( team );
+
                 this.activePlayers = _.filter( this.currentTeam.players, player => {
                     return player.performances.length > 0;
                 });
@@ -100,10 +100,13 @@ export class TeamViewerComponent implements OnInit {
         return a;
     }
 
+    // Récupère la note moyenne du joueur, on ne pose la question que pour des joueurs "actifs"
+    // Ils ont donc forcément une note
     public getAverageForPlayer( player: IPlayer ): string {
         return player_helpers.getAveragePerformance( player ).toString();
     }
 
+    // Méthode pour récupérer l'affichage des buts contre
     public getGoalAgainst( player: IPlayer ): string {
         const goal: number = player_helpers.getGoalAgainst( player );
 
@@ -115,7 +118,9 @@ export class TeamViewerComponent implements OnInit {
         }
     }
 
+    // Méthode pour récupérer l'affichage des buts pour
     public getGoalFor( player: IPlayer ): string {
+
         const goal: number = player_helpers.getGoalFor( player );
 
         if( goal > 0 ) {
@@ -124,5 +129,12 @@ export class TeamViewerComponent implements OnInit {
         else {
             return "-";
         }
+    }
+
+    // J'avais le choix entre attendre que Saint Etienne finisse en ligue 2 ou traiter les noms qui contiennent des espaces
+    // J'ai choisi la deuxième solution.
+    public getEmblemClass( team: string )
+    {
+        return team.replace( " ", "" );
     }
 }
