@@ -21,24 +21,19 @@
         <thead>
             <tr>
                 <th rowspan="2">Nom</th>
-                <th colspan="3">Résumé</th>
-                <th colspan="38">Matchs</th>
+                <th rowspan="2" class="center aligned">Résumé</th>
+                <th colspan="38" class="center aligned">Matchs</th>
             </tr>
             <tr>
-                <th class="center aligned">M</th>
-                <th class="center aligned">BP</th>
-                <th class="center aligned">BC</th>
                 <th  class="center aligned" *ngFor="let i of getRange(38)">{{ getColumnHeaderFor( i ) }}</th>
             </tr>
         </thead>
         <tbody>
-            <tr *ngFor="let player of activePlayers">
+            <tr *ngFor="let player of activePlayers" class="{{ getColorForPlayerClass( player ) }}">
                 <td>{{ player.firstName }} {{ player.lastName }}</td>
-                <td class="center aligned"><span class="ui label">{{ getAverageForPlayer( player ) }}</span></td>
                 <td class="center aligned">
+                    <span class="ui label">{{ getAverageForPlayer( player ) }}</span>
                     <span class="ui green label" *ngIf="getGoalFor( player ) > 0">{{ getGoalFor( player ) }}</span>
-                </td>
-                <td class="center aligned">
                     <span class="ui orange label" *ngIf="getGoalAgainst( player ) > 0">{{ getGoalAgainst( player )}}</span>
                 </td>
                 <td class="center aligned" *ngFor="let i of getRange(38)">

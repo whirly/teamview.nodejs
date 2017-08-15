@@ -3,7 +3,7 @@ import {TeamService} from "../services/team.service";
 import {ActivatedRoute, ParamMap} from "@angular/router";
 import _ from "lodash";
 
-import {IPlayer} from "../../../shared/models/player";
+import {IPlayer, PlayerPosition} from "../../../shared/models/player";
 import {IPerformance} from "../../../shared/models/performance";
 import {IFixture} from "../../../shared/models/fixture";
 import {ITeam} from "../../../shared/models/team";
@@ -51,6 +51,26 @@ export class TeamViewerComponent implements OnInit {
 
                 this.inactivePlayers = _.sortBy( this.inactivePlayers, [ 'role', 'lastName' ]);
             });
+    }
+
+    public getColorForPlayerClass( player: IPlayer ): string
+    {
+        switch( player.role )
+        {
+            case PlayerPosition.Goal:
+                return "goalkeeper";
+
+            case PlayerPosition.Defender:
+                return "defender";
+
+            case PlayerPosition.Midfield:
+                return "midfielder";
+
+            case PlayerPosition.Striker:
+                return "striker";
+        }
+
+        return "";
     }
 
     // La méthode pour générer les entêtes de colonnes, on va simplement récupérer l'adversaire du jour
