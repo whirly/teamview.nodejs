@@ -7,7 +7,9 @@ import {IPlayer} from "../../../shared/models/player";
 import {IPerformance} from "../../../shared/models/performance";
 import {IFixture} from "../../../shared/models/fixture";
 import {ITeam} from "../../../shared/models/team";
+
 import * as player_helpers from "../../../shared/models/player_helpers";
+import * as fixture_helpers from "../../../shared/models/fixture_helpers";
 
 @Component({
     selector: 'teamview-teamviewer',
@@ -61,7 +63,15 @@ export class TeamViewerComponent implements OnInit {
 
             // Si on a l'info
             if (fixtureThisDay) {
-                return fixtureThisDay.home.team.name + " - " + fixtureThisDay.away.team.name;
+                if( this.currentTeam.name == fixtureThisDay.home.team.name ) {
+                    return fixture_helpers.getHomeGoal( fixtureThisDay ).toString()
+                        + ":" + fixture_helpers.getAwayGoal( fixtureThisDay ).toString() + " "
+                        + fixtureThisDay.away.team.name;
+                } else {
+                    return fixtureThisDay.away.team.name + " "
+                        + fixture_helpers.getHomeGoal( fixtureThisDay ).toString()
+                        + ":" + fixture_helpers.getAwayGoal( fixtureThisDay ).toString();
+                }
             }
             else {
                 // Nous
@@ -70,6 +80,30 @@ export class TeamViewerComponent implements OnInit {
         }
 
         return day.toString();
+    }
+
+    public hasScored( player: IPlayer , day: number ): boolean {
+        return player_helpers.hasScored( player, day );
+    }
+
+    public doShowYellowCard( player: IPlayer, day: number ): boolean {
+        return player_helpers.hasYellowCard( player, day ) && !player_helpers.hasRedCard( player, day );
+    }
+
+    public doShowRedCard( player: IPlayer, day: number ): boolean {
+        return player_helpers.hasRedCard( player, day );
+    }
+
+    public getGoalForDay( player: IPlayer, day: number ): number {
+        return player_helpers.getGoalForDay(player, day );
+    }
+
+    public hasScoredAgainst( player: IPlayer , day: number ): boolean {
+        return player_helpers.hasScoredAgainst( player, day );
+    }
+
+    public getGoalAgainstForDay( player: IPlayer, day: number ): number {
+        return player_helpers.getGoalAgainstForDay(player, day );
     }
 
     public getPerformanceFor( player: IPlayer, day: number ): string
@@ -83,12 +117,6 @@ export class TeamViewerComponent implements OnInit {
             if( performanceThisDay )
             {
                 let label: string = performanceThisDay.rate.toString();
-                label += "*".repeat( performanceThisDay.goalFor );
-
-                if( performanceThisDay.sub ) {
-                    label = ">" + label;
-                }
-
                 return label;
             }
         }

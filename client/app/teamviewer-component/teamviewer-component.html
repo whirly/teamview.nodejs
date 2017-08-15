@@ -28,16 +28,26 @@
                 <th class="center aligned">M</th>
                 <th class="center aligned">BP</th>
                 <th class="center aligned">BC</th>
-                <th  class="center aligned" *ngFor="let i of getRange(38)"><div suiPopup popupText="{{ getColumnHeaderFor( i ) }}">{{ i }}</div></th>
+                <th  class="center aligned" *ngFor="let i of getRange(38)">{{ getColumnHeaderFor( i ) }}</th>
             </tr>
         </thead>
         <tbody>
             <tr *ngFor="let player of activePlayers">
                 <td>{{ player.firstName }} {{ player.lastName }}</td>
-                <td class="center aligned">{{ getAverageForPlayer( player ) }}</td>
-                <td class="center aligned">{{ getGoalFor( player ) }}</td>
-                <td class="center aligned">{{ getGoalAgainst( player )}}</td>
-                <td class="center aligned" *ngFor="let i of getRange(38)">{{ getPerformanceFor( player, i ) }}</td>
+                <td class="center aligned"><span class="ui label">{{ getAverageForPlayer( player ) }}</span></td>
+                <td class="center aligned">
+                    <span class="ui green label" *ngIf="getGoalFor( player ) > 0">{{ getGoalFor( player ) }}</span>
+                </td>
+                <td class="center aligned">
+                    <span class="ui orange label" *ngIf="getGoalAgainst( player ) > 0">{{ getGoalAgainst( player )}}</span>
+                </td>
+                <td class="center aligned" *ngFor="let i of getRange(38)">
+                    <span class="ui label">{{ getPerformanceFor( player, i ) }}</span>
+                    <span class="ui green label" *ngIf="hasScored( player, i )">{{ getGoalForDay( player, i ) }}</span>
+                    <span class="ui orange label" *ngIf="hasScoredAgainst( player, i )">{{ getGoalAgainstForDay( player, i ) }}</span>
+                    <span class="ui yellow label" *ngIf="doShowYellowCard( player, i )">&nbsp;</span>
+                    <span class="ui red label" *ngIf="doShowRedCard( player, i )">&nbsp;</span>
+                </td>
             </tr>
         </tbody>
     </table>
