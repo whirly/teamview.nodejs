@@ -37,7 +37,7 @@
                     <span class="ui orange label" *ngIf="getGoalAgainst( player ) > 0">{{ getGoalAgainst( player )}}</span>
                 </td>
                 <td class="center aligned" *ngFor="let i of getRange(38)">
-                    <span class="ui label">{{ getPerformanceFor( player, i ) }}</span>
+                    <span class="ui label" *ngIf="getPerformanceFor( player, i ) != '-'">{{ getPerformanceFor( player, i ) }}</span>
                     <span class="ui green label" *ngIf="hasScored( player, i )">{{ getGoalForDay( player, i ) }}</span>
                     <span class="ui orange label" *ngIf="hasScoredAgainst( player, i )">{{ getGoalAgainstForDay( player, i ) }}</span>
                     <span class="ui yellow label" *ngIf="doShowYellowCard( player, i )">&nbsp;</span>
