@@ -9,7 +9,7 @@ export function getAveragePerformance(player: IPlayer  ): number {
         return aggregate + performance.rate;
     }, 0 );
 
-    return sum / player.performances.length;
+    return Math.floor( sum * 100 / player.performances.length  ) / 100;
 }
 
 export function hasScored( player: IPlayer, day: number ): boolean {

@@ -88,7 +88,7 @@ export class TeamViewerComponent implements OnInit {
                         + ":" + fixture_helpers.getAwayGoal( fixtureThisDay ).toString() + " "
                         + fixtureThisDay.away.team.name;
                 } else {
-                    return fixtureThisDay.away.team.name + " "
+                    return fixtureThisDay.home.team.name + " "
                         + fixture_helpers.getHomeGoal( fixtureThisDay ).toString()
                         + ":" + fixture_helpers.getAwayGoal( fixtureThisDay ).toString();
                 }
