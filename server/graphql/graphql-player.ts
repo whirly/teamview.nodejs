@@ -1,6 +1,7 @@
 import { composeWithMongoose } from 'graphql-compose-mongoose';
 import {Player} from "../models";
 import { TYPE_COMPOSER as performanceType } from "./graphql-performance";
+import { TYPE_COMPOSER as teamType } from "./graphql-team";
 import {IMongoosePlayer} from "../models/player";
 
 const type = composeWithMongoose(Player);
@@ -13,6 +14,11 @@ type.addRelation('performances', {
     projection: { performances: 1 }
 });
 
+type.addRelation('team', {
+    resolver: () => teamType.getResolver('findById'),
+    prepareArgs: { _id: (source: IMongoosePlayer ) => source.team },
+    projection: { team: true }
+});
 
 export const QUERIES = {
     playerById: type.get('$findById'),

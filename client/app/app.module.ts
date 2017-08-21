@@ -18,6 +18,8 @@ import apolloClient from './apollo-client';
 import { TeamViewerComponent } from './teamviewer-component/teamviewer-component';
 import { TeamSelectorComponent } from './team-selector-component/team-selector-component';
 import {TeamService} from "./services/team.service";
+import {PlayersViewerComponent} from "./playersviewer-component/playersviewer-component";
+import {PlayerService} from "./services/player.service";
 
 export function provideApolloClient(): ApolloClient {
     return apolloClient;
@@ -27,6 +29,7 @@ export function provideApolloClient(): ApolloClient {
     declarations: [
         AppComponent,
         TeamViewerComponent,
+        PlayersViewerComponent,
         TeamSelectorComponent
     ],
     imports: [
@@ -39,7 +42,7 @@ export function provideApolloClient(): ApolloClient {
         ApolloModule.forRoot(provideApolloClient),
         SuiModule
     ],
-    providers: [TeamService],
+    providers: [TeamService, PlayerService],
     bootstrap: [AppComponent]
 })
 export class AppModule {
