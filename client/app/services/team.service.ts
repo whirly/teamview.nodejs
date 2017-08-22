@@ -14,20 +14,19 @@ export class TeamService {
         return this.apollo.watchQuery<{ teams: ITeam[] }>({
             query: gql`{
                     teams {
-                        idMpg
                         name
-                        players {
-                          idMpg
-                          firstName
-                          lastName
-                          role
-                          value
-                            
-                        }
                         fixtures {
                           day
-                          idMpg
-                          _id
+                          home {
+                              team {
+                                  name
+                              }
+                          }
+                          away {
+                              team {
+                                  name
+                              }
+                          }  
                         } 
                     }	  
                 }`

@@ -4,7 +4,7 @@
             <h1>Buteurs</h1>
             <table class="ui table">
                 <tbody>
-                    <tr *ngFor="let player of playersByGoals">
+                    <tr *ngFor="let player of playersByGoals" class="{{ getParticipationClass( player ) }}">
                         <td class="emblem {{ getEmblemClass( player.team?.name ) }}"></td>
                         <td>{{ player.firstName }} {{ player.lastName }}</td>
                         <td>{{ player.averagePerformance }}</td>
@@ -17,7 +17,7 @@
             <h1 class="ui center">Top Goals</h1>
             <table class="ui table">
                 <tbody>
-                <tr *ngFor="let player of players[ '1' ]">
+                <tr *ngFor="let player of players[ '1' ]" class="{{ getParticipationClass( player ) }}">
                     <td class="emblem {{ getEmblemClass( player.team?.name ) }}"></td>
                     <td>{{ player.firstName }} {{ player.lastName }}</td>
                     <td>{{ player.averagePerformance }}</td>
@@ -30,7 +30,7 @@
             <h1>Top Défenseurs</h1>
             <table class="ui table">
                 <tbody>
-                <tr *ngFor="let player of players[ '2' ]">
+                <tr *ngFor="let player of players[ '2' ]" class="{{ getParticipationClass( player ) }}">
                     <td class="emblem {{ getEmblemClass( player.team?.name ) }}"></td>
                     <td>{{ player.firstName }} {{ player.lastName }}</td>
                     <td>{{ player.averagePerformance }}</td>
@@ -43,7 +43,7 @@
             <h1>Top Milieux</h1>
             <table class="ui table">
                 <tbody>
-                <tr *ngFor="let player of players[ '3' ]">
+                <tr *ngFor="let player of players[ '3' ]" class="{{ getParticipationClass( player ) }}">
                     <td class="emblem {{ getEmblemClass( player.team?.name ) }}"></td>
                     <td>{{ player.firstName }} {{ player.lastName }}</td>
                     <td>{{ player.averagePerformance }}</td>
@@ -56,7 +56,7 @@
             <h1>Top Attaquant</h1>
             <table class="ui table">
                 <tbody>
-                <tr *ngFor="let player of players[ '4' ]">
+                <tr *ngFor="let player of players[ '4' ]" class="{{ getParticipationClass( player ) }}">
                     <td class="emblem {{ getEmblemClass( player.team?.name )}}"></td>
                     <td>{{ player.firstName }} {{ player.lastName }}</td>
                     <td>{{ player.averagePerformance }}</td>
