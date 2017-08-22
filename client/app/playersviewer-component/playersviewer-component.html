@@ -1,3 +1,69 @@
 <div class="ui grid">
-    <div *ngFor="let player of playersActive">{{ player.firstName }} {{ player.lastName }}</div>
+    <div class="ui five column grid">
+        <div class="three wide column">
+            <h1>Buteurs</h1>
+            <table class="ui table">
+                <tbody>
+                    <tr *ngFor="let player of playersByGoals">
+                        <td class="emblem {{ getEmblemClass( player.team?.name )}}"></td>
+                        <td>{{ player.firstName}} {{ player.lastName }}</td>
+                        <td>{{ player.averagePerformance }}</td>
+                        <td>{{ player.totalGoalFor }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="three wide column">
+            <h1 class="ui center">Top Goals</h1>
+            <table class="ui table">
+                <tbody>
+                <tr *ngFor="let player of players[ '1' ]">
+                    <td class="emblem {{ getEmblemClass( player.team?.name )}}"></td>
+                    <td>{{ player.firstName}} {{ player.lastName }}</td>
+                    <td>{{ player.averagePerformance }}</td>
+                    <td>{{ player.totalGoalFor }}</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="three wide column">
+            <h1>Top Défenseurs</h1>
+            <table class="ui table">
+                <tbody>
+                <tr *ngFor="let player of players[ '2' ]">
+                    <td class="emblem {{ getEmblemClass( player.team?.name )}}"></td>
+                    <td>{{ player.firstName}} {{ player.lastName }}</td>
+                    <td>{{ player.averagePerformance }}</td>
+                    <td>{{ player.totalGoalFor }}</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="three wide column">
+            <h1>Top Milieux</h1>
+            <table class="ui table">
+                <tbody>
+                <tr *ngFor="let player of players[ '3' ]">
+                    <td class="emblem {{ getEmblemClass( player.team?.name )}}"></td>
+                    <td>{{ player.firstName}} {{ player.lastName }}</td>
+                    <td>{{ player.averagePerformance }}</td>
+                    <td>{{ player.totalGoalFor }}</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="three wide column">
+            <h1>Top Attaquant</h1>
+            <table class="ui table">
+                <tbody>
+                <tr *ngFor="let player of players[ '4' ]">
+                    <td class="emblem {{ getEmblemClass( player.team?.name )}}"></td>
+                    <td>{{ player.firstName}} {{ player.lastName }}</td>
+                    <td>{{ player.averagePerformance }}</td>
+                    <td>{{ player.totalGoalFor }}</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
 </div>

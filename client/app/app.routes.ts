@@ -13,5 +13,10 @@ export const APP_ROUTES: Routes = [
         path: '',
         redirectTo: 'team/Strasbourg',
         pathMatch: 'full'
+    },
+    {
+        path: 'team',
+        redirectTo: 'team/Strasbourg',
+        pathMatch: 'full'
     }
 ];
