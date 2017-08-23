@@ -59,6 +59,8 @@ export class TeamService {
                             cardYellow
                             cardRed
                             sub
+                            penaltyFor
+                            minutes
                           }
                         }
                         fixtures {

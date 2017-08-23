@@ -42,6 +42,8 @@
                     <span class="ui orange label" *ngIf="hasScoredAgainst( player, i )">{{ getGoalAgainstForDay( player, i ) }}</span>
                     <span class="ui yellow label" *ngIf="doShowYellowCard( player, i )">&nbsp;</span>
                     <span class="ui red label" *ngIf="doShowRedCard( player, i )">&nbsp;</span>
+                    <i class="level up icon" *ngIf="isSub( player, i )"></i>
+                    <i class="level down icon" *ngIf="wasReplaced( player, i )"></i>
                 </td>
             </tr>
         </tbody>

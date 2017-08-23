@@ -11,6 +11,13 @@ interface IArgs {
     force?: boolean;
 }
 
+export default {
+    command: 'db:sync',
+    describe: 'Sync team/player with master database',
+    builder: {},
+    handler
+} as CommandModule;
+
 async function processPlayer(baseUrl: string) {
     const response = await request(baseUrl + "quotation/1");
     let players = JSON.parse(response);
@@ -115,6 +122,40 @@ function getRoleForPosition(position: string): PlayerPosition {
     return PlayerPosition.Goal;
 }
 
+
+// Dans le cas où la perf existe déjà on s'arrange quand même pour la mettre à jour
+async function updatePerformances( day: number, data: any ) {
+
+    for (let playerID in data.players) {
+
+        let playerInfos = data.players[playerID];
+        let player = await models.Player.findOne({idMpg: playerID});
+
+        let performancePrevious = await models.Performance.findOne({player: player, day: day});
+
+        // On va la mettre à jour, parce que bon il y aura toujours ces histoires de mecs
+        // qui ont finalement hérité d'un but quelques jours plus tard
+        performancePrevious.position = playerInfos.info.position;
+        performancePrevious.place = playerInfos.info.formation_place;
+        performancePrevious.rate = playerInfos.info.note_final_2015;
+        performancePrevious.goalFor = playerInfos.info.goals;
+        performancePrevious.goalAgainst = playerInfos.info.own_goals;
+        performancePrevious.cardRed = playerInfos.info.red_card > 0;
+        performancePrevious.cardYellow = playerInfos.info.yellow_card > 0;
+        performancePrevious.sub = playerInfos.info.sub == 1;
+        performancePrevious.minutes = playerInfos.info.mins_played;
+
+        if( playerInfos.stat.att_pen_goal ) {
+            performancePrevious.penaltyFor = playerInfos.stat.att_pen_goal;
+        } else {
+            performancePrevious.penaltyFor = 0;
+        }
+
+        // On sauvegarde le bordel.
+        await models.Performance.findOneAndUpdate( {player: player, day: day}, performancePrevious );
+    }
+}
+
 async function processPlayers(day: number, data: any): Promise<IPerformance[]> {
     let performances = [];
 
@@ -136,10 +177,10 @@ async function processPlayers(day: number, data: any): Promise<IPerformance[]> {
                 team: null
             });
         }
-        // Check if we already got this performance
+        // Est ce qu'on a déjà cette perf ?
         let performancePrevious = await models.Performance.findOne({player: player, day: day});
 
-        // we did not have this one, we create it
+        // Non on va la créer
         if (!performancePrevious) {
             let team = await models.Team.findOne({idMpg: data.id});
 
@@ -156,7 +197,9 @@ async function processPlayers(day: number, data: any): Promise<IPerformance[]> {
                 goalAgainst: playerInfos.info.own_goals,
                 cardYellow: playerInfos.info.yellow_card > 0,
                 cardRed: playerInfos.info.red_card > 0,
-                sub: playerInfos.info.sub == 1
+                sub: playerInfos.info.sub == 1,
+                minutes: playerInfos.info.mins_played,
+                penaltyFor: playerInfos.stat.att_pen_goal
             });
 
             performances.push(playerPerformance);
@@ -225,6 +268,10 @@ async function processMatches(baseUrl: string) {
 
                     await teamAway.save();
                     await teamHome.save();
+                } else {
+
+                    await updatePerformances( i, matchDetailed.Home );
+                    await updatePerformances( i, matchDetailed.Away );
                 }
             }
         }
@@ -252,9 +299,3 @@ async function handler(args: IArgs): Promise<void> {
     await disconnectFromDatabase();
 }
 
-export default {
-    command: 'db:sync',
-    describe: 'Sync team/player with master database',
-    builder: {},
-    handler
-} as CommandModule;

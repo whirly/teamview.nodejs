@@ -13,7 +13,9 @@ const PerformanceSchema = new Schema({
     goalAgainst: { type: Number },
     cardYellow: { type: Boolean },
     cardRed: { type: Boolean },
-    sub: { type: Boolean }
+    sub: { type: Boolean },
+    minutes: { type: Number },
+    penaltyFor: { type: Number }
 });
 
 export const Performance = mongoose.model<IMongoosePerformance>( 'Performance', PerformanceSchema );

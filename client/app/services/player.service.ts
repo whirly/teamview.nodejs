@@ -27,6 +27,8 @@ export class PlayerService {
                         sub
                         rate
                         position
+                        minutes
+                        penaltyFor
                     }
                 }
             }`

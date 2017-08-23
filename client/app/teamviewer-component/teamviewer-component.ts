@@ -97,6 +97,14 @@ export class TeamViewerComponent implements OnInit {
         return day.toString();
     }
 
+    public isSub(player: IPlayer, day: number): boolean {
+        return player_helpers.isSub( player, day );
+    }
+
+    public wasReplaced( player: IPlayer, day: number ): boolean {
+        return player_helpers.wasReplaced( player, day );
+    }
+
     public hasScored(player: IPlayer, day: number): boolean {
         return player_helpers.hasScored(player, day);
     }

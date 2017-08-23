@@ -9,5 +9,7 @@ export interface IPerformance {
     goalAgainst?: number,
     cardYellow: boolean,
     cardRed: boolean,
-    sub: boolean
+    sub: boolean,
+    minutes: number,
+    penaltyFor: number
 }

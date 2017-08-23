@@ -36,6 +36,22 @@ export function hasRedCard(player: IPlayer, day: number): boolean {
     return performance && performance.cardRed;
 }
 
+export function isSub( player: IPlayer, day: number ): boolean {
+    const performance: IPerformance = player.performances.find((performanceThis: IPerformance) => {
+        return performanceThis.day == day;
+    });
+
+    return performance && performance.sub;
+}
+
+export function wasReplaced( player: IPlayer, day: number ): boolean {
+    const performance: IPerformance = player.performances.find((performanceThis: IPerformance) => {
+        return performanceThis.day == day;
+    });
+
+    return performance && performance.minutes < 90 && !performance.sub;
+}
+
 export function getGoalForDay(player: IPlayer, day: number): number {
     const performance: IPerformance = player.performances.find((performanceThis: IPerformance) => {
         return performanceThis.day == day;
