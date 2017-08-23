@@ -1,6 +1,6 @@
-﻿import { CommandModule } from 'yargs';
+﻿import {CommandModule} from 'yargs';
 import logger from '../../logger';
-import { connectDatabase, disconnectFromDatabase } from '../../mongoose';
+import {connectDatabase, disconnectFromDatabase} from '../../mongoose';
 import * as models from '../../models';
 import {IPerformance} from "../../../shared/models/performance";
 import {PlayerPosition} from "../../../shared/models/player";
@@ -11,34 +11,30 @@ interface IArgs {
     force?: boolean;
 }
 
-async function processPlayer( baseUrl: string )
-{
-    const response = await request( baseUrl + "quotation/1");
-    let players = JSON.parse( response );
-    let numberOfPlayers:number = 0;
+async function processPlayer(baseUrl: string) {
+    const response = await request(baseUrl + "quotation/1");
+    let players = JSON.parse(response);
+    let numberOfPlayers: number = 0;
 
     // On commence par s'occuper des joueurs
-    for ( let player of players ) {
+    for (let player of players) {
 
         // On retire le player_ devant l'id. On se demande pourquoi il est là.
         player.id = player.id.slice(7);
 
-        let existingPlayer = await models.Player.findOne( { idMpg: player.id } );
+        let existingPlayer = await models.Player.findOne({idMpg: player.id});
 
-        if( existingPlayer ) {
+        if (existingPlayer) {
             let team = await models.Team.findOne({idMpg: player.teamid});
 
             // On a trouvé la team en question, on va donc rajouter notre joueur
-            if( team ) {
+            if (team) {
                 // Est ce que notre joueur n'est pas déjà dans cette équipe ?
-                if( team.players.findIndex( item => item.equals( player.teamid )) == -1 )
-                {
+                if (team.players.findIndex(item => item.equals(player.teamid)) == -1) {
                     // On l'ajoute
-                    team.players.push( existingPlayer );
+                    team.players.push(existingPlayer);
                     await team.save();
                 }
-
-
             } else {
                 // La team n'existe pas encore, on la créé
                 team = await models.Team.create({
@@ -47,20 +43,18 @@ async function processPlayer( baseUrl: string )
                 });
 
                 // On ajoute notre joueur
-                team.players.push( existingPlayer );
+                team.players.push(existingPlayer);
                 await team.save();
             }
 
             // On vérifie si le gus a pas changé d'équipe en fait.
-            if( team._id != existingPlayer.team )
-            {
+            if (team._id != existingPlayer.team) {
                 // Il a changé d'équipe, on va le virer de son ancienne équipe
-                let teamPrevious = await models.Team.findById( existingPlayer.team );
+                let teamPrevious = await models.Team.findById(existingPlayer.team);
 
                 // Si cette équipe existe encore.
-                if( teamPrevious )
-                {
-                    teamPrevious.players.splice( teamPrevious.players.findIndex( item => item.equals( existingPlayer._id )), 1 );
+                if (teamPrevious) {
+                    teamPrevious.players.splice(teamPrevious.players.findIndex(item => item.equals(existingPlayer._id)), 1);
 
                     // On sauvegarde l'équipe modifié
                     await teamPrevious.save();
@@ -104,42 +98,40 @@ async function processPlayer( baseUrl: string )
         }
     }
 
-    logger.info( numberOfPlayers + " joueurs traités.");
+    logger.info(numberOfPlayers + " joueurs traités.");
 }
 
-function findTactic( matchSide: any ): string
-{
-    return matchSide.players[ Object.keys( matchSide.players )[ 0 ]].info.formation_used;
+function findTactic(matchSide: any): string {
+    return matchSide.players[Object.keys(matchSide.players)[0]].info.formation_used;
 }
 
-function getRoleForPosition( position: string ): PlayerPosition {
-    if( position == "Goalkeeper" ) return PlayerPosition.Goal;
-    if( position == "Defender" ) return PlayerPosition.Defender;
-    if( position == "Midfielder" ) return PlayerPosition.Midfield;
-    if( position == "Striker" ) return PlayerPosition.Striker;
+function getRoleForPosition(position: string): PlayerPosition {
+    if (position == "Goalkeeper") return PlayerPosition.Goal;
+    if (position == "Defender") return PlayerPosition.Defender;
+    if (position == "Midfielder") return PlayerPosition.Midfield;
+    if (position == "Striker") return PlayerPosition.Striker;
 
     // Si je n'ai pas réussi à lire la position du mec, on va dire qu'il est goal.
     return PlayerPosition.Goal;
 }
 
-async function processPlayers( day: number, data: any ): Promise<IPerformance[]>
-{
+async function processPlayers(day: number, data: any): Promise<IPerformance[]> {
     let performances = [];
 
-    for( let playerID in data.players ) {
+    for (let playerID in data.players) {
 
-        let playerInfos = data.players[ playerID ];
+        let playerInfos = data.players[playerID];
         let player = await models.Player.findOne({idMpg: playerID});
 
         // Le joueur peut ne pas exister, parce que ce monsieur a quitté le championnat.
         // Merci à Valentin Eysseric d'avoir été le premier :)
-        if( !player ) {
+        if (!player) {
             // On créer une enveloppe player
             player = await models.Player.create({
                 idMpg: playerID,
                 firstName: "", // le paquet d'infos ne comporte que le nom de famille pour l'affichage tactique
                 lastName: playerInfos.info.lastname,
-                role: getRoleForPosition( playerInfos.info.position ),
+                role: getRoleForPosition(playerInfos.info.position),
                 value: 0,
                 team: null
             });
@@ -167,7 +159,7 @@ async function processPlayers( day: number, data: any ): Promise<IPerformance[]>
                 sub: playerInfos.info.sub == 1
             });
 
-            performances.push( playerPerformance );
+            performances.push(playerPerformance);
 
             // On stocke aussi la performance dans les infos du joueurs.
             player.performances.push(playerPerformance);
@@ -178,22 +170,20 @@ async function processPlayers( day: number, data: any ): Promise<IPerformance[]>
     return performances;
 }
 
-async function processMatches( baseUrl: string )
-{
-    for( let i = 1; i < 39; i++ )
-    {
-        const queryDay = await request( baseUrl + "championship/1/calendar/" + i.toString());
-        let day = JSON.parse( queryDay );
+async function processMatches(baseUrl: string) {
+    for (let i = 1; i < 39; i++) {
+        const queryDay = await request(baseUrl + "championship/1/calendar/" + i.toString());
+        let day = JSON.parse(queryDay);
 
-        logger.info("Traitement jour " + i );
+        logger.info("Traitement jour " + i);
 
-        for( let match of day.matches ) {
+        for (let match of day.matches) {
 
             // Si le champ score est vide, c'est que le match n'a pas encore été joué, on ne le traite donc pas
             // ... pour l'instant du moins, ça serait intéressant de voir ce qu'on pourrait faire avec les cotes
-            if ( match.home.score != "" && match.home.scoretmp == undefined ) {
+            if (match.home.score != "" && match.home.scoretmp == undefined) {
 
-                logger.info( match.home.club + " - " + match.away.club + " " + match.home.score.toString() + ":" + match.away.score.toString()  );
+                logger.info(match.home.club + " - " + match.away.club + " " + match.home.score.toString() + ":" + match.away.score.toString());
 
                 // Process each match
                 const matchInfos = await request(baseUrl + "championship/match/" + match.id);
@@ -251,13 +241,13 @@ async function handler(args: IArgs): Promise<void> {
     // On s'occupe d'abord des joueurs
 
     logger.info('Traitement des joueurs...');
-    await processPlayer( baseUrl );
+    await processPlayer(baseUrl);
 
     // On s'attaque après aux performances
     // 38 journées, on s'en occupe.
 
     logger.info('Traitement des matchs...');
-    await processMatches( baseUrl );
+    await processMatches(baseUrl);
 
     await disconnectFromDatabase();
 }
@@ -265,7 +255,6 @@ async function handler(args: IArgs): Promise<void> {
 export default {
     command: 'db:sync',
     describe: 'Sync team/player with master database',
-    builder: {
-    },
+    builder: {},
     handler
 } as CommandModule;
