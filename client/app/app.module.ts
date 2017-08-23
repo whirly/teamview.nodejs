@@ -20,6 +20,7 @@ import { TeamSelectorComponent } from './team-selector-component/team-selector-c
 import {TeamService} from "./services/team.service";
 import {PlayersViewerComponent} from "./playersviewer-component/playersviewer-component";
 import {PlayerService} from "./services/player.service";
+import {PlayerViewerComponent} from "./playerviewer-component/playerviewer-component";
 
 export function provideApolloClient(): ApolloClient {
     return apolloClient;
@@ -29,6 +30,7 @@ export function provideApolloClient(): ApolloClient {
     declarations: [
         AppComponent,
         TeamViewerComponent,
+        PlayerViewerComponent,
         PlayersViewerComponent,
         TeamSelectorComponent
     ],

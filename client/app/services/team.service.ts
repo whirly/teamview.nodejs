@@ -39,9 +39,9 @@ export class TeamService {
         const teamByName = gql`
             query ($name: String!) {
                 	team( filter: { name: $name }) {
-                        _id
                         name
                         players( sort: _ID_ASC ) {
+                            idMpg
                           firstName
                           lastName
                           role

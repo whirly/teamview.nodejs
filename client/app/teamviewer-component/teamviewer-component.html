@@ -30,7 +30,7 @@
         </thead>
         <tbody>
             <tr *ngFor="let player of activePlayers" class="{{ getColorForPlayerClass( player ) }}">
-                <td>{{ player.firstName }} {{ player.lastName }}</td>
+                <td><a href="/player/{{ player.idMpg }}">{{ player.firstName }} {{ player.lastName }}</a></td>
                 <td class="center aligned">
                     <span class="ui label">{{ getAverageForPlayer( player ) }}</span>
                     <span class="ui green label" *ngIf="getGoalFor( player ) > 0">{{ getGoalFor( player ) }}</span>

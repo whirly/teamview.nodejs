@@ -34,4 +34,36 @@ export class PlayerService {
             }`
         }).map(res => res.data.players);
     }
+
+    public get(idMpg: string): Observable<IPlayer> {
+        const playerById = gql`
+            query ($idMpg: String!) {
+                player( filter: { idMpg: $idMpg }) {
+                    firstName
+                    lastName
+                    team {
+                        name
+                    }
+                    role
+                    performances {
+                        day
+                        goalAgainst
+                        goalFor
+                        sub
+                        rate
+                        position
+                        minutes
+                        penaltyFor
+                    }
+                }
+            }`;
+
+        return this.apollo.watchQuery<{ player: IPlayer }>( {
+            query: playerById,
+            variables: {
+                idMpg: idMpg
+            }
+        }).map( res => res.data.player );
+
+    }
 }
