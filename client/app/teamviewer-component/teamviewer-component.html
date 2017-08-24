@@ -1,17 +1,9 @@
 <team-selector></team-selector>
 <div class="ui grid">
-    <div class="ui three column grid">
-        <div class="one wide column">
-            <div class="emblem {{ getEmblemClass( currentTeam.name )}}"></div>
-        </div>
-
-        <div class="eight wide column">
-            <h1 class="team-title">
-                {{ currentTeam.name }}
-            </h1>
-        </div>
-
-        <div class="four wide column">
+    <div class="ui one column grid">
+        <div class="ten wide column">
+            <div [ngClass]="['emblem', getEmblemClass( currentTeam.name ) ]"></div>
+            <h1 class="team-title">{{ currentTeam.name }}</h1>
         </div>
     </div>
 </div>

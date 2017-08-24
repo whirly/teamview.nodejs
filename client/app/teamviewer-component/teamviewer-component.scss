@@ -1,11 +1,14 @@
 .emblem {
     width: 82px;
     height: 82px;
-    background-size: 100% 100%;
+    display: inline-block;
 }
 
 .team-title {
     font-size: 48px;
+    display: inline-block;
+    vertical-align: top;
+    margin-top: 0.2em;
 }
 
 .goalkeeper {
