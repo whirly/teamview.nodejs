@@ -1,1 +1,33 @@
-<H1>{{ player?.firstName }} {{ player?.lastName }}</H1>
+<div class="ui grid">
+    <div class="ui three column grid">
+        <div class="two wide column">
+            <img src="../teams/unknown.jpg" class="logo">
+        </div>
+        <div class="ten wide column">
+            <div class="row">
+                <div class="column">
+                    <h1>{{ player?.firstName }} {{ player?.lastName }}</h1>
+                </div>
+            </div>
+            <div class="row">
+                <div class="ui statistics">
+                    <div class="ui statistic">
+                        <div class="value">8</div>
+                        <div class="label">buts marqués</div>
+                    </div>
+                    <div class="ui statistic">
+                        <div class="value">7.33</div>
+                        <div class="label">performance moyenne</div>
+                    </div>
+                    <div class="ui statistic">
+                        <div class="value">82 %</div>
+                        <div class="label">de présence</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="two wide column">
+            <img src="../teams/strasbourg.png" class="logo">
+        </div>
+    </div>
+</div>
