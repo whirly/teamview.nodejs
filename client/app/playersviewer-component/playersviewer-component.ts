@@ -1,18 +1,10 @@
 import {Component, OnInit} from "@angular/core";
 import {PlayerService} from "../services/player.service";
-import {IPlayer, PlayerPosition} from "../../../shared/models/player";
+import {IPlayer, IPlayerExtended, PlayerPosition} from "../../../shared/models/player";
 import _ from "lodash";
 import * as player_helpers from "../../../shared/models/player_helpers";
 import {TeamService} from "../services/team.service";
 import {ITeam} from "../../../shared/models/team";
-import {IPerformance} from "../../../shared/models/performance";
-
-interface IPlayerExtended extends IPlayer {
-    averagePerformance?: number;
-    totalGoalFor?: number;
-    totalGoalAgainst?: number;
-    participation?: number;
-}
 
 @Component({
     selector: 'teamview-playersviewer',
@@ -81,27 +73,20 @@ export class PlayersViewerComponent implements OnInit {
     private async buildData() {
         // On calcule quelques valeurs intéressante. Pour l'instant on se tape tous le set de données
         // A terme on verra pour pouvoir customiser la profondeur de données (genre les 5 dernières journées).
-        _.forEach(this.playersActive, (player: IPlayerExtended) => {
-            player.averagePerformance = player_helpers.getAveragePerformance(player);
-            player.totalGoalFor = player_helpers.getGoalFor(player);
-            player.totalGoalAgainst = player_helpers.getGoalAgainst(player);
+        _.forEach(this.playersActive,
+            (player: IPlayerExtended) => {
+                let numberOfFixtures: number = 0;
 
-            if( player.team ) {
-                const myteam = this.teams.find( ( team: ITeam ) => {
-                    return team.name == player.team.name;
-                });
+                if ( player.team ) {
+                    const myteam = this.teams.find((team: ITeam) => {
+                        return team.name == player.team.name;
+                    });
 
-                let played: number = 0;
+                    numberOfFixtures = myteam.fixtures.length;
+                }
 
-                _.each( player.performances, ( performance: IPerformance ) => {
-                    if ( !performance.sub ) played += 1;
-                });
-
-                player.participation = 100 * ( played / myteam.fixtures.length );
-            } else {
-                player.participation = 0;
-            }
-        });
+                player_helpers.initializeExtendedData( player, numberOfFixtures );
+            });
 
         // De base on tri par performance
         this.playersActive = _.orderBy(this.playersActive, ["averagePerformance", "totalGoalFor"], ["desc", "desc"]);

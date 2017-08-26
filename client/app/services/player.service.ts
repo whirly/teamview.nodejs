@@ -43,6 +43,18 @@ export class PlayerService {
                     lastName
                     team {
                         name
+                        fixtures {
+                            away {
+                                team {
+                                    name
+                                }
+                            }
+                            home {
+                                team {
+                                    name
+                                }
+                            }
+                        }
                     }
                     role
                     performances {

@@ -19,3 +19,10 @@ export interface IPlayer extends mongoose.Document {
 
     performances?: IPerformance[];
 }
+
+export interface IPlayerExtended extends IPlayer {
+    averagePerformance?: number;
+    totalGoalFor?: number;
+    totalGoalAgainst?: number;
+    participation?: number;
+}

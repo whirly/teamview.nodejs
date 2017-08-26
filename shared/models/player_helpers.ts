@@ -1,4 +1,4 @@
-import {IPlayer} from "./player";
+import {IPlayer, IPlayerExtended} from "./player";
 import {IPerformance} from "./performance";
 
 import * as _ from "lodash";
@@ -100,4 +100,24 @@ export function getGoalAgainst(player: IPlayer): number {
     }, 0);
 
     return sum;
+}
+
+export function initializeExtendedData(player: IPlayerExtended, numberOfFixtures: number ) {
+
+    player.averagePerformance = getAveragePerformance(player);
+    player.totalGoalFor = getGoalFor(player);
+    player.totalGoalAgainst = getGoalAgainst(player);
+
+    if (player.team) {
+
+        let played: number = 0;
+
+        _.each(player.performances, (performance: IPerformance) => {
+            if (!performance.sub) played += 1;
+        });
+
+        player.participation = 100 * ( played / numberOfFixtures );
+    } else {
+        player.participation = 0;
+    }
 }
