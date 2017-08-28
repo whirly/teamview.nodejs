@@ -5,7 +5,7 @@ import bodyParser from 'body-parser';
 import morgan from 'morgan';
 import logger, { morganStreamWriter } from './logger';
 import { connectDatabase } from './mongoose';
-import { forwardToGzippedScripts, serveStaticAssets } from './static-assets';
+import { forwardToGzippedScripts, serveStaticAssets, routeEverythingToIndex } from './static-assets';
 import authRouter from './auth';
 import { attachJwtToken } from './auth/express-middlewares';
 import graphqlRouter from './graphql';
@@ -34,18 +34,19 @@ app.use(morgan(morganFormat, { stream: morganStreamWriter }));
 //=> Decode JSON request bodies
 app.use(bodyParser.json());
 
+//=> Serve authentication endpoints
+app.use('/auth', authRouter);
+
+//=> Serve the GraphQL API & GraphiQL
+app.use(attachJwtToken(), graphqlRouter);
+
 //=> Serve static assets
 if (process.env.NODE_ENV == 'production') {
     app.use(forwardToGzippedScripts);
 }
 
 app.use(serveStaticAssets);
-
-//=> Serve authentication endpoints
-app.use('/auth', authRouter);
-
-//=> Serve the GraphQL API & GraphiQL
-app.use(attachJwtToken(), graphqlRouter);
+app.use(routeEverythingToIndex);
 
 //=> Start the HTTP server
 app.listen(port, () => {
