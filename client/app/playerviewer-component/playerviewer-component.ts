@@ -16,6 +16,8 @@ export class PlayerViewerComponent implements OnInit {
 
     public player: IPlayer;
 
+    public teamLogo: string = "https://mespetitesstats.blob.core.windows.net/teams/metz.png";
+
     constructor( private playerService: PlayerService, private route: ActivatedRoute  ) {
 
     }
