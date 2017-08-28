@@ -186,6 +186,10 @@
   dependencies:
     "@types/node" "*"
 
+"@types/chartist@^0.9.35":
+  version "0.9.35"
+  resolved "https://registry.yarnpkg.com/@types/chartist/-/chartist-0.9.35.tgz#a2f93d73dd47b52929b37b35e6a288095fdb54a7"
+
 "@types/core-js@^0.9.35":
   version "0.9.42"
   resolved "https://registry.yarnpkg.com/@types/core-js/-/core-js-0.9.42.tgz#dd6da92cd7d5ab5ca0b4477524537c3e633b6bce"
@@ -1502,6 +1506,10 @@ chalk@^2.0.1:
     ansi-styles "^3.1.0"
     escape-string-regexp "^1.0.5"
     supports-color "^4.0.0"
+
+chartist@^0.11.0:
+  version "0.11.0"
+  resolved "https://registry.yarnpkg.com/chartist/-/chartist-0.11.0.tgz#84ba5e05490d096d93dcfa9343ebc31ef6a3bd28"
 
 chokidar@^1.4.3, chokidar@^1.6.0:
   version "1.7.0"
@@ -5002,6 +5010,10 @@ nested-error-stacks@^1.0.0:
   resolved "https://registry.yarnpkg.com/nested-error-stacks/-/nested-error-stacks-1.0.2.tgz#19f619591519f096769a5ba9a86e6eeec823c3cf"
   dependencies:
     inherits "~2.0.1"
+
+ng-chartist@^1.1.1:
+  version "1.1.1"
+  resolved "https://registry.yarnpkg.com/ng-chartist/-/ng-chartist-1.1.1.tgz#79329a9a4a3ee8818d03a013df1fbe07ad407884"
 
 ng2-semantic-ui@^0.9.4:
   version "0.9.4"

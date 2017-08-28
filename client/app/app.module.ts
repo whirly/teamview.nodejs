@@ -21,6 +21,7 @@ import {TeamService} from "./services/team.service";
 import {PlayersViewerComponent} from "./playersviewer-component/playersviewer-component";
 import {PlayerService} from "./services/player.service";
 import {PlayerViewerComponent} from "./playerviewer-component/playerviewer-component";
+import {ChartistModule} from "ng-chartist";
 
 export function provideApolloClient(): ApolloClient {
     return apolloClient;
@@ -42,7 +43,8 @@ export function provideApolloClient(): ApolloClient {
         //=> Third-party modules
         NgReduxModule, NgReduxRouterModule,
         ApolloModule.forRoot(provideApolloClient),
-        SuiModule
+        SuiModule,
+        ChartistModule
     ],
     providers: [TeamService, PlayerService],
     bootstrap: [AppComponent]
