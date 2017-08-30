@@ -25,10 +25,17 @@ export class PlayerViewerComponent implements OnInit {
     public teamLogo: string = "";
 
     public performancesData: ChartData;
+    public performancesType: string = "";
     public performancesOptions:any = {
-        low: 0,
-        high: 10,
-        lineSmooth: Chartist.Interpolation.step()
+        fullWidth: true,
+        showArea: true,
+        height: 300,
+        axisY: {
+            type: Chartist.FixedScaleAxis,
+            low: 0,
+            high: 10,
+            divisor: 20
+        }
     };
 
     constructor( private playerService: PlayerService, private route: ActivatedRoute  ) {
@@ -64,13 +71,38 @@ export class PlayerViewerComponent implements OnInit {
     // Génération des données pour les différents graphs.
     public generateDataForGraph() {
 
+        let daily: number[] = [];
         let average: number[] = [];
 
-        _.each( this.player.performances, ( performance: IPerformance ) => {
-            average[ performance.day - 1 ] = performance.rate;
-        });
+        let numberOfPerformances: number = 0;
+        let totalRateValue: number = 0;
+        let lastDay: number = 0;
 
-        this.performancesData.series = [ average ];
+        let performance: IPerformance;
+
+        for( performance of this.player.performances ) {
+
+            numberOfPerformances++;
+            totalRateValue += performance.rate;
+
+            daily[ performance.day - 1 ] = performance.rate;
+            average[ performance.day - 1 ] = totalRateValue / numberOfPerformances;
+
+            if( performance.day > lastDay ) lastDay = performance.day;
+        }
+
+        // On fait une deuxième passe pour les jours qui manquent, histoire d'être sur
+        // d'avoir des trous dans le graphe
+        for( let i: number = 0; i < lastDay; i++ )
+        {
+            if( !daily[ i ] ) {
+                daily[ i ] = null;
+                average[ i ] = null;
+            }
+        }
+
+        console.log( this.performancesData );
+        this.performancesData.series = [ daily, average ];
 
         // on remplit le tableau de jours
         for( let i = 0; i < this.player.team.fixtures.length; i++ )
@@ -78,6 +110,6 @@ export class PlayerViewerComponent implements OnInit {
             this.performancesData.labels.push( (i+1).toString() );
         }
 
-        console.log( this.performancesData );
+        this.performancesType = "Line";
     }
 }

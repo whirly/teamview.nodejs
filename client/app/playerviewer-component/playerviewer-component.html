@@ -1,12 +1,12 @@
 <div class="ui grid">
-    <div class="ui three column grid">
+    <div class="ui four column grid">
         <div class="two wide column">
             <img src="https://mespetitesstats.blob.core.windows.net/people/unknown.jpg" class="logo">
         </div>
-        <div class="ten wide column">
+        <div class="seven wide column">
             <div class="row">
                 <div class="column">
-                    <h1>{{ player?.firstName }} {{ player?.lastName }}</h1>
+                    <h1 class="name">{{ player?.firstName }} {{ player?.lastName }}</h1>
                 </div>
             </div>
             <div class="row">
@@ -26,6 +26,9 @@
                 </div>
             </div>
         </div>
+        <div class="three wide column">
+
+        </div>
         <div class="two wide column">
             <img src="{{ teamLogo }}" class="logo">
         </div>
@@ -33,8 +36,9 @@
 </div>
 
 <div class="ui one column grid">
-    <div class="row">
-        <x-chartist class="column" [data]="performancesData" [options]="performancesOptions" type="Line"></x-chartist>
+    <h1>Performance </h1>
+    <div class="row" *ngIf="player">
+        <x-chartist class="column" [data]="performancesData" [options]="performancesOptions" [type]="performancesType"></x-chartist>
     </div>
 </div>
 
