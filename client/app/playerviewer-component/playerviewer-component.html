@@ -26,8 +26,8 @@
                 </div>
             </div>
         </div>
-        <div class="three wide column">
-
+        <div class="three wide column" *ngIf="player">
+            <x-chartist [data]="presenceData" [options]="presenceOptions" [type]="presenceType"></x-chartist>
         </div>
         <div class="two wide column">
             <img src="{{ teamLogo }}" class="logo">

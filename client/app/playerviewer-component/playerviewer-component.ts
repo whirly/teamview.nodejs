@@ -13,6 +13,11 @@ class ChartData {
     series: number[][];
 }
 
+class SimpleChartData {
+    labels: string[];
+    series: number[];
+}
+
 @Component({
     selector: 'teamview-playerviewer',
     templateUrl: './playerviewer-component.html',
@@ -38,6 +43,16 @@ export class PlayerViewerComponent implements OnInit {
         }
     };
 
+    public presenceData: SimpleChartData;
+    public presenceType: string = "";
+    public presenceOptions: any = {
+        donut: true,
+        donutWidth: 60,
+        startAngle: 270,
+        total: 200,
+        showLabel: false
+    };
+
     constructor( private playerService: PlayerService, private route: ActivatedRoute  ) {
     }
 
@@ -45,7 +60,12 @@ export class PlayerViewerComponent implements OnInit {
         this.performancesData = {
             labels: [],
             series: []
-        }
+        };
+
+        this.presenceData = {
+            labels: [],
+            series: []
+        };
 
         this.route.paramMap.switchMap((params: ParamMap) =>
             this.playerService.get( params.get( "id" )))
@@ -74,6 +94,10 @@ export class PlayerViewerComponent implements OnInit {
         let daily: number[] = [];
         let average: number[] = [];
 
+        let minutesAsPlayer: number = 0;
+        let minutesAsSubstitute: number = 0;
+        let minutesOnTheBench: number = 0;
+
         let numberOfPerformances: number = 0;
         let totalRateValue: number = 0;
         let lastDay: number = 0;
@@ -89,6 +113,14 @@ export class PlayerViewerComponent implements OnInit {
             average[ performance.day - 1 ] = totalRateValue / numberOfPerformances;
 
             if( performance.day > lastDay ) lastDay = performance.day;
+
+            if( performance.sub ) {
+                minutesAsSubstitute += performance.minutes;
+            } else {
+                minutesAsPlayer += performance.minutes;
+            }
+
+            minutesOnTheBench = 90 - performance.minutes;
         }
 
         // On fait une deuxième passe pour les jours qui manquent, histoire d'être sur
@@ -101,7 +133,7 @@ export class PlayerViewerComponent implements OnInit {
             }
         }
 
-        console.log( this.performancesData );
+        // On construit la série de valeurs
         this.performancesData.series = [ daily, average ];
 
         // on remplit le tableau de jours
@@ -110,6 +142,11 @@ export class PlayerViewerComponent implements OnInit {
             this.performancesData.labels.push( (i+1).toString() );
         }
 
+        // On construit notre affichage de présence
+        this.presenceData.series = [ minutesOnTheBench, minutesAsSubstitute, minutesAsPlayer ];
+
+        // On paramètre le type de diagramme (pour déclencher le refresh, sinon le diagramme ne s'affiche pas)
         this.performancesType = "Line";
+        this.presenceType = "Pie";
     }
 }
