@@ -7,6 +7,16 @@
     height: auto;
 }
 
+// Ok là j'ai un peu honte, mais en fait la taille du div contenant le graph est démesurée
+// résultat des courses on va corriger "à la hache".
+#misplaced-div {
+    margin-left: -50px !important;
+}
+
+#misplaced-label {
+    margin-top: -100px !important;
+}
+
 h1.name {
     font-size: 4em;
 }

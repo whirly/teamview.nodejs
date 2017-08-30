@@ -1,5 +1,5 @@
 <div class="ui grid">
-    <div class="ui four column grid">
+    <div class="ui three column grid">
         <div class="two wide column">
             <img src="https://mespetitesstats.blob.core.windows.net/people/unknown.jpg" class="logo">
         </div>
@@ -19,15 +19,12 @@
                         <div class="value">{{ player?.averagePerformance }}</div>
                         <div class="label">performance moyenne</div>
                     </div>
-                    <div class="ui statistic">
-                        <div class="value">{{ player?.participation }} %</div>
-                        <div class="label">de présence</div>
+                    <div class="ui statistic" id="misplaced-div" *ngIf="player">
+                        <x-chartist class="value" [data]="presenceData" [options]="presenceOptions" [type]="presenceType"></x-chartist>
+                        <div id="misplaced-label" class="label">présence</div>
                     </div>
                 </div>
             </div>
-        </div>
-        <div class="three wide column" *ngIf="player">
-            <x-chartist [data]="presenceData" [options]="presenceOptions" [type]="presenceType"></x-chartist>
         </div>
         <div class="two wide column">
             <img src="{{ teamLogo }}" class="logo">
@@ -39,6 +36,10 @@
     <h1>Performance </h1>
     <div class="row" *ngIf="player">
         <x-chartist class="column" [data]="performancesData" [options]="performancesOptions" [type]="performancesType"></x-chartist>
+    </div>
+    <h1>Buts</h1>
+    <div class="row" *ngIf="player">
+        <x-chartist class="column" [data]="goalsData" [options]="goalsOptions" [type]="goalsType"></x-chartist>
     </div>
 </div>
 
