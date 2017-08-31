@@ -2,7 +2,7 @@
 import {Component, OnInit} from "@angular/core";
 import {PlayerService} from "../services/player.service";
 import {ActivatedRoute, ParamMap} from "@angular/router";
-import {IPlayer} from "../../../shared/models/player";
+import {IPlayer, IPlayerExtended} from "../../../shared/models/player";
 import * as player_helpers from "../../../shared/models/player_helpers";
 import _ from "lodash";
 import {IPerformance} from "../../../shared/models/performance";
@@ -26,7 +26,7 @@ class SimpleChartData {
 
 export class PlayerViewerComponent implements OnInit {
 
-    public player: IPlayer;
+    public player: IPlayerExtended;
     public teamLogo: string = "";
 
     // Données pour les performances chiffrées du joueurs
@@ -106,11 +106,11 @@ export class PlayerViewerComponent implements OnInit {
     // Génération des données pour les différents graphs.
     public generateDataForGraph() {
 
-        let daily: number[] = [];
-        let average: number[] = [];
+        const daily: number[] = [];
+        const average: number[] = [];
 
-        let goalForThisDay: number[] = [];
-        let cumulativeGoals: number[] = [];
+        const goalForThisDay: number[] = [];
+        const cumulativeGoals: number[] = [];
 
         let minutesAsPlayer: number = 0;
         let minutesAsSubstitute: number = 0;
@@ -121,7 +121,6 @@ export class PlayerViewerComponent implements OnInit {
         let lastDay: number = 0;
 
         let performance: IPerformance;
-
 
         for( performance of this.player.performances ) {
 
