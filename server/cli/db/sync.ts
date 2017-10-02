@@ -224,7 +224,7 @@ async function processMatches(baseUrl: string) {
 
             // Si le champ score est vide, c'est que le match n'a pas encore été joué, on ne le traite donc pas
             // ... pour l'instant du moins, ça serait intéressant de voir ce qu'on pourrait faire avec les cotes
-            if (match.home.score != "" && match.home.scoretmp == undefined) {
+            if (match.home.score != "" && match.home.score != undefined && match.home.scoretmp == undefined) {
 
                 logger.info(match.home.club + " - " + match.away.club + " " + match.home.score.toString() + ":" + match.away.score.toString());
 
