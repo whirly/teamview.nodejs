@@ -15,7 +15,6 @@ import { AppComponent } from './app.component';
 import { APP_ROUTES } from './app.routes';
 import apolloClient from './apollo-client';
 
-import { TeamViewerComponent } from './teamviewer-component/teamviewer-component';
 import { TeamSelectorComponent } from './team-selector-component/team-selector-component';
 import {TeamService} from "./services/team.service";
 import {PlayersViewerComponent} from "./playersviewer-component/playersviewer-component";
@@ -30,7 +29,6 @@ export function provideApolloClient(): ApolloClient {
 @NgModule({
     declarations: [
         AppComponent,
-        TeamViewerComponent,
         PlayerViewerComponent,
         PlayersViewerComponent,
         TeamSelectorComponent
