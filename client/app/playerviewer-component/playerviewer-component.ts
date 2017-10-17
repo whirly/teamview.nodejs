@@ -201,8 +201,6 @@ export class PlayerViewerComponent implements OnInit {
         this.goalsData.series = [ cumulativeGoals ];
         this.goalsData.labels = this.performancesData.labels;
 
-        console.log( this.goalsData );
-
         // On paramètre le type de diagramme (pour déclencher le refresh, sinon le diagramme ne s'affiche pas)
         this.performancesType = "Line";
         this.presenceType = "Pie";

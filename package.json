@@ -91,6 +91,7 @@
     "dotenv-extended": "^2.0.1",
     "express": "^4.14.1",
     "express-jwt": "^5.1.0",
+    "font-awesome": "^4.7.0",
     "graphql": "^0.10.3",
     "graphql-compose": "^2.3.0",
     "graphql-compose-connection": "^2.1.3",

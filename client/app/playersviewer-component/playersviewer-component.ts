@@ -16,10 +16,11 @@ export class PlayersViewerComponent implements OnInit {
 
     public playersAll: IPlayerExtended[];
     public playersActive: IPlayerExtended[];
-    public playersByGoals: IPlayerExtended[];
     public players: Dictionary<IPlayerExtended[]>;
 
     public teams: ITeam[];
+
+    public positionShortForm: Map< PlayerPosition, String > = new Map< PlayerPosition, String >();
 
     constructor(private playerService: PlayerService, private teamService: TeamService ) {
 
@@ -32,6 +33,13 @@ export class PlayersViewerComponent implements OnInit {
     }
 
     public async ngOnInit() {
+
+        // On initialise le table de conversion pour les formes courtes
+        this.positionShortForm.set( PlayerPosition.Goal, "G" );
+        this.positionShortForm.set( PlayerPosition.Defender, "D" );
+        this.positionShortForm.set( PlayerPosition.Midfield, "M" );
+        this.positionShortForm.set( PlayerPosition.Striker, "A" );
+
         this.teamService.list.subscribe( (teams: ITeam[] ) => {
             this.teams = teams;
 
@@ -39,7 +47,7 @@ export class PlayersViewerComponent implements OnInit {
                 this.playersAll = _.cloneDeep(players);
 
                 // On vire les joueurs qui ne sont pas actifs, c'est à dire qui n'ont aucune performance
-                this.playersActive = _.filter(this.playersAll, (player: IPlayer) => {
+                this.playersAll = _.filter(this.playersAll, (player: IPlayer) => {
                     return player.performances.length > 0;
                 });
 
@@ -60,6 +68,19 @@ export class PlayersViewerComponent implements OnInit {
         }
     }
 
+    public getCircleClassFor( role: PlayerPosition )
+    {
+        return "circle-" + this.positionShortForm.get( role );
+    }
+    public getLevelFor( amount: number )
+    {
+        if( amount == 0 ) return "fa-battery-0";
+        else if( amount <= 25 ) return "fa-battery-1";
+        else if( amount <= 50 ) return "fa-battery-2";
+        else if( amount <= 75 ) return "fa-battery-3";
+        else if( amount <= 100 ) return "fa-battery-4";
+    }
+
     public getParticipationClass( player: IPlayerExtended ) {
         if( player.participation > 80 ) {
             return "positive";
@@ -73,7 +94,7 @@ export class PlayersViewerComponent implements OnInit {
     private async buildData() {
         // On calcule quelques valeurs intéressante. Pour l'instant on se tape tous le set de données
         // A terme on verra pour pouvoir customiser la profondeur de données (genre les 5 dernières journées).
-        _.forEach(this.playersActive,
+        _.forEach(this.playersAll,
             (player: IPlayerExtended) => {
                 let numberOfFixtures: number = 0;
 
@@ -89,10 +110,9 @@ export class PlayersViewerComponent implements OnInit {
             });
 
         // De base on tri par performance
-        this.playersActive = _.orderBy(this.playersActive, ["averagePerformance", "totalGoalFor"], ["desc", "desc"]);
+        this.playersActive = _.orderBy(this.playersAll, ["totalGoalFor", "averagePerformance"], ["desc", "desc"]);
         this.players = _.groupBy(this.playersActive, 'role');
 
-        // On se fait notre liste de meilleurs buteurs
-        this.playersByGoals = _.orderBy(this.playersActive, ["totalGoalFor", "averagePerformance"], ["desc", "desc"]);
+        console.log( this.playersActive );
     }
 }

@@ -94,6 +94,14 @@ export function getGoalFor(player: IPlayer): number {
     return sum;
 }
 
+export function getPenaltyFor(player: IPlayer): number {
+    const sum: number = _.reduce(player.performances, (aggregate: number, performance: IPerformance) => {
+        return aggregate + performance.penaltyFor;
+    }, 0);
+
+    return sum;
+}
+
 export function getGoalAgainst(player: IPlayer): number {
     const sum: number = _.reduce(player.performances, (aggregate: number, performance: IPerformance) => {
         return aggregate + performance.goalAgainst;
@@ -107,17 +115,22 @@ export function initializeExtendedData(player: IPlayerExtended, numberOfFixtures
     player.averagePerformance = getAveragePerformance(player);
     player.totalGoalFor = getGoalFor(player);
     player.totalGoalAgainst = getGoalAgainst(player);
+    player.totalPenaltyFor = getPenaltyFor(player);
 
     if (player.team) {
 
         let played: number = 0;
+        let played_as_sub: number = 0;
 
         _.each(player.performances, (performance: IPerformance) => {
             if (!performance.sub) played += 1;
+            else played_as_sub += 1;
         });
 
-        player.participation = 100 * ( played / numberOfFixtures );
+        player.titularisation = 100 * ( played / numberOfFixtures );
+        player.participation = 100 * (( played + played_as_sub ) / numberOfFixtures );
     } else {
-        player.participation = 0;
+        player.titularisation = 0;
+        player.titularisation = 0;
     }
 }

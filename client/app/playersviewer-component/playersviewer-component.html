@@ -1,16 +1,51 @@
-<div class="ui grid">
-    <div class="ui one column grid">
-        <div class="three wide column">
-            <table class="ui table">
-                <tbody>
-                    <tr *ngFor="let player of playersByGoals" class="{{ getParticipationClass( player ) }}">
-                        <td class="emblem {{ getEmblemClass( player.team?.name ) }}"></td>
-                        <td>{{ player.firstName }} {{ player.lastName }}</td>
-                        <td>{{ player.averagePerformance }}</td>
-                        <td>{{ player.totalGoalFor }}</td>
-                    </tr>
-                </tbody>
-            </table>
+<div class="ui">
+    <h1 class="title">Mes Petites Stats</h1>
+    <h2 class="subtitle">Un outil qui vous permettra de bien plus rapidement faire vos équipe à Mon Petit Gazon.</h2>
+
+    <div id="first-bar">
+        <div id="menu-position" class="ui five item menu">
+            <a class="item active">Tous</a>
+            <a class="item">Gardiens</a>
+            <a class="item">Défenseurs</a>
+            <a class="item">Millieux</a>
+            <a class="item">Attaquants</a>
+        </div>
+
+        <div id="menu-titulaire" class="ui three item menu">
+            <a class="item active">Tous</a>
+            <a class="item">Titulaires</a>
+            <a class="item">Présents</a>
         </div>
     </div>
+
+    <table align="center">
+        <thead>
+            <tr>
+                <th class="head-club"></th>
+                <th class="retrait"><div>Nom</div></th>
+                <th class=""><div>Pos</div></th>
+                <th class="center active"><div>Buts</div></th>
+                <th class="center"><div>CSC</div></th>
+                <th class="center"><div>Moyenne</div></th>
+                <th class="center"><div>Côte</div></th>
+                <th class="rotate"><div><svg width="82" height="100"><text transform="translate(26,60) rotate(-45)" x="0" y="0">Titulaire</text></svg></div></th>
+                <th class="rotate"><div><svg width="82" height="100"><text transform="translate(26,60) rotate(-45)" x="0" y="0">Présent</text></svg></div></th>
+                <th class="rotate"><div><svg width="82" height="100"><text transform="translate(26,60) rotate(-45)" x="0" y="0">Penalty</text></svg></div></th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let player of playersActive">
+                <td class="body-club emblem {{ getEmblemClass( player.team?.name ) }}"></td>
+                <td class="retrait">{{ player.firstName }} {{ player.lastName }}</td>
+                <td class="center"><div class="{{ getCircleClassFor( player.role ) }}">{{ positionShortForm.get( player.role )}}</div></td>
+                <td class="center emphase">{{ player.totalGoalFor }}</td>
+                <td class="center emphase"><div *ngIf="player.totalGoalAgainst > 0">-{{ player.totalGoalAgainst }}</div><div *ngIf="player.totalGoalAgainst == 0">-</div></td>
+                <td class="center emphase">{{ player.averagePerformance }}</td>
+                <td class="center emphase">{{ player.value }}</td>
+                <td class="center"><i class="fa {{ getLevelFor( player.titularisation ) }}" aria-hidden="true"></i></td>
+                <td class="center"><i class="fa {{ getLevelFor( player.participation ) }}" aria-hidden="true"></i></td>
+                <td class="center"><i *ngIf="player.totalPenaltyFor > 0" class="fa fa-check"></i></td>
+            </tr>
+        </tbody>
+    </table>
 </div>
