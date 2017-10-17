@@ -4,3 +4,159 @@
     background-size: 100% 100%;
 }
 
+h1.title {
+    font-size: 4em;
+    text-align: center;
+    font-family: "Roboto Condensed";
+}
+
+h2.subtitle {
+    font-size: 1.4em;
+    text-align: center;
+    font-family: "Roboto Condensed";
+}
+
+.ui.menu {
+    font-family: "Roboto Condensed";
+
+    .active.item {
+        background: black;
+        color: white;
+    }
+
+    .item::before {
+        background: black;
+    }
+
+    .item:first-child {
+        border-radius: 0px;
+    }
+}
+
+#first-bar {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    justify-content: space-around;
+
+    margin-bottom: 2em;
+}
+
+#menu-position {
+    width: 40%;
+    margin-top: 0px;
+    margin-bottom: 0px;
+
+    border-radius: 0;
+    border: 1px solid black;
+    box-shadow: none;
+}
+
+#menu-titulaire {
+    width: 20%;
+    margin-top: 0px;
+    margin-bottom: 0px;
+
+    border-radius: 0;
+    border: 1px solid black;
+    box-shadow: none;
+}
+
+table {
+    font-family: "Roboto Condensed";
+    font-weight: 400;
+
+    .retrait {
+        text-align: left;
+        padding-left: 0.5em;
+    }
+
+    .center {
+        text-align: center;
+    }
+
+
+    thead {
+        tr {
+            border-bottom:  solid 1px black;
+            text-transform: uppercase;
+            font-weight: 400;
+            font-size: 0.7em;
+
+            th {
+                padding-left: 0.2em;
+                padding-right: 0.2em;
+                height: 20px;
+
+                div { position: absolute };
+            }
+
+            th.head-name {
+                text-align: left;
+                padding-left: 0.5em;
+            }
+
+            .active {
+                background: black;
+                color: white;
+            }
+
+            .rotate {
+                height: 65px;
+                white-space: nowrap;
+                vertical-align: baseline;
+                padding-bottom: 0;
+                position: relative;
+            }
+
+        }
+    }
+
+    tbody {
+        tr {
+            border-bottom: solid 1px lightgray;
+
+            td {
+                padding-left: 0.4em;
+                padding-right: 0.4em;
+
+            }
+
+            td.emphase {
+                font-weight: 700;
+                padding-right: 1em;
+                padding-left: 1em;
+                border-left: 1px solid black;
+                border-right: 1px solid black;
+            }
+        }
+    }
+
+    .circle-G {
+        border-radius: 14px;
+        width: 20px;
+        height: 20px;
+        border: 2px solid #0E6EB8;
+    }
+
+    .circle-D {
+        border-radius: 14px;
+        width: 24px;
+        height: 24px;
+        border: 2px solid #016936;
+    }
+
+    .circle-M {
+        border-radius: 14px;
+        width: 24px;
+        height: 24px;
+        border: 2px solid #FFD700;
+    }
+
+    .circle-A {
+        border-radius: 14px;
+        width: 24px;
+        height: 24px;
+        border: 2px solid #b03060;
+    }
+}

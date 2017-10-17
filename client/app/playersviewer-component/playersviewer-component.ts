@@ -20,6 +20,8 @@ export class PlayersViewerComponent implements OnInit {
 
     public teams: ITeam[];
 
+    public positionShortForm: Map< PlayerPosition, String > = new Map< PlayerPosition, String >();
+
     constructor(private playerService: PlayerService, private teamService: TeamService ) {
 
         this.players = {
@@ -31,6 +33,13 @@ export class PlayersViewerComponent implements OnInit {
     }
 
     public async ngOnInit() {
+
+        // On initialise le table de conversion pour les formes courtes
+        this.positionShortForm.set( PlayerPosition.Goal, "G" );
+        this.positionShortForm.set( PlayerPosition.Defender, "D" );
+        this.positionShortForm.set( PlayerPosition.Midfield, "M" );
+        this.positionShortForm.set( PlayerPosition.Striker, "A" );
+
         this.teamService.list.subscribe( (teams: ITeam[] ) => {
             this.teams = teams;
 
@@ -57,6 +66,19 @@ export class PlayersViewerComponent implements OnInit {
         else {
             return "";
         }
+    }
+
+    public getCircleClassFor( role: PlayerPosition )
+    {
+        return "circle-" + this.positionShortForm.get( role );
+    }
+    public getLevelFor( amount: number )
+    {
+        if( amount == 0 ) return "fa-battery-0";
+        else if( amount <= 25 ) return "fa-battery-1";
+        else if( amount <= 50 ) return "fa-battery-2";
+        else if( amount <= 75 ) return "fa-battery-3";
+        else if( amount <= 100 ) return "fa-battery-4";
     }
 
     public getParticipationClass( player: IPlayerExtended ) {
@@ -90,5 +112,7 @@ export class PlayersViewerComponent implements OnInit {
         // De base on tri par performance
         this.playersActive = _.orderBy(this.playersAll, ["totalGoalFor", "averagePerformance"], ["desc", "desc"]);
         this.players = _.groupBy(this.playersActive, 'role');
+
+        console.log( this.playersActive );
     }
 }

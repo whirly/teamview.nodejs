@@ -20,6 +20,7 @@ export class PlayerService {
                         name
                     }
                     role
+                    value
                     performances {
                         day
                         goalAgainst
@@ -57,6 +58,7 @@ export class PlayerService {
                         }
                     }
                     role
+                    value
                     performances {
                         day
                         goalAgainst
