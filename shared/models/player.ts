@@ -3,6 +3,7 @@ import * as mongoose from "mongoose";
 import {IPerformance} from "./performance";
 
 export enum PlayerPosition {
+    None = 0,
     Goal = 1,
     Defender = 2,
     Midfield = 3,
@@ -23,6 +24,8 @@ export interface IPlayer extends mongoose.Document {
 export interface IPlayerExtended extends IPlayer {
     averagePerformance?: number;
     totalGoalFor?: number;
+    totalPenaltyFor?: number;
     totalGoalAgainst?: number;
     participation?: number;
+    titularisation?: number;
 }
