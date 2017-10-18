@@ -2,32 +2,52 @@
     <h1 class="title">Mes Petites Stats</h1>
     <h2 class="subtitle">Un outil qui vous permettra de bien plus rapidement faire vos équipe à Mon Petit Gazon.</h2>
 
-    <div id="first-bar">
-        <div id="menu-position" class="ui five item menu">
-            <a class="item active">Tous</a>
-            <a class="item">Gardiens</a>
-            <a class="item">Défenseurs</a>
-            <a class="item">Millieux</a>
-            <a class="item">Attaquants</a>
+    <div class="ui three column stackable grid">
+        <div class="eight wide column">
+            <div class="ui five item menu menu-dark">
+                <a class="item {{ isFilterPosition( 0 ) }}" (click)="filterByPosition(0)">Tous</a>
+                <a class="item {{ isFilterPosition( 1 ) }}" (click)="filterByPosition(1)">Gardiens</a>
+                <a class="item {{ isFilterPosition( 2 ) }}" (click)="filterByPosition(2)">Défenseurs</a>
+                <a class="item {{ isFilterPosition( 3 ) }}" (click)="filterByPosition(3)">Millieux</a>
+                <a class="item {{ isFilterPosition( 4 ) }}" (click)="filterByPosition(4)">Attaquants</a>
+            </div>
+        </div>
+        <div class="four wide column">
+            <div class="menu-dark ui three item menu">
+                <a class="item {{ isFilterPresence( 0 ) }}" (click)="filterByPresence(0)">Tous</a>
+                <a class="item {{ isFilterPresence( 1 ) }}" (click)="filterByPresence(1)">Titulaires</a>
+                <a class="item {{ isFilterPresence( 2 ) }}" (click)="filterByPresence(2)">Présents</a>
+            </div>
+        </div>
+        <div class="four wide column">
+            <div class="menu-dark ui two item menu">
+                <a class="item {{ isFilterPenalty(true)}}" (click)="filterByPenalty(true)">Avec Penalty</a>
+                <a class="item {{ isFilterPenalty(false)}}" (click)="filterByPenalty(false)">Indifférent</a>
+            </div>
         </div>
 
-        <div id="menu-titulaire" class="ui three item menu">
-            <a class="item active">Tous</a>
-            <a class="item">Titulaires</a>
-            <a class="item">Présents</a>
+        <div class="eight wide column">
+            <div class="menu-dark ui six item menu">
+                <a class="item {{ isFilterPrice( -1 )}}" (click)="filterByPrice( -1 )">Indifférent</a>
+                <a class="item {{ isFilterPrice( 5 )}}" (click)="filterByPrice( 5 )">< 5M€</a>
+                <a class="item {{ isFilterPrice( 10 )}}" (click)="filterByPrice( 10 )">< 10M€</a>
+                <a class="item {{ isFilterPrice( 15 )}}" (click)="filterByPrice( 15 )">< 15M€</a>
+                <a class="item {{ isFilterPrice( 20 )}}" (click)="filterByPrice( 20 )">< 20M€</a>
+                <a class="item {{ isFilterPrice( 30 )}}" (click)="filterByPrice( 30 )">< 30M€</a>
+            </div>
         </div>
     </div>
 
-    <table align="center">
+    <table align="center" *ngIf="playersActive.length > 0">
         <thead>
             <tr>
                 <th class="head-club"></th>
                 <th class="retrait"><div>Nom</div></th>
                 <th class=""><div>Pos</div></th>
-                <th class="center active"><div>Buts</div></th>
-                <th class="center"><div>CSC</div></th>
-                <th class="center"><div>Moyenne</div></th>
-                <th class="center"><div>Côte</div></th>
+                <th class="center {{ isSortingBy('totalGoalFor')}}"><div (click)="sortBy('totalGoalFor')">Buts</div></th>
+                <th class="center {{ isSortingBy('totalGoalAgainst')}}"><div (click)="sortBy( 'totalGoalAgainst' )">CSC</div></th>
+                <th class="center {{ isSortingBy( 'averagePerformance' )}}"><div (click)="sortBy( 'averagePerformance' )">Moyenne</div></th>
+                <th class="center {{ isSortingBy( 'value' )}}"><div (click)="sortBy( 'value' )">Côte</div></th>
                 <th class="rotate"><div><svg width="82" height="100"><text transform="translate(13,60) rotate(-45)" x="0" y="0">Titulaire</text></svg></div></th>
                 <th class="rotate"><div><svg width="82" height="100"><text transform="translate(13,60) rotate(-45)" x="0" y="0">Présent</text></svg></div></th>
                 <th class="rotate"><div><svg width="82" height="100"><text transform="translate(13,60) rotate(-45)" x="0" y="0">Penalty</text></svg></div></th>

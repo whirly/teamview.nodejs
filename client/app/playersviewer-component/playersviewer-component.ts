@@ -6,6 +6,25 @@ import * as player_helpers from "../../../shared/models/player_helpers";
 import {TeamService} from "../services/team.service";
 import {ITeam} from "../../../shared/models/team";
 
+enum PlayerOrdering {
+    Goal = "totalGoalFor",
+    CSC = "totalGoalAgainst",
+    Average = "averagePerformance",
+    Price = "value"
+}
+
+enum SortDirection {
+    Ascending = "asc",
+    Descending = "desc"
+}
+
+enum PlayerPresence {
+    None = 0,
+    Holder = 1,
+    SuperSub = 2
+}
+
+
 @Component({
     selector: 'teamview-playersviewer',
     templateUrl: './playersviewer-component.html',
@@ -14,22 +33,25 @@ import {ITeam} from "../../../shared/models/team";
 
 export class PlayersViewerComponent implements OnInit {
 
-    public playersAll: IPlayerExtended[];
-    public playersActive: IPlayerExtended[];
-    public players: Dictionary<IPlayerExtended[]>;
+    public playersAll: IPlayerExtended[] = [];
+    public playersActive: IPlayerExtended[] = [];
 
     public teams: ITeam[];
 
-    public positionShortForm: Map< PlayerPosition, String > = new Map< PlayerPosition, String >();
+    public positionShortForm: Map< PlayerPosition, string > = new Map< PlayerPosition, string >();
+
+    // Les données de filtrage
+    public filterPrice: number = -1;
+    public filterPosition: PlayerPosition = PlayerPosition.None;
+    public filterPresence: PlayerPresence = PlayerPresence.None;
+    public filterPenalty: boolean = false;
+
+
+    // Le filtrage
+    public orderBy:PlayerOrdering  = PlayerOrdering.Goal;
+    public sortDirection:SortDirection = SortDirection.Descending;
 
     constructor(private playerService: PlayerService, private teamService: TeamService ) {
-
-        this.players = {
-            [PlayerPosition.Goal]: [],
-            [PlayerPosition.Defender]: [],
-            [PlayerPosition.Midfield]: [],
-            [PlayerPosition.Striker]: []
-        };
     }
 
     public async ngOnInit() {
@@ -109,10 +131,130 @@ export class PlayersViewerComponent implements OnInit {
                 player_helpers.initializeExtendedData( player, numberOfFixtures );
             });
 
-        // De base on tri par performance
-        this.playersActive = _.orderBy(this.playersAll, ["totalGoalFor", "averagePerformance"], ["desc", "desc"]);
-        this.players = _.groupBy(this.playersActive, 'role');
-
-        console.log( this.playersActive );
+        // Tri & Filtre
+        this.filterAndSortData();
     }
+
+    // Fonction pour filtrer les données en fonction des critères, appliquer à chaque fois qu'on change
+    // le filtrage.
+    private filterAndSortData(): void {
+
+        this.playersActive = _.filter( this.playersAll, (player: IPlayerExtended) => {
+
+            if( this.filterPrice != -1 ) {
+                if( player.value >= this.filterPrice ) {
+                    return false;
+                }
+            }
+
+            if( this.filterPosition != PlayerPosition.None ) {
+                if( player.role != this.filterPosition ) {
+                    return false;
+                }
+            }
+
+            if( this.filterPenalty != false ) {
+                if( player.totalPenaltyFor == 0 ) {
+                    return false;
+                }
+            }
+
+            switch( this.filterPresence ) {
+                case PlayerPresence.Holder:
+                    if( player.titularisation < 80 ) return false;
+                    break;
+
+                case PlayerPresence.SuperSub:
+                    if( player.participation < 70 ) return false;
+                    break;
+            }
+
+            return true;
+        });
+
+        this.playersActive = _.orderBy( this.playersActive, [ this.orderBy ], [ this.sortDirection ]);
+    }
+
+    // Changement du filtre par prix
+    public filterByPrice( newPrice: number ): void {
+
+        // On n'opère que si les prix ont changés.
+        if( this.filterPrice != newPrice ) {
+            this.filterPrice = newPrice;
+            this.filterAndSortData();
+        }
+    }
+
+    public isFilterPrice( askPrice: number ): string {
+        if( this.filterPrice == askPrice ) {
+            return "active";
+        } else {
+            return "";
+        }
+    }
+
+    // Changement du filtre penalty
+    public filterByPenalty( requirePenalty: boolean ): void {
+
+        if( this.filterPenalty != requirePenalty ) {
+            this.filterPenalty = requirePenalty;
+            this.filterAndSortData();
+        }
+    }
+
+    public isFilterPenalty( requirePenalty: boolean ): string {
+        if( this.filterPenalty != requirePenalty ) return "";
+        else return "active";
+    }
+
+    // Changement du filtre de presence
+    public filterByPresence( presence: PlayerPresence ): void {
+        if( this.filterPresence != presence ) {
+            this.filterPresence = presence;
+            this.filterAndSortData();
+        }
+    }
+
+    public isFilterPresence( presence: PlayerPresence ): string {
+        if( this.filterPresence == presence ) return "active";
+        else return "";
+    }
+
+    // Changement du filtre de position
+    public filterByPosition( position: PlayerPosition ): void {
+        if( this.filterPosition != position ) {
+            this.filterPosition = position;
+            this.filterAndSortData();
+        }
+    }
+
+    public isFilterPosition( position: PlayerPosition ): string {
+        if( this.filterPosition == position ) return "active";
+        else return "";
+    }
+
+    // Tri
+    public sortBy( sort: PlayerOrdering ) {
+
+        // On regarde si c'était déjà la bonne colonne qu'on triait
+        if( this.orderBy == sort ) {
+            // Oui, cela veut dire qu'on va juste trier dans l'autre sens
+            this.sortDirection = this.sortDirection == SortDirection.Ascending ? SortDirection.Descending : SortDirection.Ascending;
+            this.filterAndSortData();
+
+        } else {
+            // Non, on change le tri
+            this.orderBy = sort;
+            this.filterAndSortData();
+        }
+    }
+
+    public isSortingBy( sort: PlayerOrdering ) {
+        if( this.orderBy == sort ) return "active";
+        else return "";
+    }
+
+    // Une fois que tu as écris tous ces filtres, c'est là que tu te dis que tu aurais pu factoriser
+    // le tout avec un tableau de filtre au lieu de les séparer. Mais là de suite, t'as pas envie
+    // de refactorer :)
 }

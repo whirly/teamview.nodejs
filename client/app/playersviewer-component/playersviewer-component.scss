@@ -31,19 +31,13 @@ h2.subtitle {
     .item:first-child {
         border-radius: 0px;
     }
+
+    border-radius: 0;
+    border: 1px solid black;
+    box-shadow: none;
 }
 
-#first-bar {
-    display: flex;
-    flex-direction: row;
-    width: 100%;
-    justify-content: space-around;
-
-    margin-bottom: 2em;
-}
-
-#menu-position {
-    width: 40%;
+menu-dark {
     margin-top: 0px;
     margin-bottom: 0px;
 
@@ -52,19 +46,12 @@ h2.subtitle {
     box-shadow: none;
 }
 
-#menu-titulaire {
-    width: 20%;
-    margin-top: 0px;
-    margin-bottom: 0px;
-
-    border-radius: 0;
-    border: 1px solid black;
-    box-shadow: none;
-}
 
 table {
     font-family: "Roboto Condensed";
     font-weight: 400;
+
+    margin-top: 1em;
 
     .retrait {
         text-align: left;
@@ -78,7 +65,7 @@ table {
 
     thead {
         tr {
-            border-bottom:  solid 1px black;
+            border-bottom:  solid 2px black;
             text-transform: uppercase;
             font-weight: 400;
             font-size: 0.7em;

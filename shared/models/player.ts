@@ -3,6 +3,7 @@ import * as mongoose from "mongoose";
 import {IPerformance} from "./performance";
 
 export enum PlayerPosition {
+    None = 0,
     Goal = 1,
     Defender = 2,
     Midfield = 3,
