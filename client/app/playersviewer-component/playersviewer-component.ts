@@ -161,11 +161,11 @@ export class PlayersViewerComponent implements OnInit {
 
             switch( this.filterPresence ) {
                 case PlayerPresence.Holder:
-                    if( player.titularisation < 80 ) return false;
+                    if( player.titularisation < 75 ) return false;
                     break;
 
                 case PlayerPresence.SuperSub:
-                    if( player.participation < 70 ) return false;
+                    if( player.participation < 75 ) return false;
                     break;
             }
 
