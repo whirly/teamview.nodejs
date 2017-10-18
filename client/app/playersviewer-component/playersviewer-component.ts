@@ -45,7 +45,7 @@ export class PlayersViewerComponent implements OnInit {
     public filterPosition: PlayerPosition = PlayerPosition.None;
     public filterPresence: PlayerPresence = PlayerPresence.None;
     public filterPenalty: boolean = false;
-
+    public filterMatch: number = 0;
 
     // Le filtrage
     public orderBy:PlayerOrdering  = PlayerOrdering.Goal;
@@ -113,9 +113,7 @@ export class PlayersViewerComponent implements OnInit {
         }
     }
 
-    private async buildData() {
-        // On calcule quelques valeurs intéressante. Pour l'instant on se tape tous le set de données
-        // A terme on verra pour pouvoir customiser la profondeur de données (genre les 5 dernières journées).
+    private async calculateExtendedData() {
         _.forEach(this.playersAll,
             (player: IPlayerExtended) => {
                 let numberOfFixtures: number = 0;
@@ -128,8 +126,13 @@ export class PlayersViewerComponent implements OnInit {
                     numberOfFixtures = myteam.fixtures.length;
                 }
 
-                player_helpers.initializeExtendedData( player, numberOfFixtures );
+                player_helpers.initializeExtendedData( player, numberOfFixtures, this.filterMatch );
             });
+    }
+
+    private async buildData() {
+        // On calcule les données étendus en prenant en compte le filtrage sur le nombre de jours
+        this.calculateExtendedData();
 
         // Tri & Filtre
         this.filterAndSortData();
@@ -230,6 +233,20 @@ export class PlayersViewerComponent implements OnInit {
 
     public isFilterPosition( position: PlayerPosition ): string {
         if( this.filterPosition == position ) return "active";
+        else return "";
+    }
+
+    // Changement du filtre sur le nombre de match.. celui là est un peu particulier
+    public filterByMatch( amount: number ): void {
+        if( this.filterMatch != amount ) {
+            this.filterMatch = amount;
+            this.calculateExtendedData();
+            this.filterAndSortData();
+        }
+    }
+
+    public isFilterMatch( amount: number ): string {
+        if( this.filterMatch == amount ) return "active";
         else return "";
     }
 

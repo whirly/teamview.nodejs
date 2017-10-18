@@ -12,6 +12,7 @@
                 <a class="item {{ isFilterPosition( 4 ) }}" (click)="filterByPosition(4)">Attaquants</a>
             </div>
         </div>
+
         <div class="four wide column">
             <div class="menu-dark ui three item menu">
                 <a class="item {{ isFilterPresence( 0 ) }}" (click)="filterByPresence(0)">Tous</a>
@@ -34,6 +35,15 @@
                 <a class="item {{ isFilterPrice( 15 )}}" (click)="filterByPrice( 15 )">< 15M€</a>
                 <a class="item {{ isFilterPrice( 20 )}}" (click)="filterByPrice( 20 )">< 20M€</a>
                 <a class="item {{ isFilterPrice( 30 )}}" (click)="filterByPrice( 30 )">< 30M€</a>
+            </div>
+        </div>
+
+        <div class="eight wide column">
+            <div class="menu-dark ui four item menu">
+                <a class="item {{ isFilterMatch( 0 )}}" (click)="filterByMatch( 0 )">Tous les matchs</a>
+                <a class="item {{ isFilterMatch( 3 )}}" (click)="filterByMatch( 3 )">< 3 derniers</a>
+                <a class="item {{ isFilterMatch( 5 )}}" (click)="filterByMatch( 5 )">< 5 derniers</a>
+                <a class="item {{ isFilterMatch( 10 )}}" (click)="filterByMatch( 10 )">< 10 derniers</a>
             </div>
         </div>
     </div>
