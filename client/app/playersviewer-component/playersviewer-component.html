@@ -66,7 +66,7 @@
         <tbody>
             <tr *ngFor="let player of playersActive">
                 <td class="body-club emblem {{ getEmblemClass( player.team?.name ) }}"></td>
-                <td class="retrait">{{ player.firstName }} {{ player.lastName }}</td>
+                <td class="retrait"><a href="/player/{{ player.idMpg }}">{{ player.firstName }} {{ player.lastName }}</a></td>
                 <td class="center"><div class="{{ getCircleClassFor( player.role ) }}">{{ positionShortForm.get( player.role )}}</div></td>
                 <td class="center emphase">{{ player.totalGoalFor }}</td>
                 <td class="center emphase"><div *ngIf="player.totalGoalAgainst > 0">-{{ player.totalGoalAgainst }}</div><div *ngIf="player.totalGoalAgainst == 0">-</div></td>

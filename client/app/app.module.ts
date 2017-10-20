@@ -28,6 +28,7 @@ export function provideApolloClient(): ApolloClient {
 
 @NgModule({
     declarations: [
+        // Les miens
         AppComponent,
         PlayerViewerComponent,
         PlayersViewerComponent,

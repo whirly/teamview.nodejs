@@ -16,6 +16,7 @@ export class PlayerService {
                 players {
                     firstName
                     lastName
+                    idMpg
                     team {
                         name
                     }

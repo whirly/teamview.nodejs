@@ -7,16 +7,41 @@
     height: auto;
 }
 
-// Ok là j'ai un peu honte, mais en fait la taille du div contenant le graph est démesurée
-// résultat des courses on va corriger "à la hache".
-#misplaced-div {
-    margin-left: -50px !important;
-}
+.team-logo {
+    width: 42px;
+    height: 42px;
 
-#misplaced-label {
-    margin-top: -100px !important;
+    position: absolute;
+    bottom: 16px;
+    right: 16px;
 }
 
 h1.name {
-    font-size: 4em;
+    font-family: "Roboto Condensed";
+}
+
+table.summary {
+    font-family: "Roboto Condensed";
+
+    thead {
+        tr {
+            th {
+                text-align: center;
+            }
+        }
+    }
+
+    tbody {
+        tr {
+            td {
+                font-size: 1.8em;
+                font-weight: bold;
+                text-align: center;
+            }
+        }
+    }
+}
+
+table.performances {
+    font-family: "Roboto Condensed";
 }

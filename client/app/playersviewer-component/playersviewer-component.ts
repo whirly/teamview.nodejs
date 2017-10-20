@@ -113,71 +113,6 @@ export class PlayersViewerComponent implements OnInit {
         }
     }
 
-    private async calculateExtendedData() {
-        _.forEach(this.playersAll,
-            (player: IPlayerExtended) => {
-                let numberOfFixtures: number = 0;
-
-                if ( player.team ) {
-                    const myteam = this.teams.find((team: ITeam) => {
-                        return team.name == player.team.name;
-                    });
-
-                    numberOfFixtures = myteam.fixtures.length;
-                }
-
-                player_helpers.initializeExtendedData( player, numberOfFixtures, this.filterMatch );
-            });
-    }
-
-    private async buildData() {
-        // On calcule les données étendus en prenant en compte le filtrage sur le nombre de jours
-        this.calculateExtendedData();
-
-        // Tri & Filtre
-        this.filterAndSortData();
-    }
-
-    // Fonction pour filtrer les données en fonction des critères, appliquer à chaque fois qu'on change
-    // le filtrage.
-    private filterAndSortData(): void {
-
-        this.playersActive = _.filter( this.playersAll, (player: IPlayerExtended) => {
-
-            if( this.filterPrice != -1 ) {
-                if( player.value >= this.filterPrice ) {
-                    return false;
-                }
-            }
-
-            if( this.filterPosition != PlayerPosition.None ) {
-                if( player.role != this.filterPosition ) {
-                    return false;
-                }
-            }
-
-            if( this.filterPenalty != false ) {
-                if( player.totalPenaltyFor == 0 ) {
-                    return false;
-                }
-            }
-
-            switch( this.filterPresence ) {
-                case PlayerPresence.Holder:
-                    if( player.titularisation < 75 ) return false;
-                    break;
-
-                case PlayerPresence.SuperSub:
-                    if( player.participation < 75 ) return false;
-                    break;
-            }
-
-            return true;
-        });
-
-        this.playersActive = _.orderBy( this.playersActive, [ this.orderBy ], [ this.sortDirection ]);
-    }
-
     // Changement du filtre par prix
     public filterByPrice( newPrice: number ): void {
 
@@ -274,4 +209,72 @@ export class PlayersViewerComponent implements OnInit {
     // Une fois que tu as écris tous ces filtres, c'est là que tu te dis que tu aurais pu factoriser
     // le tout avec un tableau de filtre au lieu de les séparer. Mais là de suite, t'as pas envie
     // de refactorer :)
+
+
+    private async calculateExtendedData() {
+        _.forEach(this.playersAll,
+            (player: IPlayerExtended) => {
+                let numberOfFixtures: number = 0;
+
+                if ( player.team ) {
+                    const myteam = this.teams.find((team: ITeam) => {
+                        return team.name == player.team.name;
+                    });
+
+                    numberOfFixtures = myteam.fixtures.length;
+                }
+
+                player_helpers.initializeExtendedData( player, numberOfFixtures, this.filterMatch );
+            });
+    }
+
+    // Construit l'ensemble des données ( calcul des données étendus, et filtrage de tout cela).
+    private async buildData() {
+        // On calcule les données étendus en prenant en compte le filtrage sur le nombre de jours
+        this.calculateExtendedData();
+
+        // Tri & Filtre
+        this.filterAndSortData();
+    }
+
+    // Fonction pour filtrer les données en fonction des critères, appliquer à chaque fois qu'on change
+    // le filtrage.
+    private filterAndSortData(): void {
+
+        this.playersActive = _.filter( this.playersAll, (player: IPlayerExtended) => {
+
+            if( this.filterPrice != -1 ) {
+                if( player.value >= this.filterPrice ) {
+                    return false;
+                }
+            }
+
+            if( this.filterPosition != PlayerPosition.None ) {
+                if( player.role != this.filterPosition ) {
+                    return false;
+                }
+            }
+
+            if( this.filterPenalty != false ) {
+                if( player.totalPenaltyFor == 0 ) {
+                    return false;
+                }
+            }
+
+            switch( this.filterPresence ) {
+                case PlayerPresence.Holder:
+                    if( player.titularisation < 75 ) return false;
+                    break;
+
+                case PlayerPresence.SuperSub:
+                    if( player.participation < 75 ) return false;
+                    break;
+            }
+
+            return true;
+        });
+
+        this.playersActive = _.orderBy( this.playersActive, [ this.orderBy ], [ this.sortDirection ]);
+    }
+
 }
