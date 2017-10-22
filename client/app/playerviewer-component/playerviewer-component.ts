@@ -56,7 +56,7 @@ export class PlayerViewerComponent implements OnInit {
         return fixture.home.team.name + " - " + fixture.away.team.name;
     }
 
-    public getScoreForFixture( fixture: IFixture ){
+    public getScoreForFixture( fixture: IFixture ) {
         return fixture_helpers.getHomeGoal( fixture ) + ":" + fixture_helpers.getAwayGoal( fixture );
     }
 

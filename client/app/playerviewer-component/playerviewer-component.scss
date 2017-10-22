@@ -34,7 +34,7 @@ table.summary {
     tbody {
         tr {
             td {
-                font-size: 1.8em;
+                font-size: 1.6em;
                 font-weight: bold;
                 text-align: center;
             }
@@ -88,6 +88,9 @@ table.performances {
             td {
                 padding-left: 0.4em;
                 padding-right: 0.4em;
+
+                border-left: 1px solid lightgray;
+                border-right: 1px solid lightgray;
 
             }
 

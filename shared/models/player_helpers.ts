@@ -82,8 +82,7 @@ export function getRateFor(player: IPlayer, day: number): number {
 
     if (performance) {
         return performance.rate;
-    }
-    else {
+    } else {
         return 0;
     }
 }
@@ -95,13 +94,12 @@ export function getMinutesFor(player: IPlayer, day: number): number {
 
     if (performance) {
         return performance.minutes;
-    }
-    else {
+    } else {
         return 0;
     }
 }
 
-export function getGoalFor(player: IPlayer, fromDay: number ): number {
+export function getGoalFor(player: IPlayer, fromDay: number): number {
     const sum: number = _.reduce(player.performances, (aggregate: number, performance: IPerformance) => {
         if (performance.day >= fromDay) return aggregate + performance.goalFor;
         else return aggregate;

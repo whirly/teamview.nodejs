@@ -1,3 +1,8 @@
+<div class="ui breadcrumb">
+    <a href="/" class="section">Liste</a>
+    <div class="divider"> / </div>
+    <div class="active section">{{ player?.firstName }} {{ player?.lastName }}</div>
+</div>
 <div class="ui grid">
     <div class="ui two column stackable grid">
         <div class="two wide column">
@@ -23,8 +28,8 @@
                 <tr>
                     <td>{{ player.totalGoalFor }}</td>
                     <td>{{ player.averagePerformance | number :'1.2-2' }}</td>
-                    <td>{{ player.titularisation | number :'1.2-2' }}</td>
-                    <td>{{ player.participation | number :'1.2-2' }}</td>
+                    <td>{{ player.titularisation | number :'1.0-0' }}%</td>
+                    <td>{{ player.participation | number :'1.0-0' }}%</td>
                 </tr>
                 </tbody>
             </table>
@@ -35,6 +40,7 @@
     <table class="performances" align="center">
         <thead>
             <tr>
+                <th>Jour</th>
                 <th>Match</th>
                 <th>Score</th>
                 <th>Temps</th>
@@ -44,9 +50,10 @@
         </thead>
         <tbody>
             <tr *ngFor="let fixture of team.fixtures">
+                <th>{{ fixture.day }}</th>
                 <td>{{ getSummaryForFixture( fixture ) }}</td>
-                <td>{{ getScoreForFixture( fixture ) }}</td>
-                <td>{{ getMyPlayTimeFor( fixture ) }}</td>
+                <td class="emphase">{{ getScoreForFixture( fixture ) }}</td>
+                <td>{{ getMyPlayTimeFor( fixture ) | number: '2.0-0'}}</td>
                 <td>{{ getMyGoalFor( fixture ) }}</td>
                 <td>{{ getMyRateFor( fixture ) }}</td>
             </tr>
