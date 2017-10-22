@@ -12,20 +12,20 @@
         <div class="two wide column">
             <table class="summary ui celled padded table unstackable">
                 <thead>
-                    <tr>
-                        <th>Buts</th>
-                        <th>Moyenne</th>
-                        <th>Titularisation</th>
-                        <th>Présence</th>
-                    </tr>
+                <tr>
+                    <th>Buts</th>
+                    <th>Moyenne</th>
+                    <th>Titularisation</th>
+                    <th>Présence</th>
+                </tr>
                 </thead>
                 <tbody>
-                    <tr>
-                        <td>{{ player.totalGoalFor }}</td>
-                        <td>{{ player.averagePerformance | number :'1.2-2' }}</td>
-                        <td>{{ player.titularisation | number :'1.2-2' }}</td>
-                        <td>{{ player.participation | number :'1.2-2' }}</td>
-                    </tr>
+                <tr>
+                    <td>{{ player.totalGoalFor }}</td>
+                    <td>{{ player.averagePerformance | number :'1.2-2' }}</td>
+                    <td>{{ player.titularisation | number :'1.2-2' }}</td>
+                    <td>{{ player.participation | number :'1.2-2' }}</td>
+                </tr>
                 </tbody>
             </table>
         </div>
@@ -34,20 +34,20 @@
 <div class="ui one column grid">
     <table class="performances" align="center">
         <thead>
-            <tr>
-                <th>Match</th>
-                <th>Temps</th>
-                <th>Buts</th>
-                <th>Note</th>
-            </tr>
+        <tr>
+            <th>Match</th>
+            <th>Temps</th>
+            <th>Buts</th>
+            <th>Note</th>
+        </tr>
         </thead>
         <tbody>
-            <tr *ngFor="let fixture of team.fixtures">
-                <td>{{ getSummaryForFixture( fixture )}}</td>
-                <td>{{ getMyPlayTimeFor( fixture )}}</td>
-                <td>{{ getMyGoalFor( fixture )}}</td>
-                <td>{{ getMyRateFor( fixture )}}</td>
-            </tr>
+        <tr *ngFor="let fixture of team.fixtures">
+            <td>{{ getSummaryForFixture( fixture ) }}</td>
+            <td>{{ getMyPlayTimeFor( fixture ) }}</td>
+            <td>{{ getMyGoalFor( fixture ) }}</td>
+            <td>{{ getMyRateFor( fixture ) }}</td>
+        </tr>
         </tbody>
     </table>
 </div>

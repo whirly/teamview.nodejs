@@ -1,4 +1,3 @@
-
 import {Component, OnInit} from "@angular/core";
 import {PlayerService} from "../services/player.service";
 import {ActivatedRoute, ParamMap} from "@angular/router";
@@ -25,23 +24,25 @@ export class PlayerViewerComponent implements OnInit {
 
     public teamLogo: string = "";
 
+    constructor(private playerService: PlayerService, private route: ActivatedRoute, private teamService: TeamService) {
+    }
+
     public async ngOnInit() {
-
         this.route.paramMap.switchMap((params: ParamMap) =>
-            this.playerService.get( params.get( "id" )))
-                .subscribe( ( player: IPlayer ) => {
-                    this.player = _.cloneDeep( player );
-                    player_helpers.initializeExtendedData( this.player, this.player.team.fixtures.length );
+            this.playerService.get(params.get("id")))
+            .subscribe((player: IPlayer) => {
+                this.player = _.cloneDeep(player);
+                player_helpers.initializeExtendedData(this.player, this.player.team.fixtures.length);
 
-                    // on met en place l'url de notre stockage Azure.
-                    // et en passant encore merci à Saint Etienne pour son espace !
-                    this.teamLogo = this.getEmblemUrl( this.player.team.name );
+                // on met en place l'url de notre stockage Azure.
+                // et en passant encore merci à Saint Etienne pour son espace !
+                this.teamLogo = this.getEmblemUrl(this.player.team.name);
 
-                    // On récupère l'équipe avec ses performances.
-                    this.teamService.getByName( this.player.team.name ).subscribe( ( team: ITeam ) => {
-                       this.team = team;
-                    });
+                // On récupère l'équipe avec ses performances.
+                this.teamService.getByName(this.player.team.name).subscribe((team: ITeam) => {
+                    this.team = team;
                 });
+            });
     }
 
     // Récupère l'url à partir du nom, juste pour traiter le cas de Saint Etienne.
@@ -50,24 +51,21 @@ export class PlayerViewerComponent implements OnInit {
         return "https://mespetitesstats.blob.core.windows.net/teams/" + team.replace(" ", "").toLowerCase() + ".png";
     }
 
-    public getSummaryForFixture( fixture: IFixture ) {
+    public getSummaryForFixture(fixture: IFixture) {
 
         return fixture.home.team.name + " - " + fixture.away.team.name + " "
-            + fixture_helpers.getHomeGoal( fixture ) + ":" + fixture_helpers.getAwayGoal( fixture );
+            + fixture_helpers.getHomeGoal(fixture) + ":" + fixture_helpers.getAwayGoal(fixture);
     }
 
-    public getMyPlayTimeFor( fixture: IFixture ) {
+    public getMyPlayTimeFor(fixture: IFixture) {
         return 0;
     }
 
-    public getMyGoalFor( fixture: IFixture ) {
+    public getMyGoalFor(fixture: IFixture) {
         return 0;
     }
 
-    public getMyRateFor( fixture: IFixture ) {
+    public getMyRateFor(fixture: IFixture) {
         return 0;
-    }
-
-    constructor( private playerService: PlayerService, private route: ActivatedRoute, private teamService: TeamService  ) {
     }
 }

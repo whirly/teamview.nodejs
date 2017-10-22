@@ -1,7 +1,7 @@
 import {Component} from "@angular/core";
 
 @Component({
-    selector: "team-selector",
+    selector: "teamview-team-selector",
     templateUrl: './team-selector-component.html',
     styleUrls: ['./team-selector-component.scss']
 })
