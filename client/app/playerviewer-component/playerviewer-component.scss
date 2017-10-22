@@ -44,4 +44,61 @@ table.summary {
 
 table.performances {
     font-family: "Roboto Condensed";
+
+    thead {
+        tr {
+            border-bottom:  solid 2px black;
+            text-transform: uppercase;
+            font-weight: 400;
+            font-size: 0.7em;
+
+            th {
+                padding-left: 0.2em;
+                padding-right: 0.2em;
+                height: 20px;
+
+                div { position: absolute };
+            }
+
+            th.head-name {
+                text-align: left;
+                padding-left: 0.5em;
+            }
+
+            .active {
+                background: black;
+                color: white;
+            }
+
+            .rotate {
+                height: 65px;
+                white-space: nowrap;
+                vertical-align: baseline;
+                padding-bottom: 0;
+                position: relative;
+            }
+
+        }
+    }
+
+    tbody {
+        tr {
+            border-bottom: solid 1px lightgray;
+
+            td {
+                padding-left: 0.4em;
+                padding-right: 0.4em;
+
+            }
+
+            td.emphase {
+                font-weight: 700;
+                padding-right: 1em;
+                padding-left: 1em;
+                border-left: 1px solid black;
+                border-right: 1px solid black;
+            }
+        }
+    }
 }
+

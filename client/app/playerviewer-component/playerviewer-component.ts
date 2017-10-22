@@ -53,19 +53,22 @@ export class PlayerViewerComponent implements OnInit {
 
     public getSummaryForFixture(fixture: IFixture) {
 
-        return fixture.home.team.name + " - " + fixture.away.team.name + " "
-            + fixture_helpers.getHomeGoal(fixture) + ":" + fixture_helpers.getAwayGoal(fixture);
+        return fixture.home.team.name + " - " + fixture.away.team.name;
     }
 
-    public getMyPlayTimeFor(fixture: IFixture) {
-        return 0;
+    public getScoreForFixture( fixture: IFixture ){
+        return fixture_helpers.getHomeGoal( fixture ) + ":" + fixture_helpers.getAwayGoal( fixture );
     }
 
-    public getMyGoalFor(fixture: IFixture) {
-        return 0;
+    public getMyPlayTimeFor( fixture: IFixture ) {
+        return player_helpers.getMinutesFor( this.player, fixture.day );
     }
 
-    public getMyRateFor(fixture: IFixture) {
-        return 0;
+    public getMyGoalFor( fixture: IFixture ) {
+        return player_helpers.getGoalForDay( this.player, fixture.day );
+    }
+
+    public getMyRateFor( fixture: IFixture ) {
+        return player_helpers.getRateFor( this.player, fixture.day );
     }
 }

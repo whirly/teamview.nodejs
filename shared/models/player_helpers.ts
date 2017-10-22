@@ -75,7 +75,33 @@ export function getGoalAgainstForDay(player: IPlayer, day: number): number {
     }
 }
 
-export function getGoalFor(player: IPlayer, fromDay: number): number {
+export function getRateFor(player: IPlayer, day: number): number {
+    const performance: IPerformance = player.performances.find((performanceThis: IPerformance) => {
+        return performanceThis.day == day;
+    });
+
+    if (performance) {
+        return performance.rate;
+    }
+    else {
+        return 0;
+    }
+}
+
+export function getMinutesFor(player: IPlayer, day: number): number {
+    const performance: IPerformance = player.performances.find((performanceThis: IPerformance) => {
+        return performanceThis.day == day;
+    });
+
+    if (performance) {
+        return performance.minutes;
+    }
+    else {
+        return 0;
+    }
+}
+
+export function getGoalFor(player: IPlayer, fromDay: number ): number {
     const sum: number = _.reduce(player.performances, (aggregate: number, performance: IPerformance) => {
         if (performance.day >= fromDay) return aggregate + performance.goalFor;
         else return aggregate;

@@ -34,20 +34,22 @@
 <div class="ui one column grid">
     <table class="performances" align="center">
         <thead>
-        <tr>
-            <th>Match</th>
-            <th>Temps</th>
-            <th>Buts</th>
-            <th>Note</th>
-        </tr>
+            <tr>
+                <th>Match</th>
+                <th>Score</th>
+                <th>Temps</th>
+                <th>Buts</th>
+                <th>Note</th>
+            </tr>
         </thead>
         <tbody>
-        <tr *ngFor="let fixture of team.fixtures">
-            <td>{{ getSummaryForFixture( fixture ) }}</td>
-            <td>{{ getMyPlayTimeFor( fixture ) }}</td>
-            <td>{{ getMyGoalFor( fixture ) }}</td>
-            <td>{{ getMyRateFor( fixture ) }}</td>
-        </tr>
+            <tr *ngFor="let fixture of team.fixtures">
+                <td>{{ getSummaryForFixture( fixture ) }}</td>
+                <td>{{ getScoreForFixture( fixture ) }}</td>
+                <td>{{ getMyPlayTimeFor( fixture ) }}</td>
+                <td>{{ getMyGoalFor( fixture ) }}</td>
+                <td>{{ getMyRateFor( fixture ) }}</td>
+            </tr>
         </tbody>
     </table>
 </div>
