@@ -46,6 +46,22 @@
                 <a class="item {{ isFilterMatch( 10 )}}" (click)="filterByMatch( 10 )">< 10 derniers</a>
             </div>
         </div>
+
+        <div class="eight wide column" *ngIf="!pelouseService.isLogged()">
+            <div class="ui form">
+                <div class="fields">
+                    <div class="five wide field">
+                        <input type="text" [(ngModel)]="login" placeholder="Identifiant">
+                    </div>
+                    <div class="five wide field">
+                        <input type="text" [(ngModel)]="password" placeholder="Mot de passe">
+                    </div>
+                    <div class="eight wide field">
+                        <button class="positive ui button" (click)="connectMercato()">Connecter son mercato</button>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
     <table align="center" *ngIf="playersActive.length > 0">

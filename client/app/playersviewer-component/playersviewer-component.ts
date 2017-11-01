@@ -5,6 +5,8 @@ import _ from "lodash";
 import * as player_helpers from "../../../shared/models/player_helpers";
 import {TeamService} from "../services/team.service";
 import {ITeam} from "../../../shared/models/team";
+import {PelouseService} from "../services/pelouse.service";
+import {ILeagueMPG} from "../../../shared/models/pelouse";
 
 enum PlayerOrdering {
     Goal = "totalGoalFor",
@@ -32,6 +34,12 @@ enum PlayerPresence {
 
 export class PlayersViewerComponent implements OnInit {
 
+    // Informations de login pour la connexion du mercato
+    public login: string;
+    public password: string;
+
+    public token: string;
+
     public playersAll: IPlayerExtended[] = [];
     public playersActive: IPlayerExtended[] = [];
 
@@ -50,7 +58,7 @@ export class PlayersViewerComponent implements OnInit {
     public orderBy: PlayerOrdering = PlayerOrdering.Goal;
     public sortDirection: SortDirection = SortDirection.Descending;
 
-    constructor(private playerService: PlayerService, private teamService: TeamService) {
+    constructor(private playerService: PlayerService, private teamService: TeamService, private pelouseService: PelouseService ) {
     }
 
     public async ngOnInit() {
@@ -77,6 +85,15 @@ export class PlayersViewerComponent implements OnInit {
                 this.buildData();
             });
         });
+
+        this.pelouseService.loggedIn().subscribe( (logged: boolean) => {
+            if( logged ) {
+                // On reçoit l'événement de connexion, on demande donc le dashboard du monsieur
+                this.pelouseService.getLeague().subscribe( (leagues: ILeagueMPG[] ) => {
+
+                });
+            }
+        })
     }
 
     // Cette méthode pour permettre à Saint Etienne d'exister commence à se reproduire à droite et à gauche.
@@ -108,6 +125,15 @@ export class PlayersViewerComponent implements OnInit {
         } else {
             return "negative";
         }
+    }
+
+    // Connexion du mercato.
+    // Il s'agit de connecter son mercato MPG à l'application, l'idée étant de ne
+    // garder que les joueurs encore disponible dans le mercato. Pas la peine de fantasmer
+    // sur un mec qui bosse déjà pour un autre.
+    public connectMercato(): void {
+        this.pelouseService.login( this.login, this.password ).subscribe( response => {
+        });
     }
 
     // Changement du filtre par prix
