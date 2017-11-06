@@ -1,7 +1,9 @@
 import {Component, OnInit} from "@angular/core";
+import {BehaviorSubject} from "../rxjs";
 import {PlayerService} from "../services/player.service";
 import {IPlayer, IPlayerExtended, PlayerPosition} from "../../../shared/models/player";
 import _ from "lodash";
+import latinize from "latinize";
 import * as player_helpers from "../../../shared/models/player_helpers";
 import {TeamService} from "../services/team.service";
 import {ITeam} from "../../../shared/models/team";
@@ -51,6 +53,10 @@ export class PlayersViewerComponent implements OnInit {
     public orderBy:PlayerOrdering  = PlayerOrdering.Goal;
     public sortDirection:SortDirection = SortDirection.Descending;
 
+    // Recherche
+    public search: string;
+    public searchForDebounce$ = new BehaviorSubject<string>("");
+
     constructor(private playerService: PlayerService, private teamService: TeamService ) {
     }
 
@@ -77,6 +83,12 @@ export class PlayersViewerComponent implements OnInit {
                 // la customiser pour régler la profondeur de données que l'on utilise.
                 this.buildData();
             });
+        });
+
+        // On appelle le filtre / sort quand on tape la recherche, mais avec du debounce
+        // pour éviter que toute l'appli rame si on tape vite
+        this.searchForDebounce$.debounceTime(100).subscribe(() => {
+            this.filterAndSortData();
         });
     }
 
@@ -174,6 +186,17 @@ export class PlayersViewerComponent implements OnInit {
 
             return true;
         });
+
+        if (this.search) {
+            const uniformString = (str: string) => latinize(str.trim().toLowerCase());
+            const search = uniformString(this.search);
+
+            this.playersActive = _.filter(this.playersActive, (player: IPlayerExtended) => {
+                return player.firstName && uniformString(player.firstName).includes(search) ||
+                       player.lastName && uniformString(player.lastName).includes(search) ||
+                       player.team && uniformString(player.team.name).includes(search);
+            });
+        }
 
         this.playersActive = _.orderBy( this.playersActive, [ this.orderBy ], [ this.sortDirection ]);
     }
@@ -274,4 +297,10 @@ export class PlayersViewerComponent implements OnInit {
     // Une fois que tu as écris tous ces filtres, c'est là que tu te dis que tu aurais pu factoriser
     // le tout avec un tableau de filtre au lieu de les séparer. Mais là de suite, t'as pas envie
     // de refactorer :)
+
+    public searchUpdate(search: string) {
+        this.search = search;
+
+        this.searchForDebounce$.next(search);
+    }
 }

@@ -1,5 +1,5 @@
 <div class="ui">
-    <h1 class="title">Mes Petites Stats</h1>
+    <h1 class="title">Mes Petites Stats???</h1>
     <h2 class="subtitle">Un outil qui vous permettra de bien plus rapidement faire vos équipe à Mon Petit Gazon.</h2>
 
     <div class="ui three column stackable grid">
@@ -44,6 +44,15 @@
                 <a class="item {{ isFilterMatch( 3 )}}" (click)="filterByMatch( 3 )">< 3 derniers</a>
                 <a class="item {{ isFilterMatch( 5 )}}" (click)="filterByMatch( 5 )">< 5 derniers</a>
                 <a class="item {{ isFilterMatch( 10 )}}" (click)="filterByMatch( 10 )">< 10 derniers</a>
+            </div>
+        </div>
+
+        <div class="sixteen wide column ui form">
+            <div class="field">
+                <div class="ui icon input">
+                    <input type="text" placeholder="Recherche..." [ngModel]="search" (ngModelChange)="searchUpdate($event)">
+                    <i class="search icon"></i>
+                </div>
             </div>
         </div>
     </div>

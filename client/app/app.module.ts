@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { RouterModule } from '@angular/router';
+import { FormsModule } from '@angular/forms';
 
 import { Middleware, combineReducers, applyMiddleware } from 'redux';
 import { NgReduxModule, DevToolsExtension, NgRedux } from '@angular-redux/store';
@@ -37,6 +38,7 @@ export function provideApolloClient(): ApolloClient {
         //=> Angular official modules
         BrowserModule,
         RouterModule.forRoot(APP_ROUTES),
+        FormsModule,
 
         //=> Third-party modules
         NgReduxModule, NgReduxRouterModule,
