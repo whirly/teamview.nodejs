@@ -68,32 +68,68 @@
 
     <table align="center" *ngIf="playersActive.length > 0">
         <thead>
-            <tr>
-                <th class="head-club"></th>
-                <th class="retrait"><div>Nom</div></th>
-                <th class=""><div>Pos</div></th>
-                <th class="center {{ isSortingBy('totalGoalFor')}}"><div (click)="sortBy('totalGoalFor')">Buts</div></th>
-                <th class="center {{ isSortingBy('totalGoalAgainst')}}"><div (click)="sortBy( 'totalGoalAgainst' )">CSC</div></th>
-                <th class="center {{ isSortingBy( 'averagePerformance' )}}"><div (click)="sortBy( 'averagePerformance' )">Moyenne</div></th>
-                <th class="center {{ isSortingBy( 'value' )}}"><div (click)="sortBy( 'value' )">Côte</div></th>
-                <th class="rotate"><div><svg width="82" height="100"><text transform="translate(13,60) rotate(-45)" x="0" y="0">Titulaire</text></svg></div></th>
-                <th class="rotate"><div><svg width="82" height="100"><text transform="translate(13,60) rotate(-45)" x="0" y="0">Présent</text></svg></div></th>
-                <th class="rotate"><div><svg width="82" height="100"><text transform="translate(13,60) rotate(-45)" x="0" y="0">Penalty</text></svg></div></th>
-            </tr>
+        <tr>
+            <th class="head-club"></th>
+            <th class="retrait">
+                <div>Nom</div>
+            </th>
+            <th class="">
+                <div>Pos</div>
+            </th>
+            <th class="center {{ isSortingBy('totalGoalFor')}}">
+                <div (click)="sortBy('totalGoalFor')">Buts</div>
+            </th>
+            <th class="center {{ isSortingBy('totalGoalAgainst')}}">
+                <div (click)="sortBy( 'totalGoalAgainst' )">CSC</div>
+            </th>
+            <th class="center {{ isSortingBy( 'averagePerformance' )}}">
+                <div (click)="sortBy( 'averagePerformance' )">Moyenne</div>
+            </th>
+            <th class="center {{ isSortingBy( 'value' )}}">
+                <div (click)="sortBy( 'value' )">Côte</div>
+            </th>
+            <th class="rotate">
+                <div>
+                    <svg width="82" height="100">
+                        <text transform="translate(13,60) rotate(-45)" x="0" y="0">Titulaire</text>
+                    </svg>
+                </div>
+            </th>
+            <th class="rotate">
+                <div>
+                    <svg width="82" height="100">
+                        <text transform="translate(13,60) rotate(-45)" x="0" y="0">Présent</text>
+                    </svg>
+                </div>
+            </th>
+            <th class="rotate">
+                <div>
+                    <svg width="82" height="100">
+                        <text transform="translate(13,60) rotate(-45)" x="0" y="0">Penalty</text>
+                    </svg>
+                </div>
+            </th>
+        </tr>
         </thead>
         <tbody>
-            <tr *ngFor="let player of playersActive">
-                <td class="body-club emblem {{ getEmblemClass( player.team?.name ) }}"></td>
-                <td class="retrait">{{ player.firstName }} {{ player.lastName }}</td>
-                <td class="center"><div class="{{ getCircleClassFor( player.role ) }}">{{ positionShortForm.get( player.role )}}</div></td>
-                <td class="center emphase">{{ player.totalGoalFor }}</td>
-                <td class="center emphase"><div *ngIf="player.totalGoalAgainst > 0">-{{ player.totalGoalAgainst }}</div><div *ngIf="player.totalGoalAgainst == 0">-</div></td>
-                <td class="center emphase">{{ player.averagePerformance }}</td>
-                <td class="center emphase">{{ player.value }}</td>
-                <td class="center"><i class="fa {{ getLevelFor( player.titularisation ) }}" aria-hidden="true"></i></td>
-                <td class="center"><i class="fa {{ getLevelFor( player.participation ) }}" aria-hidden="true"></i></td>
-                <td class="center"><i *ngIf="player.totalPenaltyFor > 0" class="fa fa-check"></i></td>
-            </tr>
+        <tr *ngFor="let player of playersActive">
+            <td class="body-club emblem {{ getEmblemClass( player.team?.name ) }}"></td>
+            <td class="retrait"><a href="/player/{{ player.idMpg }}">{{ player.firstName }} {{ player.lastName }}</a>
+            </td>
+            <td class="center">
+                <div class="{{ getCircleClassFor( player.role ) }}">{{ positionShortForm.get( player.role ) }}</div>
+            </td>
+            <td class="center emphase">{{ player.totalGoalFor }}</td>
+            <td class="center emphase">
+                <div *ngIf="player.totalGoalAgainst > 0">-{{ player.totalGoalAgainst }}</div>
+                <div *ngIf="player.totalGoalAgainst == 0">-</div>
+            </td>
+            <td class="center emphase">{{ player.averagePerformance }}</td>
+            <td class="center emphase">{{ player.value }}</td>
+            <td class="center"><i class="fa {{ getLevelFor( player.titularisation ) }}" aria-hidden="true"></i></td>
+            <td class="center"><i class="fa {{ getLevelFor( player.participation ) }}" aria-hidden="true"></i></td>
+            <td class="center"><i *ngIf="player.totalPenaltyFor > 0" class="fa fa-check"></i></td>
+        </tr>
         </tbody>
     </table>
 </div>

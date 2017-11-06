@@ -26,7 +26,6 @@ enum PlayerPresence {
     SuperSub = 2
 }
 
-
 @Component({
     selector: 'teamview-playersviewer',
     templateUrl: './playersviewer-component.html',
@@ -40,7 +39,7 @@ export class PlayersViewerComponent implements OnInit {
 
     public teams: ITeam[];
 
-    public positionShortForm: Map< PlayerPosition, string > = new Map< PlayerPosition, string >();
+    public positionShortForm: Map<PlayerPosition, string> = new Map<PlayerPosition, string>();
 
     // Les données de filtrage
     public filterPrice: number = -1;
@@ -51,8 +50,8 @@ export class PlayersViewerComponent implements OnInit {
     public filterTeam: ITeam | null = null;
 
     // Le filtrage
-    public orderBy:PlayerOrdering  = PlayerOrdering.Goal;
-    public sortDirection:SortDirection = SortDirection.Descending;
+    public orderBy: PlayerOrdering = PlayerOrdering.Goal;
+    public sortDirection: SortDirection = SortDirection.Descending;
 
     // Recherche
     public search: string;
@@ -64,12 +63,12 @@ export class PlayersViewerComponent implements OnInit {
     public async ngOnInit() {
 
         // On initialise le table de conversion pour les formes courtes
-        this.positionShortForm.set( PlayerPosition.Goal, "G" );
-        this.positionShortForm.set( PlayerPosition.Defender, "D" );
-        this.positionShortForm.set( PlayerPosition.Midfield, "M" );
-        this.positionShortForm.set( PlayerPosition.Striker, "A" );
+        this.positionShortForm.set(PlayerPosition.Goal, "G");
+        this.positionShortForm.set(PlayerPosition.Defender, "D");
+        this.positionShortForm.set(PlayerPosition.Midfield, "M");
+        this.positionShortForm.set(PlayerPosition.Striker, "A");
 
-        this.teamService.list.subscribe( (teams: ITeam[] ) => {
+        this.teamService.list.subscribe((teams: ITeam[]) => {
             this.teams = teams;
 
             this.playerService.list.subscribe((players: IPlayer[]) => {
@@ -97,29 +96,27 @@ export class PlayersViewerComponent implements OnInit {
     public getEmblemClass(team: string) {
         if (team) {
             return team.replace(" ", "");
-        }
-        else {
+        } else {
             return "";
         }
     }
 
-    public getCircleClassFor( role: PlayerPosition )
-    {
-        return "circle-" + this.positionShortForm.get( role );
-    }
-    public getLevelFor( amount: number )
-    {
-        if( amount == 0 ) return "fa-battery-0";
-        else if( amount <= 25 ) return "fa-battery-1";
-        else if( amount <= 50 ) return "fa-battery-2";
-        else if( amount <= 75 ) return "fa-battery-3";
-        else if( amount <= 100 ) return "fa-battery-4";
+    public getCircleClassFor(role: PlayerPosition) {
+        return "circle-" + this.positionShortForm.get(role);
     }
 
-    public getParticipationClass( player: IPlayerExtended ) {
-        if( player.participation > 80 ) {
+    public getLevelFor(amount: number) {
+        if (amount == 0) return "fa-battery-0";
+        else if (amount <= 25) return "fa-battery-1";
+        else if (amount <= 50) return "fa-battery-2";
+        else if (amount <= 75) return "fa-battery-3";
+        else if (amount <= 100) return "fa-battery-4";
+    }
+
+    public getParticipationClass(player: IPlayerExtended) {
+        if (player.participation > 80) {
             return "positive";
-        } else if( player.participation > 40 ) {
+        } else if (player.participation > 40) {
             return "";
         } else {
             return "negative";
@@ -209,17 +206,17 @@ export class PlayersViewerComponent implements OnInit {
     }
 
     // Changement du filtre par prix
-    public filterByPrice( newPrice: number ): void {
+    public filterByPrice(newPrice: number): void {
 
         // On n'opère que si les prix ont changés.
-        if( this.filterPrice != newPrice ) {
+        if (this.filterPrice != newPrice) {
             this.filterPrice = newPrice;
             this.filterAndSortData();
         }
     }
 
-    public isFilterPrice( askPrice: number ): string {
-        if( this.filterPrice == askPrice ) {
+    public isFilterPrice(askPrice: number): string {
+        if (this.filterPrice == askPrice) {
             return "active";
         } else {
             return "";
@@ -227,56 +224,56 @@ export class PlayersViewerComponent implements OnInit {
     }
 
     // Changement du filtre penalty
-    public filterByPenalty( requirePenalty: boolean ): void {
+    public filterByPenalty(requirePenalty: boolean): void {
 
-        if( this.filterPenalty != requirePenalty ) {
+        if (this.filterPenalty != requirePenalty) {
             this.filterPenalty = requirePenalty;
             this.filterAndSortData();
         }
     }
 
-    public isFilterPenalty( requirePenalty: boolean ): string {
-        if( this.filterPenalty != requirePenalty ) return "";
+    public isFilterPenalty(requirePenalty: boolean): string {
+        if (this.filterPenalty != requirePenalty) return "";
         else return "active";
     }
 
     // Changement du filtre de presence
-    public filterByPresence( presence: PlayerPresence ): void {
-        if( this.filterPresence != presence ) {
+    public filterByPresence(presence: PlayerPresence): void {
+        if (this.filterPresence != presence) {
             this.filterPresence = presence;
             this.filterAndSortData();
         }
     }
 
-    public isFilterPresence( presence: PlayerPresence ): string {
-        if( this.filterPresence == presence ) return "active";
+    public isFilterPresence(presence: PlayerPresence): string {
+        if (this.filterPresence == presence) return "active";
         else return "";
     }
 
     // Changement du filtre de position
-    public filterByPosition( position: PlayerPosition ): void {
-        if( this.filterPosition != position ) {
+    public filterByPosition(position: PlayerPosition): void {
+        if (this.filterPosition != position) {
             this.filterPosition = position;
             this.filterAndSortData();
         }
     }
 
-    public isFilterPosition( position: PlayerPosition ): string {
-        if( this.filterPosition == position ) return "active";
+    public isFilterPosition(position: PlayerPosition): string {
+        if (this.filterPosition == position) return "active";
         else return "";
     }
 
     // Changement du filtre sur le nombre de match.. celui là est un peu particulier
-    public filterByMatch( amount: number ): void {
-        if( this.filterMatch != amount ) {
+    public filterByMatch(amount: number): void {
+        if (this.filterMatch != amount) {
             this.filterMatch = amount;
             this.calculateExtendedData();
             this.filterAndSortData();
         }
     }
 
-    public isFilterMatch( amount: number ): string {
-        if( this.filterMatch == amount ) return "active";
+    public isFilterMatch(amount: number): string {
+        if (this.filterMatch == amount) return "active";
         else return "";
     }
 
@@ -296,12 +293,13 @@ export class PlayersViewerComponent implements OnInit {
 
 
     // Tri
-    public sortBy( sort: PlayerOrdering ) {
+    public sortBy(sort: PlayerOrdering) {
 
         // On regarde si c'était déjà la bonne colonne qu'on triait
-        if( this.orderBy == sort ) {
+        if (this.orderBy == sort) {
             // Oui, cela veut dire qu'on va juste trier dans l'autre sens
-            this.sortDirection = this.sortDirection == SortDirection.Ascending ? SortDirection.Descending : SortDirection.Ascending;
+            this.sortDirection = this.sortDirection ==
+                SortDirection.Ascending ? SortDirection.Descending : SortDirection.Ascending;
             this.filterAndSortData();
 
         } else {
@@ -311,15 +309,14 @@ export class PlayersViewerComponent implements OnInit {
         }
     }
 
-    public isSortingBy( sort: PlayerOrdering ) {
-        if( this.orderBy == sort ) return "active";
+    public isSortingBy(sort: PlayerOrdering) {
+        if (this.orderBy == sort) return "active";
         else return "";
     }
 
     // Une fois que tu as écris tous ces filtres, c'est là que tu te dis que tu aurais pu factoriser
     // le tout avec un tableau de filtre au lieu de les séparer. Mais là de suite, t'as pas envie
     // de refactorer :)
-
     public searchUpdate(search: string) {
         this.search = search;
 

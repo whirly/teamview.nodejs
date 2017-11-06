@@ -27,7 +27,7 @@ export function hasRedCard(player: IPlayer, day: number): boolean {
     return performance && performance.cardRed;
 }
 
-export function isSub( player: IPlayer, day: number ): boolean {
+export function isSub(player: IPlayer, day: number): boolean {
     const performance: IPerformance = player.performances.find((performanceThis: IPerformance) => {
         return performanceThis.day == day;
     });
@@ -35,7 +35,7 @@ export function isSub( player: IPlayer, day: number ): boolean {
     return performance && performance.sub;
 }
 
-export function wasReplaced( player: IPlayer, day: number ): boolean {
+export function wasReplaced(player: IPlayer, day: number): boolean {
     const performance: IPerformance = player.performances.find((performanceThis: IPerformance) => {
         return performanceThis.day == day;
     });
@@ -50,8 +50,7 @@ export function getGoalForDay(player: IPlayer, day: number): number {
 
     if (performance) {
         return performance.goalFor;
-    }
-    else {
+    } else {
         return 0;
     }
 }
@@ -71,15 +70,38 @@ export function getGoalAgainstForDay(player: IPlayer, day: number): number {
 
     if (performance) {
         return performance.goalAgainst;
-    }
-    else {
+    } else {
         return 0;
     }
 }
 
-export function getGoalFor(player: IPlayer, fromDay: number ): number {
+export function getRateFor(player: IPlayer, day: number): number {
+    const performance: IPerformance = player.performances.find((performanceThis: IPerformance) => {
+        return performanceThis.day == day;
+    });
+
+    if (performance) {
+        return performance.rate;
+    } else {
+        return 0;
+    }
+}
+
+export function getMinutesFor(player: IPlayer, day: number): number {
+    const performance: IPerformance = player.performances.find((performanceThis: IPerformance) => {
+        return performanceThis.day == day;
+    });
+
+    if (performance) {
+        return performance.minutes;
+    } else {
+        return 0;
+    }
+}
+
+export function getGoalFor(player: IPlayer, fromDay: number): number {
     const sum: number = _.reduce(player.performances, (aggregate: number, performance: IPerformance) => {
-        if( performance.day >= fromDay ) return aggregate + performance.goalFor;
+        if (performance.day >= fromDay) return aggregate + performance.goalFor;
         else return aggregate;
     }, 0);
 
@@ -88,7 +110,7 @@ export function getGoalFor(player: IPlayer, fromDay: number ): number {
 
 export function getPenaltyFor(player: IPlayer, fromDay: number): number {
     const sum: number = _.reduce(player.performances, (aggregate: number, performance: IPerformance) => {
-        if( performance.day >= fromDay ) return aggregate + performance.penaltyFor;
+        if (performance.day >= fromDay) return aggregate + performance.penaltyFor;
         else return aggregate;
     }, 0);
 
@@ -97,33 +119,32 @@ export function getPenaltyFor(player: IPlayer, fromDay: number): number {
 
 export function getGoalAgainst(player: IPlayer, fromDay: number): number {
     const sum: number = _.reduce(player.performances, (aggregate: number, performance: IPerformance) => {
-        if( performance.day >= fromDay ) return aggregate + performance.goalAgainst;
+        if (performance.day >= fromDay) return aggregate + performance.goalAgainst;
         else return aggregate;
     }, 0);
 
     return sum;
 }
+
 export function getAveragePerformance(player: IPlayer, fromDay: number): number {
 
     let totalPerformances: number = 0;
 
     const sum: number = _.reduce(player.performances, (aggregate: number, performance: IPerformance) => {
-        if( performance.day >= fromDay ) {
+        if (performance.day >= fromDay) {
             totalPerformances += 1;
             return aggregate + performance.rate;
-        }
-        else return aggregate;
+        } else return aggregate;
     }, 0);
 
-    if( totalPerformances > 0 ) return Math.floor(sum * 100 / totalPerformances ) / 100;
+    if (totalPerformances > 0) return Math.floor(sum * 100 / totalPerformances) / 100;
     else return 0;
 }
 
+export function initializeExtendedData(player: IPlayerExtended, numberOfFixtures: number, limitation: number = 0) {
 
-export function initializeExtendedData(player: IPlayerExtended, numberOfFixtures: number, limitation: number = 0 ) {
-
-    let fromDay: number  = limitation == 0 ? 1 : Math.max( numberOfFixtures - limitation, 1 );
-    let numberOfDays: number = numberOfFixtures - ( fromDay - 1 );
+    const fromDay: number = limitation == 0 ? 1 : Math.max(numberOfFixtures - limitation, 1);
+    const numberOfDays: number = numberOfFixtures - ( fromDay - 1 );
 
     player.averagePerformance = getAveragePerformance(player, fromDay);
     player.totalGoalFor = getGoalFor(player, fromDay);
@@ -133,17 +154,17 @@ export function initializeExtendedData(player: IPlayerExtended, numberOfFixtures
     if (player.team) {
 
         let played: number = 0;
-        let played_as_sub: number = 0;
+        let playedAsSub: number = 0;
 
         _.each(player.performances, (performance: IPerformance) => {
-            if( performance.day >= fromDay ) {
+            if (performance.day >= fromDay) {
                 if (!performance.sub) played += 1;
-                else played_as_sub += 1;
+                else playedAsSub += 1;
             }
         });
 
         player.titularisation = 100 * ( played / numberOfDays );
-        player.participation = 100 * (( played + played_as_sub ) / numberOfDays );
+        player.participation = 100 * (( played + playedAsSub ) / numberOfDays );
     } else {
         player.titularisation = 0;
         player.titularisation = 0;

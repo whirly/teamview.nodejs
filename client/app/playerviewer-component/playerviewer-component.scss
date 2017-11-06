@@ -7,16 +7,101 @@
     height: auto;
 }
 
-// Ok là j'ai un peu honte, mais en fait la taille du div contenant le graph est démesurée
-// résultat des courses on va corriger "à la hache".
-#misplaced-div {
-    margin-left: -50px !important;
-}
+.team-logo {
+    width: 42px;
+    height: 42px;
 
-#misplaced-label {
-    margin-top: -100px !important;
+    position: absolute;
+    bottom: 16px;
+    right: 16px;
 }
 
 h1.name {
-    font-size: 4em;
+    font-family: "Roboto Condensed";
 }
+
+table.summary {
+    font-family: "Roboto Condensed";
+
+    thead {
+        tr {
+            th {
+                text-align: center;
+            }
+        }
+    }
+
+    tbody {
+        tr {
+            td {
+                font-size: 1.6em;
+                font-weight: bold;
+                text-align: center;
+            }
+        }
+    }
+}
+
+table.performances {
+    font-family: "Roboto Condensed";
+
+    thead {
+        tr {
+            border-bottom:  solid 2px black;
+            text-transform: uppercase;
+            font-weight: 400;
+            font-size: 0.7em;
+
+            th {
+                padding-left: 0.2em;
+                padding-right: 0.2em;
+                height: 20px;
+
+                div { position: absolute };
+            }
+
+            th.head-name {
+                text-align: left;
+                padding-left: 0.5em;
+            }
+
+            .active {
+                background: black;
+                color: white;
+            }
+
+            .rotate {
+                height: 65px;
+                white-space: nowrap;
+                vertical-align: baseline;
+                padding-bottom: 0;
+                position: relative;
+            }
+
+        }
+    }
+
+    tbody {
+        tr {
+            border-bottom: solid 1px lightgray;
+
+            td {
+                padding-left: 0.4em;
+                padding-right: 0.4em;
+
+                border-left: 1px solid lightgray;
+                border-right: 1px solid lightgray;
+
+            }
+
+            td.emphase {
+                font-weight: 700;
+                padding-right: 1em;
+                padding-left: 1em;
+                border-left: 1px solid black;
+                border-right: 1px solid black;
+            }
+        }
+    }
+}
+

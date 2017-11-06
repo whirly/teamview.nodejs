@@ -1,45 +1,62 @@
+<div class="ui breadcrumb">
+    <a href="/" class="section">Liste</a>
+    <div class="divider"> / </div>
+    <div class="active section">{{ player?.firstName }} {{ player?.lastName }}</div>
+</div>
 <div class="ui grid">
-    <div class="ui three column grid">
+    <div class="ui two column stackable grid">
         <div class="two wide column">
             <img src="https://mespetitesstats.blob.core.windows.net/people/unknown.jpg" class="logo">
+            <div>
+                <img src="{{ teamLogo }}" class="team-logo">
+            </div>
         </div>
-        <div class="seven wide column">
-            <div class="row">
-                <div class="column">
-                    <h1 class="name">{{ player?.firstName }} {{ player?.lastName }}</h1>
-                </div>
-            </div>
-            <div class="row">
-                <div class="ui statistics">
-                    <div class="ui statistic">
-                        <div class="value">{{ player?.totalGoalFor }}</div>
-                        <div class="label">buts marqués</div>
-                    </div>
-                    <div class="ui statistic">
-                        <div class="value">{{ player?.averagePerformance }}</div>
-                        <div class="label">performance moyenne</div>
-                    </div>
-                    <div class="ui statistic" id="misplaced-div" *ngIf="player">
-                        <x-chartist class="value" [data]="presenceData" [options]="presenceOptions" [type]="presenceType"></x-chartist>
-                        <div id="misplaced-label" class="label">présence</div>
-                    </div>
-                </div>
-            </div>
+        <div class="six wide column">
+            <h1 class="name">{{ player?.firstName }} {{ player?.lastName }}</h1>
         </div>
         <div class="two wide column">
-            <img src="{{ teamLogo }}" class="logo">
+            <table class="summary ui celled padded table unstackable">
+                <thead>
+                <tr>
+                    <th>Buts</th>
+                    <th>Moyenne</th>
+                    <th>Titularisation</th>
+                    <th>Présence</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>{{ player.totalGoalFor }}</td>
+                    <td>{{ player.averagePerformance | number :'1.2-2' }}</td>
+                    <td>{{ player.titularisation | number :'1.0-0' }}%</td>
+                    <td>{{ player.participation | number :'1.0-0' }}%</td>
+                </tr>
+                </tbody>
+            </table>
         </div>
     </div>
 </div>
-
 <div class="ui one column grid">
-    <h1>Performance </h1>
-    <div class="row" *ngIf="player">
-        <x-chartist class="column" [data]="performancesData" [options]="performancesOptions" [type]="performancesType"></x-chartist>
-    </div>
-    <h1>Buts</h1>
-    <div class="row" *ngIf="player">
-        <x-chartist class="column" [data]="goalsData" [options]="goalsOptions" [type]="goalsType"></x-chartist>
-    </div>
+    <table class="performances" align="center">
+        <thead>
+            <tr>
+                <th>Jour</th>
+                <th>Match</th>
+                <th>Score</th>
+                <th>Temps</th>
+                <th>Buts</th>
+                <th>Note</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let fixture of team.fixtures">
+                <th>{{ fixture.day }}</th>
+                <td>{{ getSummaryForFixture( fixture ) }}</td>
+                <td class="emphase">{{ getScoreForFixture( fixture ) }}</td>
+                <td>{{ getMyPlayTimeFor( fixture ) | number: '2.0-0'}}</td>
+                <td>{{ getMyGoalFor( fixture ) }}</td>
+                <td>{{ getMyRateFor( fixture ) }}</td>
+            </tr>
+        </tbody>
+    </table>
 </div>
-

@@ -16,6 +16,7 @@ export class PlayerService {
                 players {
                     firstName
                     lastName
+                    idMpg
                     team {
                         name
                     }
@@ -75,7 +76,7 @@ export class PlayerService {
         return this.apollo.watchQuery<{ player: IPlayer }>( {
             query: playerById,
             variables: {
-                idMpg: idMpg
+                idMpg
             }
         }).map( res => res.data.player );
 
