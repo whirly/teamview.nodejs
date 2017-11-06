@@ -13,3 +13,13 @@ export interface ILeagueMPG {
     mode: number;
     teamStatus: number;
 }
+
+export interface IPlayerMercatoMPG {
+    club: string;
+    firstname: string;
+    id: string;
+    lastname: string;
+    position: number;
+    quotation: number;
+    teamid: string;
+}

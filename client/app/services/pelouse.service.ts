@@ -1,7 +1,8 @@
+import * as _ from "lodash";
 import {Injectable} from "@angular/core";
 import {Observable} from "rxjs/Observable";
 import {Headers,Http,Response} from '@angular/http';
-import {ILeagueMPG, IUserMPG} from "../../../shared/models/pelouse";
+import {ILeagueMPG, IPlayerMercatoMPG, IUserMPG} from "../../../shared/models/pelouse";
 import {AsyncSubject} from "rxjs/AsyncSubject";
 
 @Injectable()
@@ -10,6 +11,8 @@ export class PelouseService {
     private urlApi: string = "https://api.monpetitgazon.com";
     private loginApi: string = this.urlApi + "/user/signIn";
     private dashboardApi: string = this.urlApi + "/user/dashboard";
+    private mercatoApi: string = this.urlApi + "/league/";
+    private mercatoApiSecondPart: string = "/transfer/buy";
 
     private user: any;
 
@@ -40,16 +43,28 @@ export class PelouseService {
         return this.isLoggedIn;
     }
 
-    public getLeague(): Observable<ILeagueMPG[]> {
+    public getLeagues(): Observable<ILeagueMPG[]> {
 
         let headers: Headers = new Headers({'Authorization': this.user.token});
 
         return this.http.get( this.dashboardApi, { headers: headers })
             .map( (response: Response) => {
-                let data: any = response.json();
-                console.log( data );
-                return data;
+                let data: any = response.json().data;
+                console.log(data);
+                return data.leagues;
             });
+    }
+
+    public getPlayersAvailableForLeague( league: string ): Observable<string[]> {
+
+        let headers: Headers = new Headers({'Authorization': this.user.token});
+
+        return this.http.get( this.mercatoApi + league + this.mercatoApiSecondPart, { headers: headers })
+            .map( (response: Response) => {
+                let players: IPlayerMercatoMPG[] = response.json().availablePlayers;
+                return _.map( players, (player:IPlayerMercatoMPG) => player.id.slice( 7 ));
+            })
+
     }
 
     public login( login: string, password: string ): Observable<IUserMPG>  {
@@ -59,7 +74,7 @@ export class PelouseService {
             password: password,
             language: "fr-FR"
         })
-        .map((response) => {
+        .map((response) => response.json()).map( (response) => {
             let user:any = response;
             if( user && user.token ) {
                 localStorage.setItem( 'currentUser', JSON.stringify(user));

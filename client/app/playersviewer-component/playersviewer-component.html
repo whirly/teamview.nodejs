@@ -62,6 +62,13 @@
                 </div>
             </div>
         </div>
+
+        <div class="eight wide column" *ngIf="availableLeagues.length > 0">
+            <div class="menu-dark ui {{ getAmountOfLeagues() }} item menu">
+                <a class="item {{ isFilterLeague( '' )}}" (click)="filterByLeague( '' )">Pas de filtrage Mercato</a>
+                <a *ngFor="let league of availableLeagues" class="item {{ isFilterLeague( league.id )}}" (click)="filterByLeague( league.id )">{{ league.name }}</a>
+            </div>
+        </div>
     </div>
 
     <table align="center" *ngIf="playersActive.length > 0">
