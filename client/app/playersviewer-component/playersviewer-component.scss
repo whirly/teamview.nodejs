@@ -37,6 +37,21 @@ h2.subtitle {
     box-shadow: none;
 }
 
+.filters a {
+    cursor: pointer;
+}
+
+.filter-teams {
+    text-align: center;
+}
+.filter-team {
+    display: inline-block;
+    border: 1px solid rgba(0, 0, 0, 0);
+    &.active {
+        border: 1px solid #333;
+    }
+}
+
 menu-dark {
     margin-top: 0px;
     margin-bottom: 0px;

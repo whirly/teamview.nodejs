@@ -2,7 +2,7 @@
     <h1 class="title">Mes Petites Stats???</h1>
     <h2 class="subtitle">Un outil qui vous permettra de bien plus rapidement faire vos équipe à Mon Petit Gazon.</h2>
 
-    <div class="ui three column stackable grid">
+    <div class="ui three column stackable grid filters">
         <div class="eight wide column">
             <div class="ui five item menu menu-dark">
                 <a class="item {{ isFilterPosition( 0 ) }}" (click)="filterByPosition(0)">Tous</a>
@@ -45,6 +45,15 @@
                 <a class="item {{ isFilterMatch( 5 )}}" (click)="filterByMatch( 5 )">< 5 derniers</a>
                 <a class="item {{ isFilterMatch( 10 )}}" (click)="filterByMatch( 10 )">< 10 derniers</a>
             </div>
+        </div>
+
+        <div class="sixteen wide column filter-teams">
+            <a *ngFor="let team of teams"
+                class="filter-team {{ isFilterTeam(team) }}"
+                (click)="filterByTeam(team)"
+            >
+                <div class="emblem {{ getEmblemClass(team.name) }}"></div>
+            </a>
         </div>
 
         <div class="sixteen wide column ui form">
