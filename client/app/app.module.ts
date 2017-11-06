@@ -22,7 +22,6 @@ import {PlayersViewerComponent} from "./playersviewer-component/playersviewer-co
 import {PlayerService} from "./services/player.service";
 import {PlayerViewerComponent} from "./playerviewer-component/playerviewer-component";
 import {ChartistModule} from "ng-chartist";
-import {FormsModule} from "@angular/forms";
 import {PelouseService} from "./services/pelouse.service";
 import {HttpModule} from "@angular/http";
 
