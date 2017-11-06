@@ -47,6 +47,29 @@
             </div>
         </div>
 
+        <div class="eight wide column" *ngIf="!pelouseService.isLogged()">
+            <div class="ui form">
+                <div class="fields">
+                    <div class="five wide field">
+                        <input type="text" [(ngModel)]="login" placeholder="Identifiant">
+                    </div>
+                    <div class="five wide field">
+                        <input type="text" [(ngModel)]="password" placeholder="Mot de passe">
+                    </div>
+                    <div class="eight wide field">
+                        <button class="positive ui button" (click)="connectMercato()">Connecter son mercato</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="eight wide column" *ngIf="availableLeagues.length > 0">
+            <div class="menu-dark ui {{ getAmountOfLeagues() }} item menu">
+                <a class="item {{ isFilterLeague( '' )}}" (click)="filterByLeague( '' )">Pas de filtrage Mercato</a>
+                <a *ngFor="let league of availableLeagues" class="item {{ isFilterLeague( league.id )}}" (click)="filterByLeague( league.id )">{{ league.name }}</a>
+            </div>
+        </div>
+
         <div class="sixteen wide column filter-teams">
             <a *ngFor="let team of teams"
                 class="filter-team {{ isFilterTeam(team) }}"

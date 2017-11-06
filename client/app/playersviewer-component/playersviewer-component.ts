@@ -7,6 +7,8 @@ import latinize from "latinize";
 import * as player_helpers from "../../../shared/models/player_helpers";
 import {TeamService} from "../services/team.service";
 import {ITeam} from "../../../shared/models/team";
+import {PelouseService} from "../services/pelouse.service";
+import {ILeagueMPG} from "../../../shared/models/pelouse";
 
 enum PlayerOrdering {
     Goal = "totalGoalFor",
@@ -34,10 +36,17 @@ enum PlayerPresence {
 
 export class PlayersViewerComponent implements OnInit {
 
+    // Informations de login pour la connexion du mercato
+    public login: string;
+    public password: string;
+
+    public token: string;
+
     public playersAll: IPlayerExtended[] = [];
     public playersActive: IPlayerExtended[] = [];
 
     public teams: ITeam[];
+    public availableLeagues: ILeagueMPG[] = [];
 
     public positionShortForm: Map<PlayerPosition, string> = new Map<PlayerPosition, string>();
 
@@ -48,6 +57,10 @@ export class PlayersViewerComponent implements OnInit {
     public filterPenalty: boolean = false;
     public filterMatch: number = 0;
     public filterTeam: ITeam | null = null;
+    public filterLeague: string = "";
+
+    // La liste des identifiants des joueurs disponibles.
+    public availablePlayers: string[] = [];
 
     // Le filtrage
     public orderBy: PlayerOrdering = PlayerOrdering.Goal;
@@ -57,7 +70,7 @@ export class PlayersViewerComponent implements OnInit {
     public search: string;
     public searchForDebounce$ = new BehaviorSubject<string>("");
 
-    constructor(private playerService: PlayerService, private teamService: TeamService ) {
+    constructor(private playerService: PlayerService, private teamService: TeamService, private pelouseService: PelouseService ) {
     }
 
     public async ngOnInit() {
@@ -90,6 +103,17 @@ export class PlayersViewerComponent implements OnInit {
         this.searchForDebounce$.debounceTime(100).subscribe(() => {
             this.filterAndSortData();
         });
+
+        this.pelouseService.loggedIn().subscribe( (logged: boolean) => {
+            if( logged ) {
+                // On reçoit l'événement de connexion, on demande donc le dashboard du monsieur
+                this.pelouseService.getLeagues().subscribe( (leagues: ILeagueMPG[] ) => {
+                    this.availableLeagues = _.filter( leagues,(league:ILeagueMPG) => {
+                        return league.mode == 2;
+                    });
+                });
+            }
+        })
     }
 
     // Cette méthode pour permettre à Saint Etienne d'exister commence à se reproduire à droite et à gauche.
@@ -121,6 +145,15 @@ export class PlayersViewerComponent implements OnInit {
         } else {
             return "negative";
         }
+    }
+
+    // Connexion du mercato.
+    // Il s'agit de connecter son mercato MPG à l'application, l'idée étant de ne
+    // garder que les joueurs encore disponible dans le mercato. Pas la peine de fantasmer
+    // sur un mec qui bosse déjà pour un autre.
+    public connectMercato(): void {
+        this.pelouseService.login( this.login, this.password ).subscribe( response => {
+        });
     }
 
     // Changement du filtre par prix
@@ -210,6 +243,48 @@ export class PlayersViewerComponent implements OnInit {
     }
 
 
+    // Changement du filtre sur le mercato
+    public filterByLeague( leagueName: string ): void {
+        if( this.filterLeague != leagueName ) {
+            this.filterLeague = leagueName;
+
+            this.pelouseService.getPlayersAvailableForLeague( this.filterLeague ).subscribe( ( playersId: string[] ) => {
+               this.availablePlayers = playersId;
+               this.filterAndSortData();
+            });
+
+        }
+    }
+
+    public isFilterLeague( leagueName: string ): string {
+        if( this.filterLeague == leagueName ) return "active";
+        else return "";
+    }
+
+    public getAmountOfLeagues(): string {
+        switch( this.availableLeagues.length )
+        {
+            case 0:
+                return "one";
+            case 1:
+                return "two";
+            case 2:
+                return "three";
+            case 3:
+                return "four";
+            case 4:
+                return "five";
+            case 5:
+                return "six";
+            case 6:
+                return "seven";
+            case 7:
+                return "eight";
+            // Au delà de huit ligues, je me pose des questions sur votre santé mentale.
+            default:
+                return "nine";
+        }
+    }
     // Tri
     public sortBy(sort: PlayerOrdering) {
 
@@ -293,6 +368,18 @@ export class PlayersViewerComponent implements OnInit {
 
             if (this.filterTeam != null) {
                 if ( !player.team || player.team.name != this.filterTeam.name ) {
+                    return false;
+                }
+            }
+
+            // On va rechercher si la liste des joueurs dispo contient le joueur en question
+            // Si ce n'est pas le cas on le vire. A voir combien ça consomme en CPU, si c'est trop
+            // il faudrait sans doute nettoyer la liste des joueurs dispo de ceux qui ne jouent jamais.
+            if (this.filterLeague != "") {
+                if( _.find( this.availablePlayers, ( id: string ) => {
+                        if( id == player.idMpg ) return true;
+                    }) == undefined )
+                {
                     return false;
                 }
             }

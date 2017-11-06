@@ -22,6 +22,9 @@ import {PlayersViewerComponent} from "./playersviewer-component/playersviewer-co
 import {PlayerService} from "./services/player.service";
 import {PlayerViewerComponent} from "./playerviewer-component/playerviewer-component";
 import {ChartistModule} from "ng-chartist";
+import {FormsModule} from "@angular/forms";
+import {PelouseService} from "./services/pelouse.service";
+import {HttpModule} from "@angular/http";
 
 export function provideApolloClient(): ApolloClient {
     return apolloClient;
@@ -39,7 +42,7 @@ export function provideApolloClient(): ApolloClient {
         //=> Angular official modules
         BrowserModule,
         RouterModule.forRoot(APP_ROUTES),
-        FormsModule,
+        FormsModule, HttpModule,
 
         //=> Third-party modules
         NgReduxModule, NgReduxRouterModule,
@@ -47,7 +50,7 @@ export function provideApolloClient(): ApolloClient {
         SuiModule,
         ChartistModule
     ],
-    providers: [TeamService, PlayerService],
+    providers: [TeamService, PlayerService, PelouseService],
     bootstrap: [AppComponent]
 })
 export class AppModule {
