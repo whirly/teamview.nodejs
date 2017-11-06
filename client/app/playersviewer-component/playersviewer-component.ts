@@ -47,6 +47,7 @@ export class PlayersViewerComponent implements OnInit {
     public filterPresence: PlayerPresence = PlayerPresence.None;
     public filterPenalty: boolean = false;
     public filterMatch: number = 0;
+    public filterTeam: ITeam | null = null;
 
     // Le filtrage
     public orderBy: PlayerOrdering = PlayerOrdering.Goal;
@@ -194,6 +195,21 @@ export class PlayersViewerComponent implements OnInit {
         else return "";
     }
 
+    public filterByTeam( team: ITeam | null ): void {
+        if( this.filterTeam != team ) {
+            this.filterTeam = team;
+            this.filterAndSortData();
+        } else {
+            this.filterTeam = null;
+            this.filterAndSortData();
+        }
+    }
+    public isFilterTeam( team: ITeam | null ): string {
+        if( this.filterTeam == team ) return "active";
+        else return "";
+    }
+
+
     // Tri
     public sortBy(sort: PlayerOrdering) {
 
@@ -271,6 +287,12 @@ export class PlayersViewerComponent implements OnInit {
 
             if (this.filterPenalty != false) {
                 if (player.totalPenaltyFor == 0) {
+                    return false;
+                }
+            }
+
+            if (this.filterTeam != null) {
+                if ( !player.team || player.team.name != this.filterTeam.name ) {
                     return false;
                 }
             }
