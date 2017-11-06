@@ -47,7 +47,6 @@ export class PlayersViewerComponent implements OnInit {
 
     public teams: ITeam[];
     public availableLeagues: ILeagueMPG[] = [];
-
     public positionShortForm: Map<PlayerPosition, string> = new Map<PlayerPosition, string>();
 
     // Les données de filtrage
@@ -70,7 +69,8 @@ export class PlayersViewerComponent implements OnInit {
     public search: string;
     public searchForDebounce$ = new BehaviorSubject<string>("");
 
-    constructor(private playerService: PlayerService, private teamService: TeamService, private pelouseService: PelouseService ) {
+    constructor(private playerService: PlayerService, private teamService: TeamService,
+                private pelouseService: PelouseService) {
     }
 
     public async ngOnInit() {
@@ -104,16 +104,16 @@ export class PlayersViewerComponent implements OnInit {
             this.filterAndSortData();
         });
 
-        this.pelouseService.loggedIn().subscribe( (logged: boolean) => {
-            if( logged ) {
+        this.pelouseService.loggedIn().subscribe((logged: boolean) => {
+            if (logged) {
                 // On reçoit l'événement de connexion, on demande donc le dashboard du monsieur
-                this.pelouseService.getLeagues().subscribe( (leagues: ILeagueMPG[] ) => {
-                    this.availableLeagues = _.filter( leagues,(league:ILeagueMPG) => {
+                this.pelouseService.getLeagues().subscribe((leagues: ILeagueMPG[]) => {
+                    this.availableLeagues = _.filter(leagues, (league: ILeagueMPG) => {
                         return league.mode == 2;
                     });
                 });
             }
-        })
+        });
     }
 
     // Cette méthode pour permettre à Saint Etienne d'exister commence à se reproduire à droite et à gauche.
@@ -127,6 +127,10 @@ export class PlayersViewerComponent implements OnInit {
 
     public getCircleClassFor(role: PlayerPosition) {
         return "circle-" + this.positionShortForm.get(role);
+    }
+
+    public isMercatoAvailable(): boolean {
+        return this.pelouseService.isLogged();
     }
 
     public getLevelFor(amount: number) {
@@ -152,8 +156,7 @@ export class PlayersViewerComponent implements OnInit {
     // garder que les joueurs encore disponible dans le mercato. Pas la peine de fantasmer
     // sur un mec qui bosse déjà pour un autre.
     public connectMercato(): void {
-        this.pelouseService.login( this.login, this.password ).subscribe( response => {
-        });
+        this.pelouseService.login(this.login, this.password);
     }
 
     // Changement du filtre par prix
@@ -228,8 +231,8 @@ export class PlayersViewerComponent implements OnInit {
         else return "";
     }
 
-    public filterByTeam( team: ITeam | null ): void {
-        if( this.filterTeam != team ) {
+    public filterByTeam(team: ITeam | null): void {
+        if (this.filterTeam != team) {
             this.filterTeam = team;
             this.filterAndSortData();
         } else {
@@ -237,33 +240,33 @@ export class PlayersViewerComponent implements OnInit {
             this.filterAndSortData();
         }
     }
-    public isFilterTeam( team: ITeam | null ): string {
-        if( this.filterTeam == team ) return "active";
+
+    public isFilterTeam(team: ITeam | null): string {
+        if (this.filterTeam == team) return "active";
         else return "";
     }
 
-
     // Changement du filtre sur le mercato
-    public filterByLeague( leagueName: string ): void {
-        if( this.filterLeague != leagueName ) {
+    public filterByLeague(leagueName: string): void {
+        if (this.filterLeague != leagueName) {
             this.filterLeague = leagueName;
 
-            this.pelouseService.getPlayersAvailableForLeague( this.filterLeague ).subscribe( ( playersId: string[] ) => {
-               this.availablePlayers = playersId;
-               this.filterAndSortData();
-            });
-
+            if (this.filterLeague == "") this.filterAndSortData();
+            else this.pelouseService.getPlayersAvailableForLeague(this.filterLeague)
+                .subscribe((playersId: string[]) => {
+                    this.availablePlayers = playersId;
+                    this.filterAndSortData();
+                });
         }
     }
 
-    public isFilterLeague( leagueName: string ): string {
-        if( this.filterLeague == leagueName ) return "active";
+    public isFilterLeague(leagueName: string): string {
+        if (this.filterLeague == leagueName) return "active";
         else return "";
     }
 
     public getAmountOfLeagues(): string {
-        switch( this.availableLeagues.length )
-        {
+        switch (this.availableLeagues.length) {
             case 0:
                 return "one";
             case 1:
@@ -285,6 +288,7 @@ export class PlayersViewerComponent implements OnInit {
                 return "nine";
         }
     }
+
     // Tri
     public sortBy(sort: PlayerOrdering) {
 
@@ -292,7 +296,7 @@ export class PlayersViewerComponent implements OnInit {
         if (this.orderBy == sort) {
             // Oui, cela veut dire qu'on va juste trier dans l'autre sens
             this.sortDirection = this.sortDirection ==
-                SortDirection.Ascending ? SortDirection.Descending : SortDirection.Ascending;
+            SortDirection.Ascending ? SortDirection.Descending : SortDirection.Ascending;
             this.filterAndSortData();
 
         } else {
@@ -367,7 +371,7 @@ export class PlayersViewerComponent implements OnInit {
             }
 
             if (this.filterTeam != null) {
-                if ( !player.team || player.team.name != this.filterTeam.name ) {
+                if (!player.team || player.team.name != this.filterTeam.name) {
                     return false;
                 }
             }
@@ -376,10 +380,9 @@ export class PlayersViewerComponent implements OnInit {
             // Si ce n'est pas le cas on le vire. A voir combien ça consomme en CPU, si c'est trop
             // il faudrait sans doute nettoyer la liste des joueurs dispo de ceux qui ne jouent jamais.
             if (this.filterLeague != "") {
-                if( _.find( this.availablePlayers, ( id: string ) => {
-                        if( id == player.idMpg ) return true;
-                    }) == undefined )
-                {
+                if (_.find(this.availablePlayers, (id: string) => {
+                        if (id == player.idMpg) return true;
+                    }) == undefined) {
                     return false;
                 }
             }
@@ -403,8 +406,8 @@ export class PlayersViewerComponent implements OnInit {
 
             this.playersActive = _.filter(this.playersActive, (player: IPlayerExtended) => {
                 return player.firstName && uniformString(player.firstName).includes(search) ||
-                       player.lastName && uniformString(player.lastName).includes(search) ||
-                       player.team && uniformString(player.team.name).includes(search);
+                    player.lastName && uniformString(player.lastName).includes(search) ||
+                    player.team && uniformString(player.team.name).includes(search);
             });
         }
 

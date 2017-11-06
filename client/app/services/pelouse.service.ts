@@ -23,12 +23,11 @@ export class PelouseService {
         // On essaye de récupérer les infos depuis le local storage.
         // Cela nous évite de faire une requête pour le signIn si on a encore
         // le token d'identification.
-        let user = localStorage.getItem('currentUser');
+        const user = localStorage.getItem('currentUser');
         if (user) {
             this.user = JSON.parse(user);
             this.isLoggedIn = true;
-        }
-        else {
+        } else {
             this.isLoggedIn = false;
         }
         this.logged.next(this.isLoggedIn);
@@ -45,36 +44,35 @@ export class PelouseService {
 
     public getLeagues(): Observable<ILeagueMPG[]> {
 
-        let headers: Headers = new Headers({Authorization: this.user.token});
+        const headers: Headers = new Headers({Authorization: this.user.token});
 
-        return this.http.get(this.dashboardApi, {headers: headers})
+        return this.http.get(this.dashboardApi, {headers})
             .map((response: Response) => {
-                let data: any = response.json().data;
+                const data: any = response.json().data;
                 return data.leagues;
             });
     }
 
     public getPlayersAvailableForLeague(league: string): Observable<string[]> {
 
-        let headers: Headers = new Headers({Authorization: this.user.token});
+        const headers: Headers = new Headers({Authorization: this.user.token});
 
-        return this.http.get(this.mercatoApi + league + this.mercatoApiSecondPart, {headers: headers})
+        return this.http.get(this.mercatoApi + league + this.mercatoApiSecondPart, {headers})
             .map((response: Response) => {
-                let players: IPlayerMercatoMPG[] = response.json().availablePlayers;
+                const players: IPlayerMercatoMPG[] = response.json().availablePlayers;
                 return _.map(players, (player: IPlayerMercatoMPG) => player.id.slice(7));
-            })
-
+            });
     }
 
     public login(login: string, password: string): Observable<IUserMPG> {
 
         return this.http.post(this.loginApi, {
             email: login,
-            password: password,
+            password,
             language: "fr-FR"
         })
             .map((response) => response.json()).map((response) => {
-                let user: any = response;
+                const user: any = response;
                 if (user && user.token) {
                     localStorage.setItem('currentUser', JSON.stringify(user));
                     this.user = user;

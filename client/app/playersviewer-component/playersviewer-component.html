@@ -47,7 +47,7 @@
             </div>
         </div>
 
-        <div class="eight wide column" *ngIf="!pelouseService.isLogged()">
+        <div class="eight wide column" *ngIf="!isMercatoAvailable()">
             <div class="ui form">
                 <div class="fields">
                     <div class="five wide field">
@@ -99,13 +99,13 @@
             <th class="">
                 <div>Pos</div>
             </th>
-            <th class="center {{ isSortingBy('totalGoalFor')}}">
+            <th class="center {{isSortingBy('totalGoalFor')}}">
                 <div (click)="sortBy('totalGoalFor')">Buts</div>
             </th>
-            <th class="center {{ isSortingBy('totalGoalAgainst')}}">
+            <th class="center {{isSortingBy('totalGoalAgainst')}}">
                 <div (click)="sortBy( 'totalGoalAgainst' )">CSC</div>
             </th>
-            <th class="center {{ isSortingBy( 'averagePerformance' )}}">
+            <th class="center {{isSortingBy( 'averagePerformance' )}}">
                 <div (click)="sortBy( 'averagePerformance' )">Moyenne</div>
             </th>
             <th class="center {{ isSortingBy( 'value' )}}">
