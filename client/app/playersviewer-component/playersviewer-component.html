@@ -47,7 +47,7 @@
             </div>
         </div>
 
-        <div class="eight wide column" *ngIf="!isMercatoAvailable()">
+        <div class="eight wide column" *ngIf="!mercatoAvailable">
             <div class="ui form">
                 <div class="fields">
                     <div class="five wide field">
@@ -63,7 +63,7 @@
             </div>
         </div>
 
-        <div class="eight wide column" *ngIf="availableLeagues.length > 0">
+        <div class="eight wide column" *ngIf="mercatoAvailable">
             <div class="menu-dark ui {{ getAmountOfLeagues() }} item menu">
                 <a class="item {{ isFilterLeague( '' )}}" (click)="filterByLeague( '' )">Pas de filtrage Mercato</a>
                 <a *ngFor="let league of availableLeagues" class="item {{ isFilterLeague( league.id )}}" (click)="filterByLeague( league.id )">{{ league.name }}</a>

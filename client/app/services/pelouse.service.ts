@@ -3,7 +3,7 @@ import {Injectable} from "@angular/core";
 import {Observable} from "rxjs/Observable";
 import {Headers, Http, Response} from '@angular/http';
 import {ILeagueMPG, IPlayerMercatoMPG, IUserMPG} from "../../../shared/models/pelouse";
-import {AsyncSubject} from "rxjs/AsyncSubject";
+import {BehaviorSubject} from "rxjs/BehaviorSubject";
 
 @Injectable()
 export class PelouseService {
@@ -16,8 +16,8 @@ export class PelouseService {
 
     private user: any;
 
-    private logged: AsyncSubject<boolean> = new AsyncSubject<boolean>();
-    private isLoggedIn: boolean = false;
+    private loggedIn: boolean = false;
+    private isLoggedInSubject: BehaviorSubject<boolean> = new BehaviorSubject<boolean>( false );
 
     constructor(private http: Http) {
         // On essaye de récupérer les infos depuis le local storage.
@@ -26,20 +26,16 @@ export class PelouseService {
         const user = localStorage.getItem('currentUser');
         if (user) {
             this.user = JSON.parse(user);
-            this.isLoggedIn = true;
+            this.loggedIn = true;
         } else {
-            this.isLoggedIn = false;
+            this.loggedIn = false;
         }
-        this.logged.next(this.isLoggedIn);
-        this.logged.complete();
+        this.isLoggedInSubject.next(this.loggedIn);
+        this.isLoggedInSubject.next(this.loggedIn);
     }
 
-    public loggedIn(): Observable<boolean> {
-        return this.logged;
-    }
-
-    public isLogged(): boolean {
-        return this.isLoggedIn;
+    public logIn() : Observable<boolean> {
+        return this.isLoggedInSubject.asObservable();
     }
 
     public getLeagues(): Observable<ILeagueMPG[]> {
@@ -76,9 +72,8 @@ export class PelouseService {
                 if (user && user.token) {
                     localStorage.setItem('currentUser', JSON.stringify(user));
                     this.user = user;
-                    this.isLoggedIn = true;
-                    this.logged.next(this.isLoggedIn);
-                    this.logged.complete();
+                    this.loggedIn = true;
+                    this.isLoggedInSubject.next(this.loggedIn);
                 }
 
                 return user;

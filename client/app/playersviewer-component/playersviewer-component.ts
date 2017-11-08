@@ -8,7 +8,7 @@ import * as player_helpers from "../../../shared/models/player_helpers";
 import {TeamService} from "../services/team.service";
 import {ITeam} from "../../../shared/models/team";
 import {PelouseService} from "../services/pelouse.service";
-import {ILeagueMPG} from "../../../shared/models/pelouse";
+import {ILeagueMPG, IUserMPG} from "../../../shared/models/pelouse";
 
 enum PlayerOrdering {
     Goal = "totalGoalFor",
@@ -65,6 +65,10 @@ export class PlayersViewerComponent implements OnInit {
     public orderBy: PlayerOrdering = PlayerOrdering.Goal;
     public sortDirection: SortDirection = SortDirection.Descending;
 
+    // L'utilisateur loggué
+    public user: IUserMPG;
+    public mercatoAvailable: boolean = false;
+
     // Recherche
     public search: string;
     public searchForDebounce$ = new BehaviorSubject<string>("");
@@ -104,13 +108,16 @@ export class PlayersViewerComponent implements OnInit {
             this.filterAndSortData();
         });
 
-        this.pelouseService.loggedIn().subscribe((logged: boolean) => {
+        this.pelouseService.logIn().subscribe((logged: boolean) => {
+            this.mercatoAvailable = false;
+
             if (logged) {
                 // On reçoit l'événement de connexion, on demande donc le dashboard du monsieur
                 this.pelouseService.getLeagues().subscribe((leagues: ILeagueMPG[]) => {
                     this.availableLeagues = _.filter(leagues, (league: ILeagueMPG) => {
                         return league.mode == 2;
                     });
+                    this.mercatoAvailable = true;
                 });
             }
         });
@@ -127,10 +134,6 @@ export class PlayersViewerComponent implements OnInit {
 
     public getCircleClassFor(role: PlayerPosition) {
         return "circle-" + this.positionShortForm.get(role);
-    }
-
-    public isMercatoAvailable(): boolean {
-        return this.pelouseService.isLogged();
     }
 
     public getLevelFor(amount: number) {
@@ -156,7 +159,9 @@ export class PlayersViewerComponent implements OnInit {
     // garder que les joueurs encore disponible dans le mercato. Pas la peine de fantasmer
     // sur un mec qui bosse déjà pour un autre.
     public connectMercato(): void {
-        this.pelouseService.login(this.login, this.password);
+        this.pelouseService.login(this.login, this.password).subscribe( (user:IUserMPG) => {
+            this.user = user;
+        });
     }
 
     // Changement du filtre par prix
