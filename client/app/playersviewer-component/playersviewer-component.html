@@ -147,7 +147,7 @@
                 <div *ngIf="player.totalGoalAgainst > 0">-{{ player.totalGoalAgainst }}</div>
                 <div *ngIf="player.totalGoalAgainst == 0">-</div>
             </td>
-            <td class="center emphase">{{ player.averagePerformance }}</td>
+            <td class="center emphase">{{ player.averagePerformance | number :'1.2-2' }}</td>
             <td class="center emphase">{{ player.value }}</td>
             <td class="center"><i class="fa {{ getLevelFor( player.titularisation ) }}" aria-hidden="true"></i></td>
             <td class="center"><i class="fa {{ getLevelFor( player.participation ) }}" aria-hidden="true"></i></td>
