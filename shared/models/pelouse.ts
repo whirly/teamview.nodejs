@@ -23,3 +23,7 @@ export interface IPlayerMercatoMPG {
     quotation: number;
     teamid: string;
 }
+
+export interface IMercatoMPG {
+    availablePlayers: IPlayerMercatoMPG[];
+}

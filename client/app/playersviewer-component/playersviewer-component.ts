@@ -1,5 +1,6 @@
 import {Component, OnInit} from "@angular/core";
 import {BehaviorSubject} from "../rxjs";
+import 'rxjs/add/operator/switchMap';
 import {PlayerService} from "../services/player.service";
 import {IPlayer, IPlayerExtended, PlayerPosition} from "../../../shared/models/player";
 import _ from "lodash";
@@ -8,7 +9,7 @@ import * as player_helpers from "../../../shared/models/player_helpers";
 import {TeamService} from "../services/team.service";
 import {ITeam} from "../../../shared/models/team";
 import {PelouseService} from "../services/pelouse.service";
-import {ILeagueMPG, IUserMPG} from "../../../shared/models/pelouse";
+import {ILeagueMPG, IMercatoMPG, IPlayerMercatoMPG, IUserMPG} from "../../../shared/models/pelouse";
 
 enum PlayerOrdering {
     Goal = "totalGoalFor",
@@ -258,8 +259,9 @@ export class PlayersViewerComponent implements OnInit {
 
             if (this.filterLeague == "") this.filterAndSortData();
             else this.pelouseService.getPlayersAvailableForLeague(this.filterLeague)
-                .subscribe((playersId: string[]) => {
-                    this.availablePlayers = playersId;
+                .subscribe(( mercato: IMercatoMPG ) => {
+                    this.availablePlayers = _.map( mercato.availablePlayers,
+                        (player: IPlayerMercatoMPG) => player.id.slice(7));
                     this.filterAndSortData();
                 });
         }

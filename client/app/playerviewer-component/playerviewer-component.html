@@ -26,10 +26,10 @@
                 </thead>
                 <tbody>
                 <tr>
-                    <td>{{ player.totalGoalFor }}</td>
-                    <td>{{ player.averagePerformance | number :'1.2-2' }}</td>
-                    <td>{{ player.titularisation | number :'1.0-0' }}%</td>
-                    <td>{{ player.participation | number :'1.0-0' }}%</td>
+                    <td>{{ player?.totalGoalFor }}</td>
+                    <td>{{ player?.averagePerformance | number :'1.2-2' }}</td>
+                    <td>{{ player?.titularisation | number :'1.0-0' }}%</td>
+                    <td>{{ player?.participation | number :'1.0-0' }}%</td>
                 </tr>
                 </tbody>
             </table>
@@ -49,7 +49,7 @@
             </tr>
         </thead>
         <tbody>
-            <tr *ngFor="let fixture of team.fixtures">
+            <tr *ngFor="let fixture of team?.fixtures">
                 <th>{{ fixture.day }}</th>
                 <td>{{ getSummaryForFixture( fixture ) }}</td>
                 <td class="emphase">{{ getScoreForFixture( fixture ) }}</td>
