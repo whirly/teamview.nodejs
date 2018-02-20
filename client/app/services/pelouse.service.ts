@@ -1,7 +1,7 @@
 import {HttpClient, HttpHeaders} from "@angular/common/http";
 import {Injectable} from "@angular/core";
 import {Observable} from "rxjs/Observable";
-import {ILeagueMPG, IMercatoMPG, IUserMPG} from "../../../shared/models/pelouse";
+import {IFullMercatoMPG, ILeagueMPG, IMercatoMPG, IUserMPG} from "../../../shared/models/pelouse";
 import {BehaviorSubject} from "rxjs/BehaviorSubject";
 import 'rxjs/add/operator/map';
 
@@ -13,6 +13,9 @@ export class PelouseService {
     private dashboardApi: string = this.urlApi + "/user/dashboard";
     private mercatoApi: string = this.urlApi + "/league/";
     private mercatoApiSecondPart: string = "/transfer/buy";
+
+    private mercatoHistoryApi: string = this.urlApi + "/league/";
+    private mercatoHistoryApiSecondPart: string = "/pending_mercato";
 
     private user: any;
 
@@ -46,6 +49,11 @@ export class PelouseService {
         return this.http.get<any>(this.dashboardApi, {
             headers: headers
         }).map( response => { return response.data.leagues; });
+    }
+
+    public getMercatoForLeague(league: string): Observable<IFullMercatoMPG> {
+        const headers = new HttpHeaders().set( "Authorization", this.user.token );
+        return this.http.get<IFullMercatoMPG>(this.mercatoHistoryApi + league + this.mercatoHistoryApiSecondPart, {headers});
     }
 
     public getPlayersAvailableForLeague(league: string): Observable<IMercatoMPG> {

@@ -22,6 +22,7 @@ import {PlayerViewerComponent} from "./playerviewer-component/playerviewer-compo
 import {ChartistModule} from "ng-chartist";
 import {PelouseService} from "./services/pelouse.service";
 import {HttpLinkModule} from "apollo-angular-link-http";
+import {MercatoAnalyserComponent} from "./mercato-analyser-component/mercato-analyser-component";
 
 @NgModule({
     declarations: [
@@ -29,7 +30,8 @@ import {HttpLinkModule} from "apollo-angular-link-http";
         AppComponent,
         PlayerViewerComponent,
         PlayersViewerComponent,
-        TeamSelectorComponent
+        TeamSelectorComponent,
+        MercatoAnalyserComponent
     ],
     imports: [
         //=> Angular official modules

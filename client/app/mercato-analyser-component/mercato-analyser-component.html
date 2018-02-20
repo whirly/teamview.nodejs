@@ -1,0 +1,71 @@
+<div class="ui">
+    <h1 class="title">Mes petites Stats - Analyseur Mercato</h1>
+    <h2 class="subtitle">Un outil qui vous permet de voir rapidement comment chacun a depensé son argent pendant le mercato !</h2>
+
+    <div class="ui one column">
+        <div class="eight wide column" *ngIf="!mercatoAvailable">
+            <div class="ui form">
+                <div class="fields">
+                    <div class="five wide field">
+                        <input type="text" [(ngModel)]="login" placeholder="Identifiant">
+                    </div>
+                    <div class="five wide field">
+                        <input type="text" [(ngModel)]="password" placeholder="Mot de passe">
+                    </div>
+                    <div class="eight wide field">
+                        <button class="positive ui button" (click)="connectMercato()">Connecter son mercato</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="eight wide column" *ngIf="mercatoAvailable">
+        <div class="menu-dark ui {{ getAmountOfLeagues() }} item menu">
+            <a class="item {{ isFilterLeague( '' )}}" (click)="filterByLeague( '' )">Pas de mercato sélectionné</a>
+            <a *ngFor="let league of availableLeagues" class="item {{ isFilterLeague( league.id )}}" (click)="filterByLeague( league.id )">{{ league.name }}</a>
+        </div>
+    </div>
+
+    <div class="ui stackable grid spacer">
+        <div class="four wide column" *ngFor="let user of mercatoHistory?.usersMercato">
+            <h1 class="team-name">{{ user.teamName }}</h1>
+            <h2 class="user-name">{{ user.firstname }} {{ user.lastname }}</h2>
+
+            <sui-accordion [closeOthers]="false">
+                <sui-accordion-panel>
+                    <div title>
+                        <i class="dropdown icon"></i>
+                        Joueurs
+                    </div>
+                    <div content>
+                        <table align="center">
+                            <thead>
+                            <tr>
+                                <th class="retrait">
+                                    <div>Nom</div>
+                                </th>
+                                <th>
+                                    <div>Pos</div>
+                                </th>
+                                <th class="center">
+                                    <div>Prix</div>
+                                </th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr *ngFor="let player of user.players">
+                                <td class="retrait">{{ player.lastname }}</td>
+                                <td class="center">
+                                    <div class="circle-A">A</div>
+                                </td>
+                                <td class="center emphase">{{ player.price_paid }}</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </sui-accordion-panel>
+            </sui-accordion>
+        </div>
+    </div>
+</div>
