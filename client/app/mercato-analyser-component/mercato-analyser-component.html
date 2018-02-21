@@ -33,7 +33,7 @@
             <h2 class="user-name">{{ user.firstname }} {{ user.lastname }}</h2>
 
             <sui-accordion [closeOthers]="false">
-                <sui-accordion-panel>
+                <sui-accordion-panel [isOpen]="true">
                     <div title>
                         <i class="dropdown icon"></i>
                         Joueurs
@@ -42,22 +42,18 @@
                         <table align="center">
                             <thead>
                             <tr>
-                                <th class="retrait">
-                                    <div>Nom</div>
-                                </th>
-                                <th>
-                                    <div>Pos</div>
-                                </th>
-                                <th class="center">
-                                    <div>Prix</div>
-                                </th>
+                                <th class="head-club"></th>
+                                <th class="retrait">Nom</th>
+                                <th>Pos</th>
+                                <th class="center">Prix</th>
                             </tr>
                             </thead>
                             <tbody>
                             <tr *ngFor="let player of user.players">
+                                <td class="body-club emblem {{ getEmblemClass( player.club ) }}"></td>
                                 <td class="retrait">{{ player.lastname }}</td>
                                 <td class="center">
-                                    <div class="circle-A">A</div>
+                                    <div ngClass="{{ getCircleClassFor( player.position ) }}">{{ positionShortForm.get( player.position ) }}</div>
                                 </td>
                                 <td class="center emphase">{{ player.price_paid }}</td>
                             </tr>

@@ -2,6 +2,7 @@ import {Component, OnInit} from "@angular/core";
 import {PelouseService} from "../services/pelouse.service";
 import {IFullMercatoMPG, ILeagueMPG, IUserMPG} from "../../../shared/models/pelouse";
 import _ from "lodash";
+import {PlayerPosition} from "../../../shared/models/player";
 
 @Component({
     selector: 'teamview-mercato-analyser',
@@ -20,12 +21,21 @@ export class MercatoAnalyserComponent implements OnInit {
     public password: string;
 
     public mercatoHistory: IFullMercatoMPG = undefined;
+    public positionShortForm: Map<PlayerPosition, string> = new Map<PlayerPosition, string>();
 
     constructor( private pelouseService: PelouseService ) {
 
     }
 
     public async ngOnInit() {
+
+        // Initialisation du convertisseur de shortform
+        // TODO: penser à factoriser ce bout de code qui a tendance àrevenir
+        this.positionShortForm.set(PlayerPosition.Goal, "G");
+        this.positionShortForm.set(PlayerPosition.Defender, "D");
+        this.positionShortForm.set(PlayerPosition.Midfield, "M");
+        this.positionShortForm.set(PlayerPosition.Striker, "A");
+
 
         // On explique que lors d'un événement de login, on est intéressé.
         this.pelouseService.logIn().subscribe((logged: boolean) => {
@@ -61,6 +71,10 @@ export class MercatoAnalyserComponent implements OnInit {
 
             this.pelouseService.getMercatoForLeague(this.filterLeague).subscribe((mercatoHistory: IFullMercatoMPG) => {
                 this.mercatoHistory = mercatoHistory;
+
+                for( let user of this.mercatoHistory.usersMercato ) {
+                    user.players = _.orderBy( user.players, ['price_paid'], ['desc']);
+                }
             })
         }
     }
@@ -69,6 +83,20 @@ export class MercatoAnalyserComponent implements OnInit {
         if (this.filterLeague == leagueName) return "active";
         else return "";
     }
+
+    // Cette méthode pour permettre à Saint Etienne d'exister commence à se reproduire à droite et à gauche.
+    public getEmblemClass(team: string) {
+        if (team) {
+            return team.replace(" ", "");
+        } else {
+            return "";
+        }
+    }
+
+    public getCircleClassFor(role: PlayerPosition) {
+        return "circle-" + this.positionShortForm.get(role);
+    }
+
 
     public getAmountOfLeagues(): string {
         switch (this.availableLeagues.length) {
