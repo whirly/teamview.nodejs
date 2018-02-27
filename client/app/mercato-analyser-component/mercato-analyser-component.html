@@ -28,12 +28,37 @@
     </div>
 
     <div class="ui stackable grid spacer">
-        <div class="four wide column" *ngFor="let user of mercatoHistory?.usersMercato">
+        <div class="four wide column" *ngFor="let user of mercato?.users">
             <h1 class="team-name">{{ user.teamName }}</h1>
             <h2 class="user-name">{{ user.firstname }} {{ user.lastname }}</h2>
 
+            <table align="center">
+                <tbody>
+                    <tr>
+                        <td>Offres réussis</td>
+                        <td>{{ ( user.totalAcceptedOffers / user.totalOffers ) * 100 | number:'.2' }} %</td>
+                    </tr>
+                    <tr>
+                        <td>Budget Goal</td>
+                        <td>{{ user.budgetPerLine[ 1 ] }}</td>
+                    </tr>
+                    <tr>
+                        <td>Budget Défense</td>
+                        <td>{{ user.budgetPerLine[ 2 ] }}</td>
+                    </tr>
+                    <tr>
+                        <td>Budget Millieux</td>
+                        <td>{{ user.budgetPerLine[ 3 ] }}</td>
+                    </tr>
+                    <tr>
+                        <td>Budget Attaque</td>
+                        <td>{{ user.budgetPerLine[ 4 ] }}</td>
+                    </tr>
+                </tbody>
+            </table>
+
             <sui-accordion [closeOthers]="false">
-                <sui-accordion-panel [isOpen]="true">
+                <sui-accordion-panel [isOpen]="false">
                     <div title>
                         <i class="dropdown icon"></i>
                         Joueurs
@@ -46,16 +71,18 @@
                                 <th class="retrait">Nom</th>
                                 <th>Pos</th>
                                 <th class="center">Prix</th>
+                                <th class="center">Offre</th>
                             </tr>
                             </thead>
                             <tbody>
-                            <tr *ngFor="let player of user.players">
-                                <td class="body-club emblem {{ getEmblemClass( player.club ) }}"></td>
-                                <td class="retrait">{{ player.lastname }}</td>
+                            <tr *ngFor="let offer of user.players">
+                                <td class="body-club emblem {{ getEmblemClass( offer.player.team.name ) }}"></td>
+                                <td class="retrait">{{ offer.player.lastName }}</td>
                                 <td class="center">
-                                    <div ngClass="{{ getCircleClassFor( player.position ) }}">{{ positionShortForm.get( player.position ) }}</div>
+                                    <div ngClass="{{ getCircleClassFor( offer.player.role ) }}">{{ positionShortForm.get( offer.player.role ) }}</div>
                                 </td>
-                                <td class="center emphase">{{ player.price_paid }}</td>
+                                <td class="center emphase">{{ offer.offers[0].price }}</td>
+                                <td class="center emphase">{{ offer.offers.length }}</td>
                             </tr>
                             </tbody>
                         </table>

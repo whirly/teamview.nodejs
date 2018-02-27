@@ -57,5 +57,5 @@ export interface IFullMercatoMPG {
     season: number;
 
     usersMercato: IUserMercatoMPG[];
-    historyMercatos: any;
+    historyMercato: any;
 }

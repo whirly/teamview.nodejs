@@ -2,7 +2,12 @@ import {Component, OnInit} from "@angular/core";
 import {PelouseService} from "../services/pelouse.service";
 import {IFullMercatoMPG, ILeagueMPG, IUserMPG} from "../../../shared/models/pelouse";
 import _ from "lodash";
-import {PlayerPosition} from "../../../shared/models/player";
+import {IPlayer, IPlayerExtended, PlayerPosition} from "../../../shared/models/player";
+import {ITeam} from "../../../shared/models/team";
+import * as player_helpers from "../../../shared/models/player_helpers";
+import {TeamService} from "../services/team.service";
+import {PlayerService} from "../services/player.service";
+import {Mercato, MercatoOffer, MercatoUser, PlayerWithOffers} from "../../../shared/models/mercato";
 
 @Component({
     selector: 'teamview-mercato-analyser',
@@ -23,36 +28,139 @@ export class MercatoAnalyserComponent implements OnInit {
     public mercatoHistory: IFullMercatoMPG = undefined;
     public positionShortForm: Map<PlayerPosition, string> = new Map<PlayerPosition, string>();
 
-    constructor( private pelouseService: PelouseService ) {
+    // List all teams
+    public teams: ITeam[];
+
+    // List of all players
+    public playersAll: IPlayerExtended[] = [];
+    public playersBought: IPlayerExtended[] = [];
+
+    // Transformed data
+    public mercato: Mercato = new Mercato();
+
+    constructor( private pelouseService: PelouseService, private teamService: TeamService, private playerService: PlayerService  ) {
 
     }
 
     public async ngOnInit() {
 
         // Initialisation du convertisseur de shortform
-        // TODO: penser à factoriser ce bout de code qui a tendance àrevenir
+        // TODO: penser à factoriser ce bout de code qui a tendance à revenir
         this.positionShortForm.set(PlayerPosition.Goal, "G");
         this.positionShortForm.set(PlayerPosition.Defender, "D");
         this.positionShortForm.set(PlayerPosition.Midfield, "M");
         this.positionShortForm.set(PlayerPosition.Striker, "A");
 
+        this.teamService.list.subscribe((teams: ITeam[]) => {
+            this.teams = teams;
 
-        // On explique que lors d'un événement de login, on est intéressé.
-        this.pelouseService.logIn().subscribe((logged: boolean) => {
-            this.mercatoAvailable = false;
+            this.playerService.list.subscribe((players: IPlayer[]) => {
+                this.playersAll = _.cloneDeep(players);
 
-            // Si on vient de se logguer, on choppe les infos sur les leagues.
-            if( logged ) {
-                this.pelouseService.getLeagues().subscribe((leagues: ILeagueMPG[]) => {
+                // On ne vire pas les joueurs inactifs, parce que figurez vous que des gens les achètent.
 
-                    this.availableLeagues = _.filter( leagues, (league: ILeagueMPG) => {
-                        return league.leagueStatus == 4;
+                // On a isolé la construction des différentes listes dans une fonction, vu qu'on va sans doute
+                // la customiser pour régler la profondeur de données que l'on utilise.
+                this.buildData();
+            });
+
+            // Une fois les infos de base récupéré, on va voir du côté des mercato
+            // On explique que lors d'un événement de login, on est intéressé.
+            this.pelouseService.logIn().subscribe((logged: boolean) => {
+                this.mercatoAvailable = false;
+
+                // Si on vient de se logguer, on choppe les infos sur les leagues.
+                if( logged ) {
+                    this.pelouseService.getLeagues().subscribe((leagues: ILeagueMPG[]) => {
+
+                        this.availableLeagues = _.filter( leagues, (league: ILeagueMPG) => {
+                            return league.leagueStatus == 4;
+                        });
+
+                        this.mercatoAvailable = true;
+                    });
+                }
+            });
+        });
+
+    }
+
+    private async buildData() {
+        _.forEach(this.playersAll,
+            (player: IPlayerExtended) => {
+                let numberOfFixtures: number = 0;
+
+                if (player.team) {
+                    const myteam = this.teams.find((team: ITeam) => {
+                        return team.name == player.team.name;
                     });
 
-                    this.mercatoAvailable = true;
-                });
+                    numberOfFixtures = myteam.fixtures.length;
+                }
+
+                // Le calcul des données s'effectue sur l'ensemble des matchs
+                // TODO: un calcul peut être sur les match depuis l'achat des joueurs pourrait être sympa
+                player_helpers.initializeExtendedData(player, numberOfFixtures, 0);
+            });
+    }
+
+    // Cette fonction mouline toutes les données issue de l'API de MPG pour les mettre dans une forme plus facilement
+    // exploitable. Genre certains retour sont clairement juste des raccourcis pour de l'affichage.
+    private buildMercatoData() {
+
+        // On créé un nouveau mercato
+        this.mercato = new Mercato();
+
+        // On ajoute les joueurs
+        for( let user of this.mercatoHistory.usersMercato ) {
+            let userMercato: MercatoUser = new MercatoUser( user );
+            this.mercato.users.push( userMercato );
+        }
+
+        // On itère sur l'ensemble des tours de mercato
+        for( let mercatoTurn in this.mercatoHistory.historyMercato ) {
+            // On itère sur chaque joueur du mercato
+            if (this.mercatoHistory.historyMercato.hasOwnProperty(mercatoTurn)) {
+
+                for (let mercatoPlayer of this.mercatoHistory.historyMercato[ mercatoTurn ]) {
+
+                    // On cherche la structure du joueur, on récupère l'idée sans le player_
+                    let id: string = mercatoPlayer[0].id.slice(7);
+
+                    let player: IPlayerExtended = this.playersAll.find(player => {
+                        return player.idMpg == id;
+                    });
+
+                    let userWinning: MercatoUser = this.mercato.users.find(userCandidate => {
+                        return userCandidate.teamName == mercatoPlayer[0].teamName;
+                    });
+
+                    userWinning.totalAcceptedOffers++;
+
+                    let offer: PlayerWithOffers = new PlayerWithOffers();
+                    offer.player = player;
+
+                    // On itère sur chaque offre
+                    for (let mercatoOffer of mercatoPlayer) {
+
+                        let userCurrent: MercatoUser = this.mercato.users.find(userOther => {
+                            return userOther.teamName == mercatoOffer.teamName;
+                        });
+
+                        userCurrent.totalOffers++;
+
+                        let mercatoOfferCurrent: MercatoOffer = new MercatoOffer( userCurrent.teamId, mercatoOffer.price_paid);
+                        offer.offers.push(mercatoOfferCurrent);
+                    }
+
+                    userWinning.players.push(offer);
+                }
             }
-        });
+        }
+
+        // On construit les statistiques
+        this.mercato.buildData();
+        console.log(this.mercato);
     }
 
     // Connexion du mercato.
@@ -72,9 +180,8 @@ export class MercatoAnalyserComponent implements OnInit {
             this.pelouseService.getMercatoForLeague(this.filterLeague).subscribe((mercatoHistory: IFullMercatoMPG) => {
                 this.mercatoHistory = mercatoHistory;
 
-                for( let user of this.mercatoHistory.usersMercato ) {
-                    user.players = _.orderBy( user.players, ['price_paid'], ['desc']);
-                }
+                // On construit nos objets à nous à partir des données réceptionnés.
+                this.buildMercatoData();
             })
         }
     }
