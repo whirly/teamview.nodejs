@@ -27,35 +27,33 @@
         </div>
     </div>
 
-    <div class="ui stackable grid spacer">
-        <div class="four wide column" *ngFor="let user of mercato?.users">
+    <div class="ui stackable grid spacer" *ngIf="mercatoDataProcessed">
+        <div class="four wide column" *ngFor="let user of mercato.users">
             <h1 class="team-name">{{ user.teamName }}</h1>
             <h2 class="user-name">{{ user.firstname }} {{ user.lastname }}</h2>
 
             <table align="center">
                 <tbody>
                     <tr>
-                        <td>Offres réussis</td>
+                        <td>Offres réussis (nombre)</td>
                         <td>{{ ( user.totalAcceptedOffers / user.totalOffers ) * 100 | number:'.2' }} %</td>
                     </tr>
                     <tr>
-                        <td>Budget Goal</td>
-                        <td>{{ user.budgetPerLine[ 1 ] }}</td>
-                    </tr>
-                    <tr>
-                        <td>Budget Défense</td>
-                        <td>{{ user.budgetPerLine[ 2 ] }}</td>
-                    </tr>
-                    <tr>
-                        <td>Budget Millieux</td>
-                        <td>{{ user.budgetPerLine[ 3 ] }}</td>
-                    </tr>
-                    <tr>
-                        <td>Budget Attaque</td>
-                        <td>{{ user.budgetPerLine[ 4 ] }}</td>
+                        <td>Offres réussis (prix)</td>
+                        <td>{{ ( user.totalAcceptedOffersMoney / user.totalOffersMoney ) * 100 | number:'.2' }} %</td>
                     </tr>
                 </tbody>
             </table>
+
+            <h3>Distribution du budget par rôle.</h3>
+            <div>
+                <x-chartist type="Pie" [data]="user.budgetPerLine" [options]="optionsChart" [responsiveOptions]="responsiveOptionsChart"></x-chartist>
+            </div>
+
+            <h3>Distribution du budget par tranche de prix.</h3>
+            <div>
+                <x-chartist type="Bar" [data]="user.budgetPerBucket" [options]="optionsPriceBucket"></x-chartist>
+            </div>
 
             <sui-accordion [closeOthers]="false">
                 <sui-accordion-panel [isOpen]="false">

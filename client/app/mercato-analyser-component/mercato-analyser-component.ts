@@ -37,9 +37,40 @@ export class MercatoAnalyserComponent implements OnInit {
 
     // Transformed data
     public mercato: Mercato = new Mercato();
+    public mercatoDataProcessed: boolean = false;
+
+    private responsiveOptionsChart: any;
+
+    // Options for the charts
+    private optionsChart: any;
+    private optionsPriceBucket: any;
 
     constructor( private pelouseService: PelouseService, private teamService: TeamService, private playerService: PlayerService  ) {
 
+        this.responsiveOptionsChart = [
+            ['screen and (min-width: 640px)', {
+                chartPadding: 0,
+                labelOffset: 10,
+                labelDirection: 'explode',
+                labelInterpolationFnc: function(value: any) {
+                    return value;
+                }
+            }],
+            ['screen and (min-width: 1024px)', {
+                labelOffset: 0,
+                chartPadding: 0
+            }]
+        ];
+
+        this.optionsChart = {
+            labelInterpolationFnc: function( value: any ) {
+                return value[0];
+            }
+        };
+
+        this.optionsPriceBucket = {
+            high: 60,
+        }
     }
 
     public async ngOnInit() {
@@ -136,6 +167,7 @@ export class MercatoAnalyserComponent implements OnInit {
                     });
 
                     userWinning.totalAcceptedOffers++;
+                    userWinning.totalAcceptedOffersMoney += mercatoPlayer[0].price_paid;
 
                     let offer: PlayerWithOffers = new PlayerWithOffers();
                     offer.player = player;
@@ -148,6 +180,7 @@ export class MercatoAnalyserComponent implements OnInit {
                         });
 
                         userCurrent.totalOffers++;
+                        userCurrent.totalOffersMoney += mercatoOffer.price_paid;
 
                         let mercatoOfferCurrent: MercatoOffer = new MercatoOffer( userCurrent.teamId, mercatoOffer.price_paid);
                         offer.offers.push(mercatoOfferCurrent);
@@ -160,7 +193,6 @@ export class MercatoAnalyserComponent implements OnInit {
 
         // On construit les statistiques
         this.mercato.buildData();
-        console.log(this.mercato);
     }
 
     // Connexion du mercato.
@@ -175,6 +207,7 @@ export class MercatoAnalyserComponent implements OnInit {
     // Changement du filtre sur le mercato
     public filterByLeague(leagueName: string): void {
         if (this.filterLeague != leagueName) {
+            this.mercatoDataProcessed = false;
             this.filterLeague = leagueName;
 
             this.pelouseService.getMercatoForLeague(this.filterLeague).subscribe((mercatoHistory: IFullMercatoMPG) => {
@@ -182,6 +215,7 @@ export class MercatoAnalyserComponent implements OnInit {
 
                 // On construit nos objets à nous à partir des données réceptionnés.
                 this.buildMercatoData();
+                this.mercatoDataProcessed = true;
             })
         }
     }
