@@ -122,8 +122,6 @@ export class MercatoUser {
         this.budgetPerBucket.series[0][ PriceBucket.LessThan30 ] = ( this.budgetPerBucket.series[0][ PriceBucket.LessThan30 ] / numberOfPlayers ) * 100;
         this.budgetPerBucket.series[0][ PriceBucket.LessThan40 ] = ( this.budgetPerBucket.series[0][ PriceBucket.LessThan40 ] / numberOfPlayers ) * 100;
         this.budgetPerBucket.series[0][ PriceBucket.Over40 ] = ( this.budgetPerBucket.series[0][ PriceBucket.Over40 ] / numberOfPlayers ) * 100;
-
-        console.log( this.budgetPerBucket );
     }
 }
 
