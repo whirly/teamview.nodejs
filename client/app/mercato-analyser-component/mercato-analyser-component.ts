@@ -12,7 +12,7 @@ import {Mercato, MercatoOffer, MercatoUser, PlayerWithOffers} from "../../../sha
 @Component({
     selector: 'teamview-mercato-analyser',
     templateUrl: './mercato-analyser-component.html',
-    styleUrls: ['./mercato-analyser-component.scss']
+    styleUrls: ['./mercato-analyser-component.scss', '../common.scss']
 })
 
 export class MercatoAnalyserComponent implements OnInit {
@@ -36,7 +36,7 @@ export class MercatoAnalyserComponent implements OnInit {
     public playersBought: IPlayerExtended[] = [];
 
     // Transformed data
-    public mercato: Mercato = new Mercato();
+    public mercato: Mercato;
     public mercatoDataProcessed: boolean = false;
 
     private responsiveOptionsChart: any;
@@ -140,59 +140,7 @@ export class MercatoAnalyserComponent implements OnInit {
     private buildMercatoData() {
 
         // On créé un nouveau mercato
-        this.mercato = new Mercato();
-
-        // On ajoute les joueurs
-        for( let user of this.mercatoHistory.usersMercato ) {
-            let userMercato: MercatoUser = new MercatoUser( user );
-            this.mercato.users.push( userMercato );
-        }
-
-        // On itère sur l'ensemble des tours de mercato
-        for( let mercatoTurn in this.mercatoHistory.historyMercato ) {
-            // On itère sur chaque joueur du mercato
-            if (this.mercatoHistory.historyMercato.hasOwnProperty(mercatoTurn)) {
-
-                for (let mercatoPlayer of this.mercatoHistory.historyMercato[ mercatoTurn ]) {
-
-                    // On cherche la structure du joueur, on récupère l'idée sans le player_
-                    let id: string = mercatoPlayer[0].id.slice(7);
-
-                    let player: IPlayerExtended = this.playersAll.find(player => {
-                        return player.idMpg == id;
-                    });
-
-                    let userWinning: MercatoUser = this.mercato.users.find(userCandidate => {
-                        return userCandidate.teamName == mercatoPlayer[0].teamName;
-                    });
-
-                    userWinning.totalAcceptedOffers++;
-                    userWinning.totalAcceptedOffersMoney += mercatoPlayer[0].price_paid;
-
-                    let offer: PlayerWithOffers = new PlayerWithOffers();
-                    offer.player = player;
-
-                    // On itère sur chaque offre
-                    for (let mercatoOffer of mercatoPlayer) {
-
-                        let userCurrent: MercatoUser = this.mercato.users.find(userOther => {
-                            return userOther.teamName == mercatoOffer.teamName;
-                        });
-
-                        userCurrent.totalOffers++;
-                        userCurrent.totalOffersMoney += mercatoOffer.price_paid;
-
-                        let mercatoOfferCurrent: MercatoOffer = new MercatoOffer( userCurrent.teamId, mercatoOffer.price_paid);
-                        offer.offers.push(mercatoOfferCurrent);
-                    }
-
-                    userWinning.players.push(offer);
-                }
-            }
-        }
-
-        // On construit les statistiques
-        this.mercato.buildData();
+        this.mercato = new Mercato( this.mercatoHistory, this.playersAll );
     }
 
     // Connexion du mercato.

@@ -1,0 +1,192 @@
+@import "./variable.scss";
+
+.emblem {
+    width: 41px;
+    height: 41px;
+    background-size: 100% 100%;
+}
+
+.spacer {
+    margin-top: 1rem;
+}
+
+h1.title {
+    font-size: 4em;
+    text-align: center;
+    font-family: $font-table;
+}
+
+h1.team-name {
+    font-size: 1.5em;
+    text-align: center;
+    font-family: $font-table;
+    margin-bottom: 0;
+}
+
+h2.user-name {
+    font-size: 1.2em;
+    text-align: center;
+    font-family: $font-table;
+    margin-top: 0;
+}
+
+button.positive {
+    font-family: $font-table;
+}
+
+h2.subtitle {
+    font-size: 1.4em;
+    text-align: center;
+    font-family: $font-table;
+}
+
+.ui.menu {
+    font-family: $font-table;
+    font-size: 11px;
+
+    .active.item {
+        background: black;
+        color: white;
+    }
+
+    .item::before {
+        background: black;
+    }
+
+    .item:first-child {
+        border-radius: 0px;
+    }
+
+    border-radius: 0;
+    border: 1px solid black;
+    box-shadow: none;
+}
+
+.filters a {
+    cursor: pointer;
+}
+
+.filter-teams {
+    text-align: center;
+}
+.filter-team {
+    display: inline-block;
+    border: 1px solid rgba(0, 0, 0, 0);
+    &.active {
+        border: 1px solid #333;
+    }
+}
+
+.menu-dark {
+    margin-top: 0px;
+    margin-bottom: 0px;
+
+    border-radius: 0;
+    border: 1px solid black;
+    box-shadow: none;
+}
+
+
+table {
+    font-family: $font-table;
+    font-weight: 400;
+
+    margin-top: 1em;
+
+    .retrait {
+        text-align: left;
+        padding-left: 0.5em;
+    }
+
+    .center {
+        text-align: center;
+    }
+
+
+    thead {
+        tr {
+            border-bottom:  solid 2px black;
+            text-transform: uppercase;
+            font-weight: 400;
+            font-size: 0.7em;
+
+            th {
+                padding-left: 0.2em;
+                padding-right: 0.2em;
+                height: 20px;
+
+                div { position: absolute };
+            }
+
+            th.head-name {
+                text-align: left;
+                padding-left: 0.5em;
+            }
+
+            .active {
+                background: black;
+                color: white;
+            }
+
+            .rotate {
+                height: 65px;
+                white-space: nowrap;
+                vertical-align: baseline;
+                padding-bottom: 0;
+                position: relative;
+            }
+
+        }
+    }
+
+    tbody {
+        tr {
+            border-bottom: solid 1px lightgray;
+
+            td {
+                padding-left: 0.4em;
+                padding-right: 0.4em;
+
+            }
+
+            td.emphase {
+                font-weight: 700;
+                padding-right: 1em;
+                padding-left: 1em;
+                border-left: 1px solid lightgray;
+            }
+        }
+    }
+
+    .circle-G {
+        border-radius: 14px;
+        width: 24px;
+        height: 24px;
+        border: 2px solid black;
+        background: $pc-goalkeeper;
+    }
+
+    .circle-D {
+        border-radius: 14px;
+        width: 24px;
+        height: 24px;
+        border: 2px solid black;
+        background: $pc-defender;
+    }
+
+    .circle-M {
+        border-radius: 14px;
+        width: 24px;
+        height: 24px;
+        border: 2px solid black;
+        background: $pc-midfield;
+    }
+
+    .circle-A {
+        border-radius: 14px;
+        width: 24px;
+        height: 24px;
+        border: 2px solid black;
+        background: $pc-striker;
+    }
+}

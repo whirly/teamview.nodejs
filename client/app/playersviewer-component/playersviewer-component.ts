@@ -32,7 +32,7 @@ enum PlayerPresence {
 @Component({
     selector: 'teamview-playersviewer',
     templateUrl: './playersviewer-component.html',
-    styleUrls: ['./playersviewer-component.scss']
+    styleUrls: ['./playersviewer-component.scss', '../common.scss']
 })
 
 export class PlayersViewerComponent implements OnInit {
