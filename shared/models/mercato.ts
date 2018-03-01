@@ -10,9 +10,19 @@ export class MercatoOffer {
         this.price = price;
     }
 }
+
 export class PlayerWithOffers {
     public player: IPlayerExtended;
     public offers: MercatoOffer[] = [];
+    public turn: number;
+
+    public getMine( user: MercatoUser ): number {
+        for( let offer of this.offers ) {
+            if( offer.teamId == user.teamId ) {
+                return offer.price;
+            }
+        }
+    }
 }
 
 export class MercatoData {
@@ -63,21 +73,19 @@ export class MercatoUser {
     public teamAbbr: string;
     public teamStatus: number;
 
-    public totalAcceptedOffers: number = 0;
-    public totalOffers: number = 0;
-
-    public totalAcceptedOffersMoney: number = 0;
-    public totalOffersMoney: number = 0;
+    public numberOfTurns: number;
 
     public players: PlayerWithOffers[] = [];
+    public playersLost: PlayerWithOffers[] = [];
 
     // Les données suivantes sont calculés
     public budgetPerLine: MercatoData = new MercatoData( 4 );
     public budgetPerBucket: MercatoMultiData = new MercatoMultiData( 5, 1);
 
     public contention: MercatoMultiData;
+    public offersSummary: number[][] = [[]];
 
-    constructor( user: IUserMercatoMPG ) {
+    constructor( user: IUserMercatoMPG, numberOfTurns: number ) {
         this.lastname = user.lastname;
         this.firstname = user.firstname;
         this.teamAbbr = user.teamAbbr;
@@ -85,10 +93,13 @@ export class MercatoUser {
         this.teamName = user.teamName;
         this.teamStatus = user.teamStatus;
         this.budget = user.budget;
+        this.numberOfTurns = numberOfTurns;
+
+        // On initialise le stockage pour les offres
+        this.contention = new MercatoMultiData( numberOfTurns, 2 );
     }
 
     public buildData() {
-        const numberOfPlayers:number = this.players.length;
         let totalPricePaid:number = 0;
 
         // On initialise les labels pour les graphs
@@ -129,25 +140,84 @@ export class MercatoUser {
         this.budgetPerBucket.series[0][ PriceBucket.LessThan30 ] = ( this.budgetPerBucket.series[0][ PriceBucket.LessThan30 ] / totalPricePaid ) * 100;
         this.budgetPerBucket.series[0][ PriceBucket.LessThan40 ] = ( this.budgetPerBucket.series[0][ PriceBucket.LessThan40 ] / totalPricePaid ) * 100;
         this.budgetPerBucket.series[0][ PriceBucket.Over40 ] = ( this.budgetPerBucket.series[0][ PriceBucket.Over40 ] / totalPricePaid ) * 100;
+
+        // On construit le graph de contention
+        for( let turn = 1; turn <= this.numberOfTurns; turn++ ) {
+
+            let offerNumberWon: number = 0;
+            let offerNumberLost: number = 0;
+
+            let offerValueWon: number = 0;
+            let offerValueLost: number = 0;
+
+            // Ce qui nous intéresse c'est les offres du tour que l'on a gagné et où il y avait de la concurrence.
+            for( let offerWon of this.players ) {
+                if( offerWon.turn == turn && offerWon.offers.length > 1 ) {
+
+                    offerNumberWon++;
+                    offerValueWon += offerWon.offers[ 0 ].price;
+                }
+            }
+
+            // La même chose mais là où on a perdu. L'avantage c'est que quand on a perdu on est sur d'avoir
+            // été en compétition, par contre faut se retrouver dans les offres
+            for( let offerLost of this.playersLost ) {
+                if( offerLost.turn == turn ) {
+                    offerNumberLost++;
+
+                    for( let offer of offerLost.offers ) {
+                        if( offer.teamId == this.teamId ) {
+                            offerValueLost += offer.price;
+                            break;
+                        }
+                    }
+                }
+            }
+
+            // On a plus qu'a stocker pour le graph
+            this.contention.labels[turn-1] = turn.toString();
+
+            if( offerNumberWon + offerNumberLost > 0 ) {
+                this.contention.series[0][turn-1] = ( offerNumberWon / (offerNumberLost + offerNumberWon )) * 100;
+                this.contention.series[1][turn-1] = ( offerValueWon / (offerValueWon + offerValueLost )) * 100;
+            } else {
+                this.contention.series[0][turn-1] = null;
+                this.contention.series[1][turn-1] = null;
+
+            }
+        }
     }
 }
 
 
 export class Mercato {
     public users: MercatoUser[] = [];
+    public numberOfTurns: number = 0;
 
     constructor( mercatoHistory: any, playersAll: IPlayerExtended[] ) {
 
+        for( let mercatoTurn in mercatoHistory.historyMercato ) {
+            // On itère sur chaque joueur du mercato
+            if (mercatoHistory.historyMercato.hasOwnProperty(mercatoTurn)) {
+
+                this.numberOfTurns++;
+            }
+        }
+
         // On ajoute les joueurs
         for( let user of mercatoHistory.usersMercato ) {
-            let userMercato: MercatoUser = new MercatoUser( user );
+            let userMercato: MercatoUser = new MercatoUser( user, this.numberOfTurns );
             this.users.push( userMercato );
         }
+
+        let turnCurrent: number = 0;
 
         // On itère sur l'ensemble des tours de mercato
         for( let mercatoTurn in mercatoHistory.historyMercato ) {
             // On itère sur chaque joueur du mercato
             if (mercatoHistory.historyMercato.hasOwnProperty(mercatoTurn)) {
+
+                turnCurrent++;
 
                 for (let mercatoPlayer of mercatoHistory.historyMercato[ mercatoTurn ]) {
 
@@ -162,11 +232,11 @@ export class Mercato {
                         return userCandidate.teamName == mercatoPlayer[0].teamName;
                     });
 
-                    userWinning.totalAcceptedOffers++;
-                    userWinning.totalAcceptedOffersMoney += mercatoPlayer[0].price_paid;
-
                     let offer: PlayerWithOffers = new PlayerWithOffers();
                     offer.player = player;
+                    offer.turn = turnCurrent;
+
+                    let loosers: MercatoUser[] = [];
 
                     // On itère sur chaque offre
                     for (let mercatoOffer of mercatoPlayer) {
@@ -175,14 +245,20 @@ export class Mercato {
                             return userOther.teamName == mercatoOffer.teamName;
                         });
 
-                        userCurrent.totalOffers++;
-                        userCurrent.totalOffersMoney += mercatoOffer.price_paid;
+                        // On se fait une petite liste des perdants.
+                        if( userCurrent != userWinning )
+                        {
+                            loosers.push( userCurrent );
+                        }
 
-                        let mercatoOfferCurrent: MercatoOffer = new MercatoOffer( userCurrent.teamId, mercatoOffer.price_paid);
+                        let mercatoOfferCurrent: MercatoOffer = new MercatoOffer( userCurrent.teamId, mercatoOffer.price_paid );
                         offer.offers.push(mercatoOfferCurrent);
                     }
 
                     userWinning.players.push(offer);
+                    for( let looser of loosers ) {
+                        looser.playersLost.push( offer );
+                    }
                 }
             }
         }

@@ -20,6 +20,22 @@
     fill: $pc-striker;
 }
 
+::ng-deep .ct-series-a .ct-line, ::ng-deep .ct-series-a .ct-point {
+    stroke: $duelNumber;
+}
+
+::ng-deep .ct-series-b .ct-line, ::ng-deep .ct-series-b .ct-point {
+    stroke: $duelValue;
+}
+
+.duel-number {
+    color: $duelNumber;
+}
+
+.dual-value {
+    color: $duelValue;
+}
+
 h3 {
     font-family: $font-table;
     font-weight: 400;

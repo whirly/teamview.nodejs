@@ -32,18 +32,10 @@
             <h1 class="team-name">{{ user.teamName }}</h1>
             <h2 class="user-name">{{ user.firstname }} {{ user.lastname }}</h2>
 
-            <table align="center">
-                <tbody>
-                    <tr>
-                        <td>Offres réussis (nombre)</td>
-                        <td>{{ ( user.totalAcceptedOffers / user.totalOffers ) * 100 | number:'.2' }} %</td>
-                    </tr>
-                    <tr>
-                        <td>Offres réussis (prix)</td>
-                        <td>{{ ( user.totalAcceptedOffersMoney / user.totalOffersMoney ) * 100 | number:'.2' }} %</td>
-                    </tr>
-                </tbody>
-            </table>
+            <h3>Duels gagnés (<span class="duel-number">nombre</span>/<span class="dual-value">valeur</span>)</h3>
+            <div>
+                <x-chartist type="Line" [data]="user.contention"></x-chartist>
+            </div>
 
             <h3>Distribution du budget par rôle.</h3>
             <div>
@@ -70,6 +62,7 @@
                                 <th>Pos</th>
                                 <th class="center">Prix</th>
                                 <th class="center">Offre</th>
+                                <th class="center">Tour</th>
                             </tr>
                             </thead>
                             <tbody>
@@ -81,6 +74,41 @@
                                 </td>
                                 <td class="center emphase">{{ offer.offers[0].price }}</td>
                                 <td class="center emphase">{{ offer.offers.length }}</td>
+                                <td class="center emphase">{{ offer.turn}}</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </sui-accordion-panel>
+            </sui-accordion>
+            <sui-accordion [closeOthers]="false">
+                <sui-accordion-panel [isOpen]="false">
+                    <div title>
+                        <i class="dropdown icon"></i>
+                        Joueurs perdus
+                    </div>
+                    <div content>
+                        <table align="center">
+                            <thead>
+                            <tr>
+                                <th class="head-club"></th>
+                                <th class="retrait">Nom</th>
+                                <th>Pos</th>
+                                <th class="center">Prix</th>
+                                <th class="center">Offre</th>
+                                <th class="center">Tour</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr *ngFor="let offer of user.playersLost">
+                                <td class="body-club emblem {{ getEmblemClass( offer.player.team?.name ) }}"></td>
+                                <td class="retrait">{{ offer.player.lastName }}</td>
+                                <td class="center">
+                                    <div ngClass="{{ getCircleClassFor( offer.player.role ) }}">{{ positionShortForm.get( offer.player.role ) }}</div>
+                                </td>
+                                <td class="center emphase">{{ offer.getMine( user ) }}</td>
+                                <td class="center emphase">{{ offer.offers.length }}</td>
+                                <td class="center emphase">{{ offer.turn}}</td>
                             </tr>
                             </tbody>
                         </table>
