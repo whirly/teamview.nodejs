@@ -96,7 +96,7 @@ export class MercatoUser {
         this.numberOfTurns = numberOfTurns;
 
         // On initialise le stockage pour les offres
-        this.contention = new MercatoMultiData( numberOfTurns, 2 );
+        this.contention = new MercatoMultiData( numberOfTurns, 3 );
     }
 
     public buildData() {
@@ -144,48 +144,39 @@ export class MercatoUser {
         // On construit le graph de contention
         for( let turn = 1; turn <= this.numberOfTurns; turn++ ) {
 
-            let offerNumberWon: number = 0;
-            let offerNumberLost: number = 0;
-
-            let offerValueWon: number = 0;
-            let offerValueLost: number = 0;
+            let offerWon: number = 0;
+            let offerLost: number = 0;
+            let offerUncontested: number = 0;
 
             // Ce qui nous intéresse c'est les offres du tour que l'on a gagné et où il y avait de la concurrence.
-            for( let offerWon of this.players ) {
-                if( offerWon.turn == turn && offerWon.offers.length > 1 ) {
-
-                    offerNumberWon++;
-                    offerValueWon += offerWon.offers[ 0 ].price;
+            for( let offer of this.players ) {
+                if( offer.turn == turn ) {
+                    if( offer.offers.length > 1 ) {
+                       offerWon++;
+                    } else {
+                        // Offre non contesté
+                        offerUncontested++;
+                    }
                 }
             }
 
             // La même chose mais là où on a perdu. L'avantage c'est que quand on a perdu on est sur d'avoir
             // été en compétition, par contre faut se retrouver dans les offres
-            for( let offerLost of this.playersLost ) {
-                if( offerLost.turn == turn ) {
-                    offerNumberLost++;
-
-                    for( let offer of offerLost.offers ) {
-                        if( offer.teamId == this.teamId ) {
-                            offerValueLost += offer.price;
-                            break;
-                        }
-                    }
+            for( let offer of this.playersLost ) {
+                if( offer.turn == turn ) {
+                    offerLost++;
                 }
             }
 
             // On a plus qu'a stocker pour le graph
-            this.contention.labels[turn-1] = turn.toString();
-
-            if( offerNumberWon + offerNumberLost > 0 ) {
-                this.contention.series[0][turn-1] = ( offerNumberWon / (offerNumberLost + offerNumberWon )) * 100;
-                this.contention.series[1][turn-1] = ( offerValueWon / (offerValueWon + offerValueLost )) * 100;
-            } else {
-                this.contention.series[0][turn-1] = null;
-                this.contention.series[1][turn-1] = null;
-
-            }
+            this.contention.labels[turn-1] = "Tour " + turn.toString();
+            
+            this.contention.series[0][turn-1] = offerUncontested;
+            this.contention.series[1][turn-1] = offerWon;
+            this.contention.series[2][turn-1] = offerLost;
         }
+
+        console.log( this.contention );
     }
 }
 

@@ -1,7 +1,36 @@
 @import "../variable.scss";
 
-::ng-deep .ct-series-a .ct-bar {
-    stroke-width: 30px;
+#graph-budget {
+    ::ng-deep .ct-series-a .ct-bar {
+        stroke-width: 26px;
+    }    
+}
+
+#graph-offer {
+    ::ng-deep .ct-series-a .ct-bar {
+        stroke: $pc-defender;
+        stroke-width: 26px;
+    }    
+    ::ng-deep .ct-series-b .ct-bar {
+        stroke: $pc-goalkeeper;
+        stroke-width: 26px;
+    }    
+    ::ng-deep .ct-series-c .ct-bar {
+        stroke: $pc-striker;
+        stroke-width: 26px;
+    }    
+}
+
+.duel-obtained {
+    color: $pc-defender;
+}
+
+.duel-won {
+    color: $pc-goalkeeper;
+}
+
+.duel-lost {
+    color: $pc-striker;
 }
 
 ::ng-deep .ct-series-a .ct-slice-pie {
@@ -28,17 +57,10 @@
     stroke: $duelValue;
 }
 
-.duel-number {
-    color: $duelNumber;
-}
-
-.dual-value {
-    color: $duelValue;
-}
-
 h3 {
     font-family: $font-table;
     font-weight: 400;
     font-size: 1em;
+    text-align: center;
 }
 

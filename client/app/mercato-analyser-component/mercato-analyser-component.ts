@@ -44,6 +44,7 @@ export class MercatoAnalyserComponent implements OnInit {
     // Options for the charts
     private optionsChart: any;
     private optionsPriceBucket: any;
+    private optionsContention: any;
 
     constructor( private pelouseService: PelouseService, private teamService: TeamService, private playerService: PlayerService  ) {
 
@@ -70,6 +71,10 @@ export class MercatoAnalyserComponent implements OnInit {
 
         this.optionsPriceBucket = {
             high: 60,
+        }
+
+        this.optionsContention = {
+            stackBars: true
         }
     }
 

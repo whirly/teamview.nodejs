@@ -32,9 +32,9 @@
             <h1 class="team-name">{{ user.teamName }}</h1>
             <h2 class="user-name">{{ user.firstname }} {{ user.lastname }}</h2>
 
-            <h3>Duels gagnés (<span class="duel-number">nombre</span>/<span class="dual-value">valeur</span>)</h3>
+            <h3>Offres (<span class="duel-obtained">obtenu</span>/<span class="duel-won">gagné</span>/<span class="duel-lost">perdu</span>)</h3>
             <div>
-                <x-chartist type="Line" [data]="user.contention"></x-chartist>
+                <x-chartist type="Bar" id="graph-offer" [data]="user.contention" [options]="optionsContention"></x-chartist>
             </div>
 
             <h3>Distribution du budget par rôle.</h3>
@@ -44,7 +44,7 @@
 
             <h3>Distribution du budget par tranche de prix.</h3>
             <div>
-                <x-chartist type="Bar" [data]="user.budgetPerBucket" [options]="optionsPriceBucket"></x-chartist>
+                <x-chartist id="graph-budget" type="Bar" [data]="user.budgetPerBucket" [options]="optionsPriceBucket"></x-chartist>
             </div>
 
             <sui-accordion [closeOthers]="false">
