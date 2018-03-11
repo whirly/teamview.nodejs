@@ -15,15 +15,15 @@ import { APP_ROUTES } from './app.routes';
 import { ApolloInitializer } from './apollo-client';
 
 import { TeamSelectorComponent } from './team-selector-component/team-selector-component';
-import {TeamService} from "./services/team.service";
-import {PlayersViewerComponent} from "./playersviewer-component/playersviewer-component";
-import {PlayerService} from "./services/player.service";
-import {PlayerViewerComponent} from "./playerviewer-component/playerviewer-component";
-import {ChartistModule} from "ng-chartist";
-import {PelouseService} from "./services/pelouse.service";
-import {HttpLinkModule} from "apollo-angular-link-http";
-import {MercatoAnalyserComponent} from "./mercato-analyser-component/mercato-analyser-component";
-import {AboutComponent} from "./about-component/about-component";
+import { TeamService } from "./services/team.service";
+import { PlayersViewerComponent } from "./playersviewer-component/playersviewer-component";
+import { PlayerService } from "./services/player.service";
+import { PlayerViewerComponent } from "./playerviewer-component/playerviewer-component";
+import { ChartistModule } from "ng-chartist";
+import { PelouseService } from "./services/pelouse.service";
+import { HttpLinkModule } from "apollo-angular-link-http";
+import { MercatoAnalyserComponent } from "./mercato-analyser-component/mercato-analyser-component";
+import { AboutComponent } from "./about-component/about-component";
 
 @NgModule({
     declarations: [
