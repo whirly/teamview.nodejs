@@ -133,6 +133,20 @@ export class PlayersViewerComponent implements OnInit {
         }
     }
 
+    public getImageForTeam( team: string ) {
+        if( team ) {
+            const fileName = team.replace(" ", "_" ).toLowerCase() + ".png";
+            const url = "https://mespetitesstats.blob.core.windows.net/teams/" + fileName;
+
+            return url;
+        }
+        else
+        {
+            // TODO: un truc un peu plus joli pour le Guido Carrillo de ce monde qui n'ont plus d'équipe en L1.
+            return "";
+        }
+    }
+
     public getCircleClassFor(role: PlayerPosition) {
         return "circle-" + this.positionShortForm.get(role);
     }

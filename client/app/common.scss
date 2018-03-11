@@ -190,3 +190,23 @@ table {
         background: $pc-striker;
     }
 }
+
+@media only screen and (max-width: 1023px) {
+    table {
+        tbody {
+            tr {
+                .body-club {
+                    padding: 0em;
+                }
+
+                td {
+                    padding: 0.2em;
+                }
+
+                td.emphase {
+                    padding: 0.3em;
+                }
+            }
+        }
+    }
+}

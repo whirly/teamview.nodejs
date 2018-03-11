@@ -136,17 +136,13 @@
         </thead>
         <tbody>
         <tr *ngFor="let player of playersActive">
-            <td class="body-club emblem {{ getEmblemClass( player.team?.name ) }}"></td>
+            <td class="body-club"><img class="logo-team" [src]="getImageForTeam( player.team?.name )"></td>
             <td class="retrait"><a href="/player/{{ player.idMpg }}">{{ player.firstName }} {{ player.lastName }}</a>
             </td>
             <td class="center">
                 <div class="{{ getCircleClassFor( player.role ) }}">{{ positionShortForm.get( player.role ) }}</div>
             </td>
             <td class="center emphase">{{ player.totalGoalFor }}</td>
-            <td class="center emphase">
-                <div *ngIf="player.totalGoalAgainst > 0">-{{ player.totalGoalAgainst }}</div>
-                <div *ngIf="player.totalGoalAgainst == 0">-</div>
-            </td>
             <td class="center emphase">{{ player.averagePerformance | number :'1.2-2' }}</td>
             <td class="center emphase">{{ player.value }}</td>
             <td class="center"><i class="fa {{ getLevelFor( player.titularisation ) }}" aria-hidden="true"></i></td>
