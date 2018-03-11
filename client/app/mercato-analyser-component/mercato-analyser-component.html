@@ -1,16 +1,17 @@
 <div class="ui">
-    <h1 class="title">Mes petites Stats - Analyseur Mercato</h1>
-    <h2 class="subtitle">Un outil qui vous permet de voir rapidement comment chacun a depensé son argent pendant le mercato !</h2>
-
     <div class="ui one column">
         <div class="eight wide column" *ngIf="!mercatoAvailable">
+            <p>Pour obtenir vos informations de mercato nous devons nous connecter sur le site de MPG en utilisant vos identifiants,
+               ces identifiants sont utilisés uniquement dans votre navigateur, et sauvegardé dans le stockage locale, à aucun moment ils
+                ne sont remontés sur notre serveur.
+            </p>
             <div class="ui form">
                 <div class="fields">
                     <div class="five wide field">
                         <input type="text" [(ngModel)]="login" placeholder="Identifiant">
                     </div>
                     <div class="five wide field">
-                        <input type="text" [(ngModel)]="password" placeholder="Mot de passe">
+                        <input type="password" [(ngModel)]="password" placeholder="Mot de passe">
                     </div>
                     <div class="eight wide field">
                         <button class="positive ui button" (click)="connectMercato()">Connecter son mercato</button>

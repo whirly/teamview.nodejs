@@ -1,4 +1,11 @@
-
-<div class="ui container" id="content">
+<div class="ui fixed inverted menu">
+    <div class="ui container">
+        <a href="/" class="header item">Mes Petites Stats</a>
+        <a routerLink="/players" routerLinkActive="active" class="item">Joueurs</a>
+        <a routerLink="/mercato" routerLinkActive="active" class="item">Mercato</a>
+        <a routerLink="/about" routerLinkActive="active" class="item">A Propos</a>
+    </div>
+</div>
+<div class="ui container main" id="content">
     <router-outlet></router-outlet>
 </div>
