@@ -68,7 +68,7 @@
                             </thead>
                             <tbody>
                             <tr *ngFor="let offer of user.players">
-                                <td class="body-club emblem {{ getEmblemClass( offer.player.team?.name ) }}"></td>
+                                <td class="body-club"><img class="logo-team" [src]="getImageForTeam(offer.player.team?.name )"></td>
                                 <td class="retrait">{{ offer.player.lastName }}</td>
                                 <td class="center">
                                     <div ngClass="{{ getCircleClassFor( offer.player.role ) }}">{{ positionShortForm.get( offer.player.role ) }}</div>
@@ -102,7 +102,7 @@
                             </thead>
                             <tbody>
                             <tr *ngFor="let offer of user.playersLost">
-                                <td class="body-club emblem {{ getEmblemClass( offer.player.team?.name ) }}"></td>
+                                <td class="body-club"><img class="logo-team" [src]="getImageForTeam(offer.player.team?.name )"></td>
                                 <td class="retrait">{{ offer.player.lastName }}</td>
                                 <td class="center">
                                     <div ngClass="{{ getCircleClassFor( offer.player.role ) }}">{{ positionShortForm.get( offer.player.role ) }}</div>
