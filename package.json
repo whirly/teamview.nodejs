@@ -1,11 +1,12 @@
 {
   "name": "@mitm/teamview",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Un outil de statistique pour mon petit gazon.",
   "license": "UNLICENSED",
   "engines": {
     "node": "9.x"
   },
+  "author": "Stéphane Becker <whirly.von.elsass@gmail.com> (http://www.bretzelsandgames.com)",
   "scripts": {
     "cli": "node dist/server/cli.bundle.js",
     "start": "node dist/server/main.bundle.js",
