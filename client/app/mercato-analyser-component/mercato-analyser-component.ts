@@ -19,7 +19,7 @@ export class MercatoAnalyserComponent implements OnInit {
 
     public mercatoAvailable: boolean = false;
     public availableLeagues: ILeagueMPG[] = [];
-    public filterLeague: string = "";
+    public filterLeague: string = '';
     public user: IUserMPG;
 
     public login: string;
@@ -82,10 +82,10 @@ export class MercatoAnalyserComponent implements OnInit {
 
         // Initialisation du convertisseur de shortform
         // TODO: penser à factoriser ce bout de code qui a tendance à revenir
-        this.positionShortForm.set(PlayerPosition.Goal, "G");
-        this.positionShortForm.set(PlayerPosition.Defender, "D");
-        this.positionShortForm.set(PlayerPosition.Midfield, "M");
-        this.positionShortForm.set(PlayerPosition.Striker, "A");
+        this.positionShortForm.set(PlayerPosition.Goal, 'G');
+        this.positionShortForm.set(PlayerPosition.Defender, 'D');
+        this.positionShortForm.set(PlayerPosition.Midfield, 'M');
+        this.positionShortForm.set(PlayerPosition.Striker, 'A');
 
         this.teamService.list.subscribe((teams: ITeam[]) => {
             this.teams = teams;
@@ -174,60 +174,57 @@ export class MercatoAnalyserComponent implements OnInit {
     }
 
     public isFilterLeague(leagueName: string): string {
-        if (this.filterLeague == leagueName) return "active";
-        else return "";
+        if (this.filterLeague == leagueName) return 'active';
+        else return '';
     }
 
     // Cette méthode pour permettre à Saint Etienne d'exister commence à se reproduire à droite et à gauche.
     public getEmblemClass(team: string) {
         if (team) {
-            return team.replace(" ", "");
+            return team.replace(' ', '');
         } else {
-            return "";
+            return '';
         }
     }
 
     // Retour l'url de l'image pour une équipe donnée
-    public getImageForTeam( team: string ) {
-        if( team ) {
-            const fileName = team.replace(" ", "_" ).toLowerCase() + ".png";
-            const url = "https://mespetitesstats.blob.core.windows.net/teams/" + fileName;
+    public getImageForTeam(team: string) {
+        if (team) {
+            const fileName = team.replace(' ', '_').toLowerCase() + '.png';
+            const url = 'https://mespetitesstats.blob.core.windows.net/teams/' + fileName;
 
             return url;
-        }
-        else
-        {
+        } else {
             // TODO: un truc un peu plus joli pour le Guido Carrillo de ce monde qui n'ont plus d'équipe en L1.
-            return "";
+            return '';
         }
     }
 
-
     public getCircleClassFor(role: PlayerPosition) {
-        return "circle-" + this.positionShortForm.get(role);
+        return 'circle-' + this.positionShortForm.get(role);
     }
 
     public getAmountOfLeagues(): string {
         switch (this.availableLeagues.length) {
             case 0:
-                return "one";
+                return 'one';
             case 1:
-                return "two";
+                return 'two';
             case 2:
-                return "three";
+                return 'three';
             case 3:
-                return "four";
+                return 'four';
             case 4:
-                return "five";
+                return 'five';
             case 5:
-                return "six";
+                return 'six';
             case 6:
-                return "seven";
+                return 'seven';
             case 7:
-                return "eight";
+                return 'eight';
             // Au delà de huit ligues, je me pose des questions sur votre santé mentale.
             default:
-                return "nine";
+                return 'nine';
         }
     }
 }
