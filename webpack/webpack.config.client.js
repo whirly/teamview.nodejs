@@ -3,7 +3,7 @@ import webpackMerge from 'webpack-merge';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
 import CompressionPlugin from 'compression-webpack-plugin';
 import VisualizerPlugin from 'webpack-visualizer-plugin';
-import { AotPlugin } from '@ngtools/webpack';
+import { AngularCompilerPlugin } from '@ngtools/webpack';
 import { isProductionBuild, fromRoot } from './environment';
 import agnosticConfig from './webpack.config.agnostic';
 
@@ -140,7 +140,7 @@ const PRODUCTION_CONFIG = {
     devtool: false,
 
     plugins: [
-        new AotPlugin({
+        new AngularCompilerPlugin({
             tsConfigPath: fromRoot('tsconfig.json'),
             entryModule: fromRoot('client/app/app.module#AppModule')
         }),
