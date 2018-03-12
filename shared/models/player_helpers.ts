@@ -8,7 +8,7 @@ export function hasScored(player: IPlayer, day: number): boolean {
         return performanceThis.day == day;
     });
 
-    return performance && ( performance.goalFor > 0 );
+    return performance && (performance.goalFor > 0);
 }
 
 export function hasYellowCard(player: IPlayer, day: number): boolean {
@@ -60,7 +60,7 @@ export function hasScoredAgainst(player: IPlayer, day: number): boolean {
         return performanceThis.day == day;
     });
 
-    return performance && ( performance.goalAgainst > 0 );
+    return performance && (performance.goalAgainst > 0);
 }
 
 export function getGoalAgainstForDay(player: IPlayer, day: number): number {
@@ -144,7 +144,7 @@ export function getAveragePerformance(player: IPlayer, fromDay: number): number 
 export function initializeExtendedData(player: IPlayerExtended, numberOfFixtures: number, limitation: number = 0) {
 
     const fromDay: number = limitation == 0 ? 1 : Math.max(numberOfFixtures - limitation, 1);
-    const numberOfDays: number = numberOfFixtures - ( fromDay - 1 );
+    const numberOfDays: number = numberOfFixtures - (fromDay - 1);
 
     player.averagePerformance = getAveragePerformance(player, fromDay);
     player.totalGoalFor = getGoalFor(player, fromDay);
@@ -163,8 +163,8 @@ export function initializeExtendedData(player: IPlayerExtended, numberOfFixtures
             }
         });
 
-        player.titularisation = 100 * ( played / numberOfDays );
-        player.participation = 100 * (( played + playedAsSub ) / numberOfDays );
+        player.titularisation = 100 * (played / numberOfDays);
+        player.participation = 100 * ((played + playedAsSub) / numberOfDays);
     } else {
         player.titularisation = 0;
         player.titularisation = 0;

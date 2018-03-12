@@ -1,13 +1,13 @@
-import {Component, OnInit} from "@angular/core";
-import {PelouseService} from "../services/pelouse.service";
-import {IFullMercatoMPG, ILeagueMPG, IUserMPG} from "../../../shared/models/pelouse";
-import _ from "lodash";
-import {IPlayer, IPlayerExtended, PlayerPosition} from "../../../shared/models/player";
-import {ITeam} from "../../../shared/models/team";
-import * as player_helpers from "../../../shared/models/player_helpers";
-import {TeamService} from "../services/team.service";
-import {PlayerService} from "../services/player.service";
-import {Mercato, MercatoOffer, MercatoUser, PlayerWithOffers} from "../../../shared/models/mercato";
+import { Component, OnInit } from '@angular/core';
+import _ from 'lodash';
+import { Mercato } from '../../../shared/models/mercato';
+import { IFullMercatoMPG, ILeagueMPG, IUserMPG } from '../../../shared/models/pelouse';
+import { IPlayer, IPlayerExtended, PlayerPosition } from '../../../shared/models/player';
+import * as player_helpers from '../../../shared/models/player_helpers';
+import { ITeam } from '../../../shared/models/team';
+import { PelouseService } from '../services/pelouse.service';
+import { PlayerService } from '../services/player.service';
+import { TeamService } from '../services/team.service';
 
 @Component({
     selector: 'teamview-mercato-analyser',
@@ -46,14 +46,14 @@ export class MercatoAnalyserComponent implements OnInit {
     private optionsPriceBucket: any;
     private optionsContention: any;
 
-    constructor( private pelouseService: PelouseService, private teamService: TeamService, private playerService: PlayerService  ) {
+    constructor(private pelouseService: PelouseService, private teamService: TeamService, private playerService: PlayerService) {
 
         this.responsiveOptionsChart = [
             ['screen and (min-width: 640px)', {
                 chartPadding: 0,
                 labelOffset: 10,
                 labelDirection: 'explode',
-                labelInterpolationFnc: function(value: any) {
+                labelInterpolationFnc(value: any) {
                     return value;
                 }
             }],
@@ -64,18 +64,18 @@ export class MercatoAnalyserComponent implements OnInit {
         ];
 
         this.optionsChart = {
-            labelInterpolationFnc: function( value: any ) {
+            labelInterpolationFnc(value: any) {
                 return value[0];
             }
         };
 
         this.optionsPriceBucket = {
             high: 60,
-        }
+        };
 
         this.optionsContention = {
             stackBars: true
-        }
+        };
     }
 
     public async ngOnInit() {
@@ -106,10 +106,10 @@ export class MercatoAnalyserComponent implements OnInit {
                 this.mercatoAvailable = false;
 
                 // Si on vient de se logguer, on choppe les infos sur les leagues.
-                if( logged ) {
+                if (logged) {
                     this.pelouseService.getLeagues().subscribe((leagues: ILeagueMPG[]) => {
 
-                        this.availableLeagues = _.filter( leagues, (league: ILeagueMPG) => {
+                        this.availableLeagues = _.filter(leagues, (league: ILeagueMPG) => {
                             return league.leagueStatus == 4;
                         });
 
@@ -145,14 +145,14 @@ export class MercatoAnalyserComponent implements OnInit {
     private buildMercatoData() {
 
         // On créé un nouveau mercato
-        this.mercato = new Mercato( this.mercatoHistory, this.playersAll );
+        this.mercato = new Mercato(this.mercatoHistory, this.playersAll);
     }
 
     // Connexion du mercato.
     // Il s'agit de connecter son mercato MPG à l'application, afin de permettre de sélectionner
     // la ligue dont on veut analyser le mercato.
     public connectMercato(): void {
-        this.pelouseService.login(this.login, this.password).subscribe( (user:IUserMPG) => {
+        this.pelouseService.login(this.login, this.password).subscribe((user: IUserMPG) => {
             this.user = user;
         });
     }
@@ -169,7 +169,7 @@ export class MercatoAnalyserComponent implements OnInit {
                 // On construit nos objets à nous à partir des données réceptionnés.
                 this.buildMercatoData();
                 this.mercatoDataProcessed = true;
-            })
+            });
         }
     }
 
@@ -206,7 +206,6 @@ export class MercatoAnalyserComponent implements OnInit {
     public getCircleClassFor(role: PlayerPosition) {
         return "circle-" + this.positionShortForm.get(role);
     }
-
 
     public getAmountOfLeagues(): string {
         switch (this.availableLeagues.length) {

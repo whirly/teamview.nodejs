@@ -18,5 +18,4 @@ const FixtureSchema = new Schema({
     }
 });
 
-export const Fixture = mongoose.model<IMongooseFixture>( 'Fixture', FixtureSchema );
-
+export const Fixture = mongoose.model<IMongooseFixture>('Fixture', FixtureSchema);

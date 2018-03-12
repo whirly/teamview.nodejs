@@ -1,10 +1,14 @@
-import path from 'path';
-import dotenvx from 'dotenv-extended';
+const path = require('path');
+const dotenvx = require('dotenv-extended');
 
 dotenvx.load();
 
-export const isProductionBuild = process.env.NODE_ENV == 'production';
+const mode = process.env.NODE_ENV || 'development';
 
-export function fromRoot(posixPath) {
+const isProductionBuild = mode === 'production';
+
+function fromRoot(posixPath) {
     return path.resolve(`${__dirname}/../${posixPath}`);
 }
+
+module.exports = { mode, isProductionBuild, fromRoot };

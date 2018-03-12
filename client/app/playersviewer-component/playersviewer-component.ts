@@ -133,15 +133,13 @@ export class PlayersViewerComponent implements OnInit {
         }
     }
 
-    public getImageForTeam( team: string ) {
-        if( team ) {
-            const fileName = team.replace(" ", "_" ).toLowerCase() + ".png";
+    public getImageForTeam(team: string) {
+        if (team) {
+            const fileName = team.replace(" ", "_").toLowerCase() + ".png";
             const url = "https://mespetitesstats.blob.core.windows.net/teams/" + fileName;
 
             return url;
-        }
-        else
-        {
+        } else {
             // TODO: un truc un peu plus joli pour le Guido Carrillo de ce monde qui n'ont plus d'équipe en L1.
             return "";
         }
@@ -174,7 +172,7 @@ export class PlayersViewerComponent implements OnInit {
     // garder que les joueurs encore disponible dans le mercato. Pas la peine de fantasmer
     // sur un mec qui bosse déjà pour un autre.
     public connectMercato(): void {
-        this.pelouseService.login(this.login, this.password).subscribe( (user:IUserMPG) => {
+        this.pelouseService.login(this.login, this.password).subscribe((user: IUserMPG) => {
             this.user = user;
         });
     }
@@ -273,8 +271,8 @@ export class PlayersViewerComponent implements OnInit {
 
             if (this.filterLeague == "") this.filterAndSortData();
             else this.pelouseService.getPlayersAvailableForLeague(this.filterLeague)
-                .subscribe(( mercato: IMercatoMPG ) => {
-                    this.availablePlayers = _.map( mercato.availablePlayers,
+                .subscribe((mercato: IMercatoMPG) => {
+                    this.availablePlayers = _.map(mercato.availablePlayers,
                         (player: IPlayerMercatoMPG) => player.id.slice(7));
                     this.filterAndSortData();
                 });

@@ -39,7 +39,7 @@ export async function getUserFromEmailAndPassword(email: string, password: strin
     return user;
 }
 
-export async function getUserFromJwtToken(token: IJwtToken|string): Promise<IMongooseUser> {
+export async function getUserFromJwtToken(token: IJwtToken | string): Promise<IMongooseUser> {
     if (typeof token == 'string') {
         token = await pify(jwt.verify)(token, process.env.SERVER_SECRET);
     }

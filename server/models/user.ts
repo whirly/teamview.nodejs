@@ -40,11 +40,11 @@ UserSchema.pre('save', async function(this: IMongooseUser, next): Promise<void> 
 //----------------
 
 UserSchema.methods.hashPassword = async function(this: IMongooseUser, password: string): Promise<string> {
-    return await bcrypt.hash(password, BCRYPT_SALT_ROUNDS);
+    return bcrypt.hash(password, BCRYPT_SALT_ROUNDS);
 };
 
 UserSchema.methods.verifyPassword = async function(this: IMongooseUser, password: string): Promise<boolean> {
-    return await bcrypt.compare(password, this.password);
+    return bcrypt.compare(password, this.password);
 };
 
 UserSchema.methods.hasPermission = function(this: IMongooseUser, permission: string): boolean {

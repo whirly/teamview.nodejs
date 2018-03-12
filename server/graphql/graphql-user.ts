@@ -49,11 +49,11 @@ export const MUTATIONS = {
 };
 
 async function currentUserResolver({ context }: any): Promise<IMongooseUser> {
-    return await context.user;
+    return context.user;
 }
 
 async function grantUserByIdResolver({ args }: any): Promise<IMongooseUser> {
     const role = await UserRole.findOne({ name: args.roleName });
 
-    return await User.findByIdAndUpdate(args.userId, { $set: { role } }, { new: true });
+    return User.findByIdAndUpdate(args.userId, { $set: { role } }, { new: true });
 }

@@ -1,11 +1,19 @@
-import webpack from 'webpack';
-import webpackMerge from 'webpack-merge';
-import webpackNodeExternals from 'webpack-node-externals';
-import { isProductionBuild, fromRoot } from './environment';
-import agnosticConfig from './webpack.config.agnostic';
+const webpack = require('webpack');
+const webpackMerge = require('webpack-merge');
+const webpackNodeExternals = require('webpack-node-externals');
+const { mode, isProductionBuild, fromRoot } = require('./environment');
+const agnosticConfig = require('./webpack.config.agnostic');
 
-const ENV_AGNOSTIC_CONFIG = {
+const envAgnosticConfig = {
+    mode,
     target: 'node',
+
+    devtool: 'source-map',
+    performance: false,
+
+    optimization: {
+        minimize: false
+    },
 
     externals: [webpackNodeExternals()],
 
@@ -15,10 +23,7 @@ const ENV_AGNOSTIC_CONFIG = {
     },
 
     output: {
-        path: fromRoot('dist/server'),
-        filename: '[name].bundle.js',
-        sourceMapFilename: '[name].bundle.map',
-        chunkFilename: '[id].chunk.js'
+        path: fromRoot('dist/server')
     },
 
     plugins: [
@@ -66,14 +71,12 @@ const ENV_AGNOSTIC_CONFIG = {
     }
 };
 
-const DEVELOPMENT_CONFIG = {
-    devtool: 'source-map'
-};
+const developmentConfig = {};
 
-const PRODUCTION_CONFIG = {};
+const productionConfig = {};
 
-export default webpackMerge(
+module.exports = webpackMerge(
     agnosticConfig,
-    ENV_AGNOSTIC_CONFIG,
-    isProductionBuild ? PRODUCTION_CONFIG : DEVELOPMENT_CONFIG
+    envAgnosticConfig,
+    isProductionBuild ? productionConfig : developmentConfig
 );

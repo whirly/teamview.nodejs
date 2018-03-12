@@ -1,4 +1,4 @@
-export default {
+module.exports = {
     module: {
         rules: [
             {
@@ -7,4 +7,4 @@ export default {
             }
         ]
     }
-}
+};

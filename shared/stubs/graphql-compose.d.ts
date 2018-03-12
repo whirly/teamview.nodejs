@@ -50,7 +50,7 @@ declare module 'graphql-compose' {
     }
 
     export class InputTypeComposer {
-        static create(opts: TypeNameString|TypeDefinitionString|GraphQLObjectTypeConfig<any, any>|GraphQLObjectType): TypeComposer;
+        static create(opts: TypeNameString | TypeDefinitionString | GraphQLObjectTypeConfig<any, any> | GraphQLObjectType): TypeComposer;
 
         constructor(gqType: any);
 
@@ -214,6 +214,7 @@ declare module 'graphql-compose' {
 
         wrapOutputType(cb: any, ...args: any[]): any;
 
+        // tslint:disable-next-line:ban-types
         wrapResolve(cb: (next: Function) => (resolveParams: any) => void, ...args: any[]): any;
 
         wrapType(cb: any, ...args: any[]): any;
@@ -221,7 +222,7 @@ declare module 'graphql-compose' {
     }
 
     export class TypeComposer {
-        static create(opts: TypeNameString|TypeDefinitionString|GraphQLObjectTypeConfig<any, any>|GraphQLObjectType): TypeComposer;
+        static create(opts: TypeNameString | TypeDefinitionString | GraphQLObjectTypeConfig<any, any> | GraphQLObjectType): TypeComposer;
 
         constructor(gqType: any);
 

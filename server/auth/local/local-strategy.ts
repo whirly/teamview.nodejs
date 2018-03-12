@@ -3,7 +3,7 @@ import { IMongooseUser } from '../../models';
 import { getUserFromEmailAndPassword } from '../index';
 import { AuthenticationError } from '../auth-errors';
 
-type DoneFunc = (err?: any, authed?: false|IMongooseUser) => void;
+type DoneFunc = (err?: any, authed?: false | IMongooseUser) => void;
 
 export const LOCAL_STRATEGY = new LocalStrategy({
     usernameField: 'email',
