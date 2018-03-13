@@ -45,13 +45,18 @@
         </div>
 
         <div class="eight wide column" *ngIf="!mercatoAvailable">
+            <p>Vos identifiants MPG permettent de filtrer la liste en fonction des joueurs disponibles dans votre championnat.
+                Les identifiants sont stockés dans votre navigateur.</p>
+        </div>
+
+        <div class="eight wide column" *ngIf="!mercatoAvailable">
             <div class="ui form">
                 <div class="fields">
                     <div class="five wide field">
                         <input type="text" [(ngModel)]="login" placeholder="Identifiant">
                     </div>
                     <div class="five wide field">
-                        <input type="text" [(ngModel)]="password" placeholder="Mot de passe">
+                        <input type="password" [(ngModel)]="password" placeholder="Mot de passe">
                     </div>
                     <div class="eight wide field">
                         <button class="positive ui button" (click)="connectMercato()">Connecter son mercato</button>
