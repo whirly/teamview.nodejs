@@ -6,8 +6,8 @@
   "author": "Stéphane Becker <whirly.von.elsass@gmail.com> (http://www.bretzelsandgames.com)",
   "scripts": {
     "cli": "node dist/server/cli.js",
-    "run:server": "node dist/server/main.bundle.js",
-    "run:nodemon-server": "nodemon --watch dist/server dist/server/main.bundle.js",
+    "run:server": "node dist/server/main.js",
+    "run:nodemon-server": "nodemon --watch dist/server dist/server/main.js",
     "postinstall": "yarn build && yarn cli db:migrate",
     "build": "run-s build:*",
     "build:server": "webpack --config webpack/webpack.config.server.js",
