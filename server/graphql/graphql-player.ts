@@ -10,13 +10,13 @@ export const TYPE_COMPOSER = type;
 
 type.addRelation('performances', {
     resolver: () => performanceType.getResolver('findByIds'),
-    prepareArgs: { _ids: (source: IMongoosePlayer ) => source.performances },
+    prepareArgs: { _ids: (source: IMongoosePlayer) => source.performances },
     projection: { performances: 1 }
 });
 
 type.addRelation('team', {
     resolver: () => teamType.getResolver('findById'),
-    prepareArgs: { _id: (source: IMongoosePlayer ) => source.team },
+    prepareArgs: { _id: (source: IMongoosePlayer) => source.team },
     projection: { team: true }
 });
 
@@ -29,4 +29,3 @@ export const QUERIES = {
 
 export const MUTATIONS = {
 };
-

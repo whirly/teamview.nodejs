@@ -18,4 +18,4 @@ const PerformanceSchema = new Schema({
     penaltyFor: { type: Number }
 });
 
-export const Performance = mongoose.model<IMongoosePerformance>( 'Performance', PerformanceSchema );
+export const Performance = mongoose.model<IMongoosePerformance>('Performance', PerformanceSchema);

@@ -1,17 +1,9 @@
-import {Component, OnInit} from "@angular/core";
-import {ActivatedRoute} from "@angular/router";
+import { Component } from '@angular/core';
 
 @Component({
     selector: 'teamview-about',
     templateUrl: './about-component.html',
     styleUrls: ['./about-component.scss']
 })
-export class AboutComponent implements OnInit {
-
-    constructor(private route: ActivatedRoute) {
-    }
-
-    public async ngOnInit() {
-    }
-
+export class AboutComponent {
 }

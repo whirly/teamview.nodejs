@@ -9,4 +9,4 @@ const TeamSchema = new Schema({
     fixtures: [{ type: Schema.Types.ObjectId, ref: 'Fixture' }]
 });
 
-export const Team = mongoose.model<IMongooseTeam>( 'Team', TeamSchema );
+export const Team = mongoose.model<IMongooseTeam>('Team', TeamSchema);

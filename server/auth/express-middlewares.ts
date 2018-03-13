@@ -1,7 +1,7 @@
 import { RequestHandler, Request, Response, NextFunction } from 'express';
 import expressJwt from 'express-jwt';
 import { compose } from 'compose-middleware';
-import { getUserFromJwtToken } from './index';
+import { getUserFromJwtToken, IJwtToken } from './index';
 
 /**
  * Requires a JWT token to be present in the request (Authorization: Bearer <token>).
@@ -39,7 +39,7 @@ export function attachUser(): RequestHandler {
         async (req: Request, res: Response, next: NextFunction) => {
             if (req.user && req.user._id) {
                 try {
-                    req.user = await getUserFromJwtToken(req.user);
+                    req.user = await getUserFromJwtToken(req.user as IJwtToken);
                 } catch (err) {
                     next(err);
                 }

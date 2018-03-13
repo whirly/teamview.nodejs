@@ -32,7 +32,7 @@ export class TeamService {
                 }
             }`
 
-        }).valueChanges.map( res => res.data.teams);
+        }).valueChanges.map(res => res.data.teams);
     }
 
     public getByName(name: string): Observable<ITeam> {

@@ -20,7 +20,7 @@ export class PelouseService {
     private user: any;
 
     private loggedIn: boolean = false;
-    private isLoggedInSubject: BehaviorSubject<boolean> = new BehaviorSubject<boolean>( false );
+    private isLoggedInSubject: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
 
     constructor(private http: HttpClient) {
         // On essaye de récupérer les infos depuis le local storage.
@@ -38,27 +38,27 @@ export class PelouseService {
         this.isLoggedInSubject.next(this.loggedIn);
     }
 
-    public logIn() : Observable<boolean> {
+    public logIn(): Observable<boolean> {
         return this.isLoggedInSubject.asObservable();
     }
 
     public getLeagues(): Observable<ILeagueMPG[]> {
 
-        const headers = new HttpHeaders().set( "Authorization", this.user.token );
+        const headers = new HttpHeaders().set("Authorization", this.user.token);
 
         return this.http.get<any>(this.dashboardApi, {
-            headers: headers
-        }).map( response => { return response.data.leagues; });
+            headers
+        }).map(response => response.data.leagues);
     }
 
     public getMercatoForLeague(league: string): Observable<IFullMercatoMPG> {
-        const headers = new HttpHeaders().set( "Authorization", this.user.token );
+        const headers = new HttpHeaders().set("Authorization", this.user.token);
         return this.http.get<IFullMercatoMPG>(this.mercatoHistoryApi + league + this.mercatoHistoryApiSecondPart, {headers});
     }
 
     public getPlayersAvailableForLeague(league: string): Observable<IMercatoMPG> {
 
-        const headers = new HttpHeaders().set( "Authorization", this.user.token );
+        const headers = new HttpHeaders().set("Authorization", this.user.token);
 
         return this.http.get<IMercatoMPG>(this.mercatoApi + league + this.mercatoApiSecondPart, {headers});
     }
@@ -70,8 +70,7 @@ export class PelouseService {
             password,
             language: "fr-FR"
         })
-            .map( user => {
-                console.log( user );
+            .map(user => {
                 if (user && user.token) {
                     localStorage.setItem('currentUser', JSON.stringify(user));
                     this.user = user;

@@ -11,10 +11,6 @@ La compilation est basée sur Webpack, et le build est découpé en quatre bundl
     - `main` : Point d'entrée du serveur Express ;
     - `cli` : Point d'entrée d'une application CLI yargs contenant des utilitaires.
 
-webpack-dev-{middleware, server} n'étant pas assez extensibles et hackables pour le moment, on a du séparer le serveur du client, qui en dév est géré par une instance d'un webpack-dev-server.
-
-Cela signifie que le serveur et le client n'utilisent pas le même port en mode dév, le client étant par défaut sur http://localhost:3000 et le serveur sur http://localhost:3001.
-
 ## Angular
 
 La structure minimale d'un projet Angular est disponible dans client/.

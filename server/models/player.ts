@@ -1,5 +1,6 @@
 import mongoose, { Schema } from 'mongoose';
 import { IPlayer } from '../../shared/models';
+
 export interface IMongoosePlayer extends IPlayer {}
 
 const PlayerSchema = new Schema({
@@ -13,4 +14,4 @@ const PlayerSchema = new Schema({
     performances: [{ type: Schema.Types.ObjectId, ref: "Performance" }]
 });
 
-export const Player = mongoose.model<IMongoosePlayer>('Player', PlayerSchema );
+export const Player = mongoose.model<IMongoosePlayer>('Player', PlayerSchema);

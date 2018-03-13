@@ -74,12 +74,12 @@ export class PlayerService {
                 }
             }`;
 
-        return this.apollo.watchQuery<{ player: IPlayer }>( {
+        return this.apollo.watchQuery<{ player: IPlayer }>({
             query: playerById,
             variables: {
                 idMpg
             }
-        }).valueChanges.map( res => res.data.player );
+        }).valueChanges.map(res => res.data.player);
 
     }
 }
