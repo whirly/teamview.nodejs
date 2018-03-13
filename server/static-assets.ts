@@ -8,11 +8,11 @@ export function forwardToGzippedScripts(req: Request, res: Response, next: NextF
     if (req.url.endsWith('.js')) {
         req.url += '.gz';
         res.set('Content-Encoding', 'gzip');
+        res.set('Content-Type', 'application/javascript');
     }
 
     next();
 }
-
 export const serveStaticAssets = express.static(staticAssetsPath);
 export const routeEverythingToIndex = express.Router().get('/*', (req: Request, res: Response) => {
     res.sendFile(indexPath);
