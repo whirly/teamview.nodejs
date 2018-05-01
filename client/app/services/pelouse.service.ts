@@ -15,7 +15,7 @@ export class PelouseService {
     private mercatoApiSecondPart: string = "/transfer/buy";
 
     private mercatoHistoryApi: string = this.urlApi + "/league/";
-    private mercatoHistoryApiSecondPart: string = "/pending_mercato";
+    private mercatoHistoryApiSecondPart: string = "pending_mercato";
 
     private user: any;
 
