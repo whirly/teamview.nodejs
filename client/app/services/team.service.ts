@@ -1,9 +1,11 @@
+
+import {map} from 'rxjs/operators';
 import {Injectable} from "@angular/core";
 import {ITeam} from "../../../shared/models/team";
 import gql from "graphql-tag";
 import {Apollo } from "apollo-angular";
-import {Observable} from "rxjs/Observable";
-import 'rxjs/add/operator/map';
+import {Observable} from "rxjs";
+
 
 @Injectable()
 export class TeamService {
@@ -32,7 +34,7 @@ export class TeamService {
                 }
             }`
 
-        }).valueChanges.map(res => res.data.teams);
+        }).valueChanges.pipe(map(res => res.data.teams));
     }
 
     public getByName(name: string): Observable<ITeam> {
@@ -95,6 +97,6 @@ export class TeamService {
             variables: {
                 name
             }
-        }).valueChanges.map(res => res.data.team);
+        }).valueChanges.pipe(map(res => res.data.team));
     }
 }

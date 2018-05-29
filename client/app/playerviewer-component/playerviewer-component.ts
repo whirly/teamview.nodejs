@@ -9,6 +9,8 @@ import {TeamService} from "../services/team.service";
 import {ITeam} from "../../../shared/models/team";
 import {IFixture} from "../../../shared/models/fixture";
 
+import { switchMap } from "rxjs/operators";
+
 @Component({
     selector: 'teamview-playerviewer',
     templateUrl: './playerviewer-component.html',
@@ -28,8 +30,8 @@ export class PlayerViewerComponent implements OnInit {
     }
 
     public async ngOnInit() {
-        this.route.paramMap.switchMap((params: ParamMap) =>
-            this.playerService.get(params.get("id")))
+        this.route.paramMap.pipe( switchMap((params: ParamMap) =>
+            this.playerService.get(params.get("id"))))
             .subscribe((player: IPlayer) => {
                 this.player = _.cloneDeep(player);
                 player_helpers.initializeExtendedData(this.player, this.player.team.fixtures.length);

@@ -1,9 +1,10 @@
+
+import {map} from 'rxjs/operators';
 import {HttpClient, HttpHeaders} from "@angular/common/http";
 import {Injectable} from "@angular/core";
-import {Observable} from "rxjs/Observable";
+import {Observable, BehaviorSubject} from "rxjs";
 import {IFullMercatoMPG, ILeagueMPG, IMercatoMPG, IUserMPG} from "../../../shared/models/pelouse";
-import {BehaviorSubject} from "rxjs/BehaviorSubject";
-import 'rxjs/add/operator/map';
+
 
 @Injectable()
 export class PelouseService {
@@ -48,7 +49,7 @@ export class PelouseService {
 
         return this.http.get<any>(this.dashboardApi, {
             headers
-        }).map(response => response.data.leagues);
+        }).pipe(map(response => response.data.leagues));
     }
 
     public getMercatoForLeague(league: string): Observable<IFullMercatoMPG> {
@@ -69,8 +70,8 @@ export class PelouseService {
             email: login,
             password,
             language: "fr-FR"
-        })
-            .map(user => {
+        }).pipe(
+            map(user => {
                 if (user && user.token) {
                     localStorage.setItem('currentUser', JSON.stringify(user));
                     this.user = user;
@@ -79,7 +80,7 @@ export class PelouseService {
                 }
 
                 return user;
-            });
+            }));
     }
 
     public logout() {

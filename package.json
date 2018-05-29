@@ -20,7 +20,7 @@
     "g": "ng g"
   },
   "engines": {
-    "node": "9.x"
+    "node": "8.x"
   },
   "devDependencies": {
     "@ngtools/webpack": "^1.10.0",
@@ -69,22 +69,22 @@
   "dependencies": {
     "@angular-redux/router": "^7.0.0",
     "@angular-redux/store": "^7.1.0",
-    "@angular/animations": "^5.2.5",
-    "@angular/cli": "^1.7.0",
-    "@angular/common": "^5.2.5",
-    "@angular/compiler": "^5.2.5",
-    "@angular/compiler-cli": "^5.2.5",
-    "@angular/core": "^5.2.5",
-    "@angular/forms": "^5.2.5",
-    "@angular/http": "^5.2.5",
-    "@angular/platform-browser": "^5.2.5",
-    "@angular/platform-browser-dynamic": "^5.2.5",
-    "@angular/platform-server": "^5.2.5",
-    "@angular/router": "^5.2.5",
+    "@angular/animations": "^6.0.3",
+    "@angular/cli": "^6.0.5",
+    "@angular/common": "^6.0.3",
+    "@angular/compiler": "^6.0.3",
+    "@angular/compiler-cli": "^6.0.3",
+    "@angular/core": "^6.0.3",
+    "@angular/forms": "^6.0.3",
+    "@angular/http": "^6.0.3",
+    "@angular/platform-browser": "^6.0.3",
+    "@angular/platform-browser-dynamic": "^6.0.3",
+    "@angular/platform-server": "^6.0.3",
+    "@angular/router": "^6.0.3",
     "@types/chartist": "^0.9.38",
     "@types/lodash": "^4.14.104",
     "@types/mongoose": "^5.0.2",
-    "apollo-angular": "^1.0.1",
+    "apollo-angular": "^1.1.0",
     "apollo-angular-link-http": "^1.0.2-beta.0",
     "apollo-cache-inmemory": "^1.1.5",
     "apollo-client": "^2.2.1",
@@ -120,11 +120,12 @@
     "passport-local": "^1.0.0",
     "pify": "^3.0.0",
     "redux": "^3.7.2",
-    "redux-observable": "^0.18.0",
     "request-promise": "^4.2.2",
-    "rxjs": "^5.5.6",
+    "rxjs": "^6.2.0",
+    "rxjs-compat": "^6.2.0",
+    "style-loader": "^0.21.0",
     "winston": "^2.4.0",
     "yargs": "^11.0.0",
-    "zone.js": "^0.8.20"
+    "zone.js": "^0.8.26"
   }
 }

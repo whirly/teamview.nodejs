@@ -1,9 +1,11 @@
+
+import {map} from 'rxjs/operators';
 import {Injectable} from "@angular/core";
 import {Apollo} from "apollo-angular";
-import {Observable} from "rxjs/Observable";
+import {Observable} from "rxjs";
 import {IPlayer} from "../../../shared/models/player";
 import gql from "graphql-tag";
-import 'rxjs/add/operator/map';
+
 
 @Injectable()
 export class PlayerService {
@@ -35,7 +37,7 @@ export class PlayerService {
                     }
                 }
             }`
-        }).valueChanges.map(res => res.data.players);
+        }).valueChanges.pipe(map(res => res.data.players));
     }
 
     public get(idMpg: string): Observable<IPlayer> {
@@ -79,7 +81,7 @@ export class PlayerService {
             variables: {
                 idMpg
             }
-        }).valueChanges.map(res => res.data.player);
+        }).valueChanges.pipe(map(res => res.data.player));
 
     }
 }

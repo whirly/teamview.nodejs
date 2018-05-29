@@ -1,6 +1,8 @@
 import {Component, OnInit} from "@angular/core";
-import {BehaviorSubject} from "../rxjs";
-import 'rxjs/add/operator/switchMap';
+
+import { BehaviorSubject } from "rxjs";
+import { debounceTime } from "rxjs/operators";
+
 import {PlayerService} from "../services/player.service";
 import {IPlayer, IPlayerExtended, PlayerPosition} from "../../../shared/models/player";
 import _ from "lodash";
@@ -10,7 +12,7 @@ import {TeamService} from "../services/team.service";
 import {ITeam} from "../../../shared/models/team";
 import {PelouseService} from "../services/pelouse.service";
 import {ILeagueMPG, IMercatoMPG, IPlayerMercatoMPG, IUserMPG} from "../../../shared/models/pelouse";
-
+ 
 enum PlayerOrdering {
     Goal = "totalGoalFor",
     CSC = "totalGoalAgainst",
@@ -105,7 +107,7 @@ export class PlayersViewerComponent implements OnInit {
 
         // On appelle le filtre / sort quand on tape la recherche, mais avec du debounce
         // pour éviter que toute l'appli rame si on tape vite
-        this.searchForDebounce$.debounceTime(100).subscribe(() => {
+        this.searchForDebounce$.pipe( debounceTime(100) ).subscribe(() => {
             this.filterAndSortData();
         });
 
