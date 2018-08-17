@@ -9,6 +9,7 @@ export interface IFixtureSide {
 
 export interface IFixture {
     day: number;
+    year: number;
     idMpg?: number;
     home?: IFixtureSide;
     away?: IFixtureSide;

@@ -5,3 +5,7 @@ node_modules/
 \.idea/
 
 yarn-error\.log
+
+dump/
+
+copy_production_db\.bat

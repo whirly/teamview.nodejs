@@ -89,10 +89,24 @@ export class PlayersViewerComponent implements OnInit {
         this.positionShortForm.set(PlayerPosition.Striker, "A");
 
         this.teamService.list.subscribe((teams: ITeam[]) => {
-            this.teams = teams;
+            this.teams = _.cloneDeep( teams );
+
+            // On vire les fixtures qui ne datent pas de cette année.
+            for( let team of this.teams ) {
+                team.fixtures = team.fixtures.filter( fixture => fixture.year == 2018 );
+            }
+
+            // Puis on vire les équipes qui n'ont pas de fixtures, en gros ceux qui ne sont plus
+            // parmi nous :)
+            this.teams = this.teams.filter( team => team.fixtures.length > 0 );
 
             this.playerService.list.subscribe((players: IPlayer[]) => {
                 this.playersAll = _.cloneDeep(players);
+
+                // On retire les performances qui ne sont pas de cette saison.
+                for( let player of this.playersAll ) {
+                    player.performances = player.performances.filter( performance => performance.year == 2018 && performance.minutes > 0 );
+                }
 
                 // On vire les joueurs qui ne sont pas actifs, c'est à dire qui n'ont aucune performance
                 this.playersAll = _.filter(this.playersAll, (player: IPlayer) => {

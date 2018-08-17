@@ -8,6 +8,7 @@ const BCRYPT_SALT_ROUNDS = 13; // strong, but not too much, ~1 hash/sec
 
 //=> Interface and schema
 //-----------------------
+
 export interface IMongooseUser extends IUser, Document {
     hasPermission(permission: string): boolean;
     hasPermissions(...permissions: string[]): boolean;
@@ -28,9 +29,10 @@ const UserSchema = new Schema({
     password: { type: String, required: true }
 });
 
-UserSchema.pre('save', async function(this: IMongooseUser, next): Promise<void> {
+UserSchema.pre('save', async function(this: Document, next): Promise<void> {
+    let that: IMongooseUser = <IMongooseUser> this;
     if (this.isNew || this.isModified('password')) {
-        this.password = await this.hashPassword(this.password);
+        that.password = await that.hashPassword(that.password);
     }
 
     next();

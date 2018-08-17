@@ -6,6 +6,7 @@ const PerformanceSchema = new Schema({
     player: { type: Schema.Types.ObjectId, ref: 'Player' },
     team: { type: Schema.Types.ObjectId, ref: 'Team' },
     day: { type: Number },
+    year: { type: Number },
     position: { type: String },
     place: { type: Number },
     rate: { type: Number },

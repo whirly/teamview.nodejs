@@ -2,6 +2,7 @@ export interface IPerformance {
     player?: string;
     team?: string;
     day?: number;
+    year?: number;
     position?: string;
     place?: number;
     rate?: number;

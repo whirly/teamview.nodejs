@@ -124,13 +124,13 @@ function getRoleForPosition(position: string): PlayerPosition {
 }
 
 // Dans le cas où la perf existe déjà on s'arrange quand même pour la mettre à jour
-async function updatePerformances(day: number, data: any) {
+async function updatePerformances(year: number, day: number, data: any) {
     // tslint:disable-next-line:forin
     for (const playerID in data.players) {
         const playerInfos = data.players[playerID];
         const player = await models.Player.findOne({ idMpg: playerID });
 
-        const performancePrevious = await models.Performance.findOne({ player, day });
+        const performancePrevious = await models.Performance.findOne({ player, day, year });
 
         // On va la mettre à jour, parce que bon il y aura toujours ces histoires de mecs
         // qui ont finalement hérité d'un but quelques jours plus tard
@@ -153,7 +153,7 @@ async function updatePerformances(day: number, data: any) {
     }
 }
 
-async function processPlayers(day: number, data: any): Promise<IPerformance[]> {
+async function processPlayers(year: number, day: number, data: any): Promise<IPerformance[]> {
     const performances = [];
 
     // tslint:disable-next-line:forin
@@ -175,7 +175,7 @@ async function processPlayers(day: number, data: any): Promise<IPerformance[]> {
             });
         }
         // Est ce qu'on a déjà cette perf ?
-        const performancePrevious = await models.Performance.findOne({ player, day });
+        const performancePrevious = await models.Performance.findOne({ player, day, year });
 
         // Non on va la créer
         if (!performancePrevious) {
@@ -186,6 +186,7 @@ async function processPlayers(day: number, data: any): Promise<IPerformance[]> {
             const playerPerformance = await models.Performance.create({
                 player,
                 team,
+                year,
                 day,
                 position: playerInfos.info.position,
                 place: playerInfos.info.formation_place,
@@ -214,6 +215,7 @@ async function processMatches(baseUrl: string) {
     for (let i = 1; i < 39; i++) {
         const queryDay = await request(baseUrl + 'championship/1/calendar/' + i.toString());
         const day = JSON.parse(queryDay);
+        const year = 2018;
 
         logger.info('Traitement jour ' + i);
 
@@ -249,6 +251,7 @@ async function processMatches(baseUrl: string) {
                 // Fixture does not exists yet
                 if (!fixture) {
                     fixture = await models.Fixture.create({
+                        year,
                         day: i,
                         idMpg: matchDetailed.id.toString(),
                         home: {
@@ -262,8 +265,8 @@ async function processMatches(baseUrl: string) {
                     });
 
                     // Populate players and their performance
-                    fixture.home.performances = await processPlayers(i, matchDetailed.Home);
-                    fixture.away.performances = await processPlayers(i, matchDetailed.Away);
+                    fixture.home.performances = await processPlayers(year, i, matchDetailed.Home);
+                    fixture.away.performances = await processPlayers(year, i, matchDetailed.Away);
 
                     await fixture.save();
 
@@ -274,8 +277,8 @@ async function processMatches(baseUrl: string) {
                     await teamHome.save();
                 } else {
 
-                    await updatePerformances(i, matchDetailed.Home);
-                    await updatePerformances(i, matchDetailed.Away);
+                    await updatePerformances(year, i, matchDetailed.Home);
+                    await updatePerformances(year, i, matchDetailed.Away);
                 }
             }
         }

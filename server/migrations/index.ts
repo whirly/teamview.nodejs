@@ -1,4 +1,5 @@
 import * as Migration01CreateBaseUsers from './01_create_base_users';
+import * as Migration02AddYear from './02_add_year';
 
 export interface IMigration {
     name: string;
@@ -8,5 +9,6 @@ export interface IMigration {
 }
 
 export const Migrations: IMigration[] = [
-    Migration01CreateBaseUsers
+    Migration01CreateBaseUsers,
+    Migration02AddYear,
 ];

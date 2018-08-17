@@ -4,6 +4,7 @@ import { IFixture } from '../../shared/models';
 export interface IMongooseFixture extends IFixture, Document {}
 
 const FixtureSchema = new Schema({
+    year: { type: Number },
     day: { type: Number },
     idMpg: { type: String },
     home: {

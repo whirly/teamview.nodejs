@@ -19,6 +19,7 @@ export class TeamService {
                 teams {
                     name
                     fixtures {
+                        year
                         day
                         home {
                             team {
@@ -53,6 +54,7 @@ export class TeamService {
                             team {
                                 name
                             }
+                            year
                             day
                             position
                             place
@@ -67,6 +69,7 @@ export class TeamService {
                         }
                     }
                     fixtures {
+                        year
                         day
                         home {
                             formation
