@@ -149,7 +149,8 @@ async function updatePerformances(year: number, day: number, data: any) {
             : 0;
 
         // On sauvegarde le bordel.
-        await models.Performance.findOneAndUpdate({ player, day }, performancePrevious);
+        delete performancePrevious._id;
+        await models.Performance.findOneAndUpdate({ player, day, year }, performancePrevious);
     }
 }
 
