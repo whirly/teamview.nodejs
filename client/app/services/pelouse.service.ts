@@ -54,7 +54,7 @@ export class PelouseService {
 
     public getMercatoForLeague(league: string): Observable<IFullMercatoMPG> {
         const headers = new HttpHeaders().set("Authorization", this.user.token);
-        return this.http.get<IFullMercatoMPG>(this.mercatoHistoryApi + league + this.mercatoHistoryApiSecondPart, {headers});
+        return this.http.get<IFullMercatoMPG>(this.mercatoHistoryApi + league + "/" + this.mercatoHistoryApiSecondPart, {headers});
     }
 
     public getPlayersAvailableForLeague(league: string): Observable<IMercatoMPG> {

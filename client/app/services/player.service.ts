@@ -3,7 +3,7 @@ import {map} from 'rxjs/operators';
 import {Injectable} from "@angular/core";
 import {Apollo} from "apollo-angular";
 import {Observable} from "rxjs";
-import {IPlayer} from "../../../shared/models/player";
+import {IPlayer} from "../../../shared/models";
 import gql from "graphql-tag";
 
 
@@ -50,6 +50,7 @@ export class PlayerService {
                     team {
                         name
                         fixtures {
+                            year
                             away {
                                 team {
                                     name

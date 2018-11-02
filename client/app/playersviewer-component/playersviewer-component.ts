@@ -108,6 +108,7 @@ export class PlayersViewerComponent implements OnInit {
                     player.performances = player.performances.filter( performance => performance.year == 2018 && performance.minutes > 0 );
                 }
 
+
                 // On vire les joueurs qui ne sont pas actifs, c'est à dire qui n'ont aucune performance
                 this.playersAll = _.filter(this.playersAll, (player: IPlayer) => {
                     return player.performances.length > 0;
@@ -132,7 +133,7 @@ export class PlayersViewerComponent implements OnInit {
                 // On reçoit l'événement de connexion, on demande donc le dashboard du monsieur
                 this.pelouseService.getLeagues().subscribe((leagues: ILeagueMPG[]) => {
                     this.availableLeagues = _.filter(leagues, (league: ILeagueMPG) => {
-                        return league.mode == 2;
+                        return league.mode == 2 && league.leagueStatus < 5;
                     });
                     this.mercatoAvailable = true;
                 });

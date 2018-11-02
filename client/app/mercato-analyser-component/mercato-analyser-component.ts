@@ -110,7 +110,7 @@ export class MercatoAnalyserComponent implements OnInit {
                     this.pelouseService.getLeagues().subscribe((leagues: ILeagueMPG[]) => {
 
                         this.availableLeagues = _.filter(leagues, (league: ILeagueMPG) => {
-                            return league.leagueStatus == 4;
+                            return league.leagueStatus == 4 || league.leagueStatus == 3;
                         });
 
                         this.mercatoAvailable = true;

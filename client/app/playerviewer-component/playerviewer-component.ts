@@ -34,6 +34,11 @@ export class PlayerViewerComponent implements OnInit {
             this.playerService.get(params.get("id"))))
             .subscribe((player: IPlayer) => {
                 this.player = _.cloneDeep(player);
+
+                // On vire tous les trucs de 2017, on s'en occupera plus tard.
+                this.player.performances = this.player.performances.filter( performance => performance.year == 2018 );
+                this.player.team.fixtures = this.player.team.fixtures.filter( fixture => fixture.year == 2018 );
+
                 player_helpers.initializeExtendedData(this.player, this.player.team.fixtures.length);
 
                 // on met en place l'url de notre stockage Azure.
@@ -43,6 +48,8 @@ export class PlayerViewerComponent implements OnInit {
                 // On récupère l'équipe avec ses performances.
                 this.teamService.getByName(this.player.team.name).subscribe((team: ITeam) => {
                     this.team = team;
+
+                    this.team.fixtures = this.team.fixtures.filter( fixture => fixture.year == 2018 );
                 });
             });
     }
@@ -71,6 +78,7 @@ export class PlayerViewerComponent implements OnInit {
     }
 
     public getMyRateFor(fixture: IFixture) {
-        return player_helpers.getRateFor(this.player, fixture.day);
+        const rate: number = player_helpers.getRateFor(this.player, fixture.day);
+        return rate > 0 ? rate : '-';
     }
 }

@@ -80,7 +80,7 @@ export function getRateFor(player: IPlayer, day: number): number {
         return performanceThis.day == day;
     });
 
-    if (performance) {
+    if (performance && performance.minutes > 0) {
         return performance.rate;
     } else {
         return 0;
@@ -131,7 +131,7 @@ export function getAveragePerformance(player: IPlayer, fromDay: number): number 
     let totalPerformances: number = 0;
 
     const sum: number = _.reduce(player.performances, (aggregate: number, performance: IPerformance) => {
-        if (performance.day >= fromDay) {
+        if (performance.day >= fromDay && performance.minutes > 0) {
             totalPerformances += 1;
             return aggregate + performance.rate;
         } else return aggregate;

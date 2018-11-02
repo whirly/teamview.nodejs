@@ -15,6 +15,7 @@ export interface IPlayer extends mongoose.Document {
     firstName?: string;
     lastName?: string;
     role?: number;
+    position?: number;  // Seems that now some object return that
     value?: number;
     team?: ITeam;
 

@@ -21,16 +21,6 @@ export class TeamService {
                     fixtures {
                         year
                         day
-                        home {
-                            team {
-                                name
-                            }
-                        }
-                        away {
-                            team {
-                                name
-                            }
-                        }
                     }
                 }
             }`
