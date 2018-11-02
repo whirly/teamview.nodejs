@@ -144,9 +144,11 @@ export function getAveragePerformance(player: IPlayer, fromDay: number): number 
 export function initializeExtendedData(player: IPlayerExtended, numberOfFixtures: number, limitation: number = 0) {
 
     const fromDay: number = limitation == 0 ? 1 : Math.max(numberOfFixtures - limitation, 1);
+    const fromDayFlash: number = Math.max(numberOfFixtures - 3, 1);
     const numberOfDays: number = numberOfFixtures - (fromDay - 1);
 
     player.averagePerformance = getAveragePerformance(player, fromDay);
+    player.flashPerformance = getAveragePerformance(player, fromDayFlash);
     player.totalGoalFor = getGoalFor(player, fromDay);
     player.totalGoalAgainst = getGoalAgainst(player, fromDay);
     player.totalPenaltyFor = getPenaltyFor(player, fromDay);

@@ -131,6 +131,13 @@
                     </svg>
                 </div>
             </th>
+            <th class="rotate">
+                <div>
+                    <svg width="82" height="100">
+                        <text transform="translate(13,60) rotate(-45)" x="0" y="0">Tendance</text>
+                    </svg>
+                </div>
+            </th>
         </tr>
         </thead>
         <tbody>
@@ -147,6 +154,7 @@
             <td class="center"><i class="fa {{ getLevelFor( player.titularisation ) }}" aria-hidden="true"></i></td>
             <td class="center"><i class="fa {{ getLevelFor( player.participation ) }}" aria-hidden="true"></i></td>
             <td class="center"><i *ngIf="player.totalPenaltyFor > 0" class="fa fa-check"></i></td>
+            <td class="center"><i class="fas {{ getIconForTrend(player) }}"></i></td>
         </tr>
         </tbody>
     </table>

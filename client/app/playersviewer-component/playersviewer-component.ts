@@ -325,6 +325,16 @@ export class PlayersViewerComponent implements OnInit {
         }
     }
 
+    public getIconForTrend( player: IPlayerExtended ): string {
+        if ( Math.abs( player.averagePerformance - player.flashPerformance ) < 0.1 ) {
+            return 'fa-equals';
+        } else if( player.averagePerformance > player.flashPerformance ) {
+            return 'fa-chevron-down';
+        } else if( player.averagePerformance < player.flashPerformance ) {
+            return 'fa-chevron-up';
+        }
+    }
+
     // Tri
     public sortBy(sort: PlayerOrdering) {
 
