@@ -20,7 +20,7 @@
     "g": "ng g"
   },
   "engines": {
-    "node": "10.x"
+    "node": ">=8.x"
   },
   "devDependencies": {
     "@ngtools/webpack": "^1.10.0",
