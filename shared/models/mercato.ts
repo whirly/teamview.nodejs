@@ -116,22 +116,27 @@ export class MercatoUser {
 
         for (const playerOffer of this.players) {
 
-            const price: number = playerOffer.offers[0].price;
-            this.budgetPerLine.series[ playerOffer.player.role - 1 ] += price;
+            // On ne prends en compte que si le joueur existe.
+            // Le cas classique c'est le mec qui a été revendu et n'existe plus dans la base
+            // Une pensée pour le mec dans la ligue qui était fan d'Arnaud Souquet et autres Lo Celso.
+            if (playerOffer.player) {
+                const price: number = playerOffer.offers[0].price;
+                this.budgetPerLine.series[ playerOffer.player.role - 1 ] += price;
 
-            if (price <= 10) {
-                this.budgetPerBucket.series[0][ PriceBucket.LessThan10 ] += price;
-            } else if (price <= 20) {
-                this.budgetPerBucket.series[0][ PriceBucket.LessThan20 ] += price;
-            } else if (price <= 30) {
-                this.budgetPerBucket.series[0][ PriceBucket.LessThan30 ] += price;
-            } else if (price <= 40) {
-                this.budgetPerBucket.series[0][ PriceBucket.LessThan40 ] += price;
-            } else {
-                this.budgetPerBucket.series[0][ PriceBucket.Over40 ] += price;
+                if (price <= 10) {
+                    this.budgetPerBucket.series[0][ PriceBucket.LessThan10 ] += price;
+                } else if (price <= 20) {
+                    this.budgetPerBucket.series[0][ PriceBucket.LessThan20 ] += price;
+                } else if (price <= 30) {
+                    this.budgetPerBucket.series[0][ PriceBucket.LessThan30 ] += price;
+                } else if (price <= 40) {
+                    this.budgetPerBucket.series[0][ PriceBucket.LessThan40 ] += price;
+                } else {
+                    this.budgetPerBucket.series[0][ PriceBucket.Over40 ] += price;
+                }
+
+                totalPricePaid += price;
             }
-
-            totalPricePaid += price;
         }
 
         // On convertit en fait en pourcentage les buckets de player

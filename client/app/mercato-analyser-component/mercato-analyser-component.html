@@ -68,10 +68,10 @@
                             </thead>
                             <tbody>
                             <tr *ngFor="let offer of user.players">
-                                <td class="body-club"><img class="logo-team" [src]="getImageForTeam(offer.player.team?.name )"></td>
-                                <td class="retrait">{{ offer.player.lastName }}</td>
+                                <td class="body-club"><img class="logo-team" [src]="getImageForTeam(offer.player?.team?.name )"></td>
+                                <td class="retrait">{{ offer.player?.lastName }}</td>
                                 <td class="center">
-                                    <div ngClass="{{ getCircleClassFor( offer.player.role ) }}">{{ positionShortForm.get( offer.player.role ) }}</div>
+                                    <div ngClass="{{ getCircleClassFor( offer.player?.role ) }}">{{ positionShortForm.get( offer.player?.role ) }}</div>
                                 </td>
                                 <td class="center emphase">{{ offer.offers[0].price }}</td>
                                 <td class="center emphase">{{ offer.offers.length }}</td>
@@ -102,10 +102,10 @@
                             </thead>
                             <tbody>
                             <tr *ngFor="let offer of user.playersLost">
-                                <td class="body-club"><img class="logo-team" [src]="getImageForTeam(offer.player.team?.name )"></td>
-                                <td class="retrait">{{ offer.player.lastName }}</td>
+                                <td class="body-club"><img class="logo-team" [src]="getImageForTeam(offer.player?.team?.name )"></td>
+                                <td class="retrait">{{ offer.player?.lastName }}</td>
                                 <td class="center">
-                                    <div ngClass="{{ getCircleClassFor( offer.player.role ) }}">{{ positionShortForm.get( offer.player.role ) }}</div>
+                                    <div ngClass="{{ getCircleClassFor( offer.player?.role ) }}">{{ positionShortForm.get( offer.player?.role ) }}</div>
                                 </td>
                                 <td class="center emphase">{{ offer.getMine( user ) }}</td>
                                 <td class="center emphase">{{ offer.offers.length }}</td>
