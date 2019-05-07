@@ -152,7 +152,8 @@ export class PlayersViewerComponent implements OnInit {
 
     public getImageForTeam(team: string) {
         if (team) {
-            const fileName = team.replace(" ", "_").toLowerCase() + ".png";
+            // Avec les blagues récentes, les replaces s'enchainent.
+            const fileName = team.replace(" ", "_").replace("_", "").toLowerCase().replace("é", "e").replace("-", "_") + ".png";
             const url = "https://mespetitesstats.blob.core.windows.net/teams/" + fileName;
 
             return url;
