@@ -16,7 +16,7 @@ export class PlayerService {
     public get list(): Observable<IPlayer[]> {
         return this.apollo.watchQuery<{ players: IPlayer[] }>({
             query: gql`{
-                players {
+                players( limit: 10000 ) {
                     firstName
                     lastName
                     idMpg

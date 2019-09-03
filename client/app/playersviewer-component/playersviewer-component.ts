@@ -12,7 +12,7 @@ import {TeamService} from "../services/team.service";
 import {ITeam} from "../../../shared/models/team";
 import {PelouseService} from "../services/pelouse.service";
 import {ILeagueMPG, IMercatoMPG, IPlayerMercatoMPG, IUserMPG} from "../../../shared/models/pelouse";
- 
+
 enum PlayerOrdering {
     Goal = "totalGoalFor",
     CSC = "totalGoalAgainst",
@@ -89,11 +89,11 @@ export class PlayersViewerComponent implements OnInit {
         this.positionShortForm.set(PlayerPosition.Striker, "A");
 
         this.teamService.list.subscribe((teams: ITeam[]) => {
-            this.teams = _.cloneDeep( teams );
+            this.teams = _.cloneDeep( teams ).sort( (a: ITeam,b: ITeam) => a.name.localeCompare(b.name));
 
             // On vire les fixtures qui ne datent pas de cette année.
             for( let team of this.teams ) {
-                team.fixtures = team.fixtures.filter( fixture => fixture.year == 2018 );
+                team.fixtures = team.fixtures.filter( fixture => fixture.year == 2019 );
             }
 
             // Puis on vire les équipes qui n'ont pas de fixtures, en gros ceux qui ne sont plus
@@ -105,7 +105,8 @@ export class PlayersViewerComponent implements OnInit {
 
                 // On retire les performances qui ne sont pas de cette saison.
                 for( let player of this.playersAll ) {
-                    player.performances = player.performances.filter( performance => performance.year == 2018 && performance.minutes > 0 );
+                    if (player.lastName == 'Autret') console.log(player);
+                    player.performances = player.performances.filter( performance => performance.year == 2019 && performance.minutes > 0 );
                 }
 
 

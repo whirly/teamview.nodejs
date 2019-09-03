@@ -4,9 +4,12 @@ import { IPerformance, PlayerPosition } from '../../../shared/models';
 import logger from '../../logger';
 import * as models from '../../models';
 import { connectDatabase, disconnectFromDatabase } from '../../mongoose';
+import axios from 'axios';
 
 interface IArgs {
     force?: boolean;
+    login?: string;
+    password?: string;
 }
 
 const command: CommandModule = {
@@ -18,9 +21,16 @@ const command: CommandModule = {
 
 export default command;
 
-async function processPlayer(baseUrl: string) {
-    const response = await request(baseUrl + 'quotation/1');
-    const players = JSON.parse(response);
+async function processPlayer(baseUrl: string, token: string) {
+    const options: any = {
+        uri: baseUrl + 'mercato/1',
+        headers: {
+            'Authorization': token
+        }
+    };
+
+    const response = await request(options);
+    const players = JSON.parse(response).players;
     let numberOfPlayers: number = 0;
 
     // On commence par s'occuper des joueurs
@@ -212,11 +222,11 @@ async function processPlayers(year: number, day: number, data: any): Promise<IPe
     return performances;
 }
 
-async function processMatches(baseUrl: string) {
+async function processMatches(baseUrl: string, token: string) {
     for (let i = 1; i < 39; i++) {
-        const queryDay = await request(baseUrl + 'championship/1/calendar/' + i.toString());
+        const queryDay = await request(baseUrl + 'championship/1/calendar/' + i.toString() );
         const day = JSON.parse(queryDay);
-        const year = 2018;
+        const year = 2019;
 
         logger.info('Traitement jour ' + i);
 
@@ -290,19 +300,29 @@ async function processMatches(baseUrl: string) {
 
 async function handler(args: IArgs): Promise<void> {
 
-    const baseUrl: string = 'http://api.monpetitgazon.com/';
+    const baseUrl: string = 'https://api.monpetitgazon.com/';
     await connectDatabase(process.env.MONGO_URL);
 
-    // On s'occupe d'abord des joueurs
+    let response = await axios.post(baseUrl+"user/signIn", {
+        email: args.login,
+        password: args.password,
+        language: 'fr-FR'
+    });
 
-    logger.info('Traitement des joueurs...');
-    await processPlayer(baseUrl);
+    if (response.status == 200 && response.data.token) {
+        // Grab da token
+        let token = response.data.token;
 
-    // On s'attaque après aux performances
-    // 38 journées, on s'en occupe.
+        // On s'occupe d'abord des joueurs
+        logger.info('Traitement des joueurs...');
+        await processPlayer(baseUrl, token);
 
-    logger.info('Traitement des matchs...');
-    await processMatches(baseUrl);
+        // On s'attaque après aux performances
+        // 38 journées, on s'en occupe.
+
+        logger.info('Traitement des matchs...');
+        await processMatches(baseUrl, token);
+    }
 
     await disconnectFromDatabase();
 }

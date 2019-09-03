@@ -36,8 +36,8 @@ export class PlayerViewerComponent implements OnInit {
                 this.player = _.cloneDeep(player);
 
                 // On vire tous les trucs de 2017, on s'en occupera plus tard.
-                this.player.performances = this.player.performances.filter( performance => performance.year == 2018 );
-                this.player.team.fixtures = this.player.team.fixtures.filter( fixture => fixture.year == 2018 );
+                this.player.performances = this.player.performances.filter( performance => performance.year == 2019 );
+                this.player.team.fixtures = this.player.team.fixtures.filter( fixture => fixture.year == 2019 );
 
                 player_helpers.initializeExtendedData(this.player, this.player.team.fixtures.length);
 
@@ -49,7 +49,7 @@ export class PlayerViewerComponent implements OnInit {
                 this.teamService.getByName(this.player.team.name).subscribe((team: ITeam) => {
                     this.team = team;
 
-                    this.team.fixtures = this.team.fixtures.filter( fixture => fixture.year == 2018 );
+                    this.team.fixtures = this.team.fixtures.filter( fixture => fixture.year == 2019 );
                 });
             });
     }
