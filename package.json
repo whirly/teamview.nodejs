@@ -20,7 +20,7 @@
     "g": "ng g"
   },
   "engines": {
-    "node": "=8.x"
+    "node": ">10.x"
   },
   "devDependencies": {
     "@ngtools/webpack": "^7.0.4",
@@ -50,7 +50,7 @@
     "html-loader": "^0.5.5",
     "html-webpack-plugin": "^3.0.6",
     "koa-connect": "^2.0.1",
-    "node-sass": "^4.7.2",
+    "node-sass": "^4.12.0",
     "npm-run-all": "^4.1.2",
     "raw-loader": "^0.5.1",
     "resolve-url-loader": "^2.2.1",

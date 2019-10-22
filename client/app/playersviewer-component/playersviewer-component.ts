@@ -105,7 +105,6 @@ export class PlayersViewerComponent implements OnInit {
 
                 // On retire les performances qui ne sont pas de cette saison.
                 for( let player of this.playersAll ) {
-                    if (player.lastName == 'Autret') console.log(player);
                     player.performances = player.performances.filter( performance => performance.year == 2019 && performance.minutes > 0 );
                 }
 
@@ -134,7 +133,7 @@ export class PlayersViewerComponent implements OnInit {
                 // On reçoit l'événement de connexion, on demande donc le dashboard du monsieur
                 this.pelouseService.getLeagues().subscribe((leagues: ILeagueMPG[]) => {
                     this.availableLeagues = _.filter(leagues, (league: ILeagueMPG) => {
-                        return league.mode == 2 && league.leagueStatus < 5;
+                        return league.mode == 2 && league.leagueStatus < 5 && league.championship == 1;
                     });
                     this.mercatoAvailable = true;
                 });
