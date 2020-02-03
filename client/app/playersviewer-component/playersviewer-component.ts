@@ -4,7 +4,7 @@ import { BehaviorSubject } from "rxjs";
 import { debounceTime } from "rxjs/operators";
 
 import {PlayerService} from "../services/player.service";
-import {IPlayer, IPlayerExtended, PlayerPosition} from "../../../shared/models/player";
+import {ComputedType, IPlayer, IPlayerExtended, PlayerPosition} from "../../../shared/models/player";
 import _ from "lodash";
 import latinize from "latinize";
 import * as player_helpers from "../../../shared/models/player_helpers";
@@ -103,15 +103,9 @@ export class PlayersViewerComponent implements OnInit {
             this.playerService.list.subscribe((players: IPlayer[]) => {
                 this.playersAll = _.cloneDeep(players);
 
-                // On retire les performances qui ne sont pas de cette saison.
-                for( let player of this.playersAll ) {
-                    player.performances = player.performances.filter( performance => performance.year == 2019 && performance.minutes > 0 );
-                }
-
-
                 // On vire les joueurs qui ne sont pas actifs, c'est à dire qui n'ont aucune performance
                 this.playersAll = _.filter(this.playersAll, (player: IPlayer) => {
-                    return player.performances.length > 0;
+                    return player.currentlyActive;
                 });
 
                 // On a isolé la construction des différentes listes dans une fonction, vu qu'on va sans doute
@@ -329,9 +323,9 @@ export class PlayersViewerComponent implements OnInit {
     public getIconForTrend( player: IPlayerExtended ): string {
         if ( Math.abs( player.averagePerformance - player.flashPerformance ) < 0.1 ) {
             return 'fa-equals';
-        } else if( player.averagePerformance > player.flashPerformance ) {
+        } else if( player.averagePerformance > player.computed[ComputedType.THREE_DAYS].rating ) {
             return 'fa-chevron-down';
-        } else if( player.averagePerformance < player.flashPerformance ) {
+        } else if( player.averagePerformance < player.computed[ComputedType.THREE_DAYS].rating ) {
             return 'fa-chevron-up';
         }
     }
@@ -368,20 +362,33 @@ export class PlayersViewerComponent implements OnInit {
     // le tout avec un tableau de filtre au lieu de les séparer. Mais là de suite, t'as pas envie
     // de refactorer :)
     private async calculateExtendedData() {
-        _.forEach(this.playersAll,
-            (player: IPlayerExtended) => {
-                let numberOfFixtures: number = 0;
+        for(let player of this.playersAll) {
 
-                if (player.team) {
-                    const myteam = this.teams.find((team: ITeam) => {
-                        return team.name == player.team.name;
-                    });
+            let offset: number = 0;
+            switch(this.filterMatch) {
+                case 0:
+                    offset = ComputedType.ALL;
+                    break;
 
-                    numberOfFixtures = myteam.fixtures.length;
-                }
+                case 3:
+                    offset = ComputedType.THREE_DAYS;
+                    break;
 
-                player_helpers.initializeExtendedData(player, numberOfFixtures, this.filterMatch);
-            });
+                case 5:
+                    offset = ComputedType.FIVE_DAYS;
+                    break;
+
+                case 10:
+                    offset = ComputedType.TEN_DAYS;
+                    break;
+            }
+
+            player.totalGoalFor = player.computed[offset].goal;
+            player.averagePerformance = player.computed[offset].rating;
+            player.titularisation = player.computed[offset].playedFromStart;
+            player.participation = player.computed[offset].played;
+            player.totalPenaltyFor = player.computed[offset].penalty;
+        }
     }
 
     // Construit l'ensemble des données ( calcul des données étendus, et filtrage de tout cela).

@@ -5,6 +5,7 @@ import logger from '../../logger';
 import * as models from '../../models';
 import { connectDatabase, disconnectFromDatabase } from '../../mongoose';
 import axios from 'axios';
+import {crunchPlayersData} from "./optimize";
 
 interface IArgs {
     force?: boolean;
@@ -193,7 +194,7 @@ async function processPlayers(year: number, day: number, data: any): Promise<IPe
             const team = await models.Team.findOne({ idMpg: data.id });
 
             // Pour l'instant on stocke juste les perfs
-            // Mais on pourrait réfléchir à récupérer les starts pour voir ce qu'on pourrait faire.
+            // Mais on pourrait réfléchir à récupérer les stats pour voir ce qu'on pourrait faire.
             const playerPerformance = await models.Performance.create({
                 player,
                 team,
@@ -322,6 +323,11 @@ async function handler(args: IArgs): Promise<void> {
 
         logger.info('Traitement des matchs...');
         await processMatches(baseUrl, token);
+
+        // On précalcule les statistiques des joueurs
+        // Cela va permettre de fortement descendre la charge du client
+        // avec moins de flexibilité, que l'on utilise pas
+        await crunchPlayersData();
     }
 
     await disconnectFromDatabase();

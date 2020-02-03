@@ -101,7 +101,7 @@ export function getMinutesFor(player: IPlayer, day: number): number {
 
 export function getGoalFor(player: IPlayer, fromDay: number): number {
     const sum: number = _.reduce(player.performances, (aggregate: number, performance: IPerformance) => {
-        if (performance.day >= fromDay) return aggregate + performance.goalFor;
+        if (performance.day >= fromDay && performance.goalFor) return aggregate + performance.goalFor;
         else return aggregate;
     }, 0);
 
@@ -110,7 +110,7 @@ export function getGoalFor(player: IPlayer, fromDay: number): number {
 
 export function getPenaltyFor(player: IPlayer, fromDay: number): number {
     const sum: number = _.reduce(player.performances, (aggregate: number, performance: IPerformance) => {
-        if (performance.day >= fromDay) return aggregate + performance.penaltyFor;
+        if (performance.day >= fromDay && performance.penaltyFor) return aggregate + performance.penaltyFor;
         else return aggregate;
     }, 0);
 
@@ -119,7 +119,7 @@ export function getPenaltyFor(player: IPlayer, fromDay: number): number {
 
 export function getGoalAgainst(player: IPlayer, fromDay: number): number {
     const sum: number = _.reduce(player.performances, (aggregate: number, performance: IPerformance) => {
-        if (performance.day >= fromDay) return aggregate + performance.goalAgainst;
+        if (performance.day >= fromDay && performance.goalAgainst) return aggregate + performance.goalAgainst;
         else return aggregate;
     }, 0);
 
@@ -139,6 +139,32 @@ export function getAveragePerformance(player: IPlayer, fromDay: number): number 
 
     if (totalPerformances > 0) return Math.floor(sum * 100 / totalPerformances) / 100;
     else return 0;
+}
+
+export function getStartingTime(player: IPlayer, fromDay: number, numberOfFixtures: number): number {
+    let played: number = 0;
+    const numberOfDays: number = numberOfFixtures - (fromDay - 1);
+
+    _.each(player.performances, (performance: IPerformance) => {
+        if (performance.day >= fromDay) {
+            if (!performance.sub) played += 1;
+        }
+    });
+
+    return 100 * ( played / numberOfDays );
+}
+
+export function getSubAndStartingTime(player: IPlayer, fromDay: number, numberOfFixtures: number): number {
+    let playedAsSub: number = 0;
+    const numberOfDays: number = numberOfFixtures - (fromDay - 1);
+
+    _.each(player.performances, (performance: IPerformance) => {
+        if (performance.day >= fromDay) {
+            playedAsSub += 1;
+        }
+    });
+
+    return 100 * ( playedAsSub / numberOfDays );
 }
 
 export function initializeExtendedData(player: IPlayerExtended, numberOfFixtures: number, limitation: number = 0) {

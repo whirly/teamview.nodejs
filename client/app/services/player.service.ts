@@ -16,7 +16,8 @@ export class PlayerService {
     public get list(): Observable<IPlayer[]> {
         return this.apollo.watchQuery<{ players: IPlayer[] }>({
             query: gql`{
-                players( limit: 10000 ) {
+                players( filter: {currentlyActive: true}, limit: 10000 ) {
+                    currentlyActive
                     firstName
                     lastName
                     idMpg
@@ -25,16 +26,12 @@ export class PlayerService {
                     }
                     role
                     value
-                    performances {
-                        year
-                        day
-                        goalAgainst
-                        goalFor
-                        sub
-                        rate
-                        position
-                        minutes
-                        penaltyFor
+                    computed {
+                        rating
+                        goal
+                        penalty
+                        playedFromStart
+                        played
                     }
                 }
             }`
@@ -47,6 +44,7 @@ export class PlayerService {
                 player( filter: { idMpg: $idMpg }) {
                     firstName
                     lastName
+                    pictureUrl
                     team {
                         name
                         fixtures {
