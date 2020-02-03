@@ -113,7 +113,7 @@
     "jsonwebtoken": "^8.1.1",
     "latinize": "^0.4.0",
     "lodash": "^4.17.5",
-    "mongoose": "^5.0.6",
+    "mongoose": "^5.7.5",
     "morgan": "^1.9.0",
     "ng-chartist": "^1.1.1",
     "ng2-semantic-ui": "^0.9.6",
