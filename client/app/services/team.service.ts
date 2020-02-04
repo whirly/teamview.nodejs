@@ -34,30 +34,6 @@ export class TeamService {
             query ($name: String!) {
                 team( filter: { name: $name }) {
                     name
-                    players( sort: _ID_ASC ) {
-                        idMpg
-                        firstName
-                        lastName
-                        role
-                        value
-                        performances {
-                            team {
-                                name
-                            }
-                            year
-                            day
-                            position
-                            place
-                            rate
-                            goalFor
-                            goalAgainst
-                            cardYellow
-                            cardRed
-                            sub
-                            penaltyFor
-                            minutes
-                        }
-                    }
                     fixtures {
                         year
                         day
