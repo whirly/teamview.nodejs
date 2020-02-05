@@ -45,7 +45,8 @@ export class PelouseService {
 
     public getLeagues(): Observable<ILeagueMPG[]> {
 
-        const headers = new HttpHeaders().set("Authorization", this.user.token);
+        const headers = new HttpHeaders().set("Authorization", this.user.token)
+            .set("client-version", "5.8.2");
 
         return this.http.get<any>(this.dashboardApi, {
             headers
@@ -53,14 +54,13 @@ export class PelouseService {
     }
 
     public getMercatoForLeague(league: string): Observable<IFullMercatoMPG> {
-        const headers = new HttpHeaders().set("Authorization", this.user.token);
+        const headers = new HttpHeaders().set("Authorization", this.user.token).set("client-version", "5.8.2");
         return this.http.get<IFullMercatoMPG>(this.mercatoHistoryApi + league + "/" + this.mercatoHistoryApiSecondPart, {headers});
     }
 
     public getPlayersAvailableForLeague(league: string): Observable<IMercatoMPG> {
 
-        const headers = new HttpHeaders().set("Authorization", this.user.token);
-
+        const headers = new HttpHeaders().set("Authorization", this.user.token).set("client-version", "5.8.2");
         return this.http.get<IMercatoMPG>(this.mercatoApi + league + this.mercatoApiSecondPart, {headers});
     }
 
