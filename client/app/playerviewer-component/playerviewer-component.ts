@@ -35,10 +35,13 @@ export class PlayerViewerComponent implements OnInit {
             .subscribe((player: IPlayer) => {
                 this.player = _.cloneDeep(player);
 
-                // On vire tous les trucs de 2017, on s'en occupera plus tard.
-                this.player.performances = this.player.performances.filter( performance => performance.year == 2019 );
-                this.player.team.fixtures = this.player.team.fixtures.filter( fixture => fixture.year == 2019 );
+                console.log(player);
 
+                // On vire tous les trucs de 2017, 2018, 2019 on s'en occupera plus tard.
+                this.player.performances = this.player.performances.filter( performance => performance.year == 2020 );
+                this.player.team.fixtures = this.player.team.fixtures.filter( fixture => fixture.year == 2020 );
+
+                console.log(this.player);
                 player_helpers.initializeExtendedData(this.player, this.player.team.fixtures.length);
 
                 // on met en place l'url de notre stockage Azure.
@@ -49,7 +52,7 @@ export class PlayerViewerComponent implements OnInit {
                 this.teamService.getByName(this.player.team.name).subscribe((team: ITeam) => {
                     this.team = team;
 
-                    this.team.fixtures = this.team.fixtures.filter( fixture => fixture.year == 2019 );
+                    this.team.fixtures = this.team.fixtures.filter( fixture => fixture.year == 2020 );
                 });
             });
     }

@@ -93,7 +93,7 @@ export class PlayersViewerComponent implements OnInit {
 
             // On vire les fixtures qui ne datent pas de cette année.
             for( let team of this.teams ) {
-                team.fixtures = team.fixtures.filter( fixture => fixture.year == 2019 );
+                team.fixtures = team.fixtures.filter( fixture => fixture.year == 2020 );
             }
 
             // Puis on vire les équipes qui n'ont pas de fixtures, en gros ceux qui ne sont plus

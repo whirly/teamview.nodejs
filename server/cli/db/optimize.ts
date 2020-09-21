@@ -33,7 +33,7 @@ export async function crunchPlayersData(): Promise<void> {
 
     for (let player of players) {
 
-        player.performances = player.performances.filter( performance => performance.year == 2019 );
+        player.performances = player.performances.filter( performance => performance.year == 2020 );
 
         // On vérifie si c'est un joueur actif, pour ça on regarde s'il est dans le roster de l'équipe
         // qu'il considère comme la sienne et en premier lieu s'il en a une.
@@ -46,7 +46,7 @@ export async function crunchPlayersData(): Promise<void> {
         if (team && player.performances.length > 0) {
             logger.info( player.firstName + ' ' + player.lastName );
 
-            const numberOfDaysPlayed = team.fixtures.filter( fixture => fixture.year == 2019 ).length;
+            const numberOfDaysPlayed = team.fixtures.filter( fixture => fixture.year == 2020 ).length;
 
             let playerToWrite = await models.Player.findOne({idMpg: player.idMpg});
             playerToWrite.currentlyActive = true;

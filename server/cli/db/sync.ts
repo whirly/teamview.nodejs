@@ -227,7 +227,7 @@ async function processMatches(baseUrl: string, token: string) {
     for (let i = 1; i < 39; i++) {
         const queryDay = await request(baseUrl + 'championship/1/calendar/' + i.toString() );
         const day = JSON.parse(queryDay);
-        const year = 2019;
+        const year = 2020;
 
         logger.info('Traitement jour ' + i);
 

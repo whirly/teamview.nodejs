@@ -1,6 +1,7 @@
 import { User, UserRole } from '../models';
 import * as mongoose from "mongoose";
 
+
 export const name = 'add_year';
 
 export async function migrate(): Promise<void> {
