@@ -1,6 +1,6 @@
 ﻿import request from 'request-promise';
 import { CommandModule } from 'yargs';
-import { IPerformance, PlayerPosition } from '../../../shared/models';
+import {IFixtureSide, IPerformance, PlayerPosition} from '../../../shared/models';
 import logger from '../../logger';
 import * as models from '../../models';
 import { connectDatabase, disconnectFromDatabase } from '../../mongoose';
@@ -258,7 +258,8 @@ async function processMatches(baseUrl: string, token: string) {
                     .populate('players fixtures').exec();
 
                 // find fixtures
-                let fixture = await models.Fixture.findOne({ idMpg: matchDetailed.id });
+                let fixture = await models.Fixture.findOne({ idMpg: matchDetailed.id })
+                    .populate('home.performances').populate('away.performances').exec();
 
                 // Fixture does not exists yet
                 if (!fixture) {
@@ -280,6 +281,10 @@ async function processMatches(baseUrl: string, token: string) {
                     fixture.home.performances = await processPlayers(year, i, matchDetailed.Home);
                     fixture.away.performances = await processPlayers(year, i, matchDetailed.Away);
 
+                    // On calcule le median, la moyenne, la variance
+                    await addVariance(fixture.home);
+                    await addVariance(fixture.away);
+
                     await fixture.save();
 
                     teamAway.fixtures.push(fixture);
@@ -291,12 +296,52 @@ async function processMatches(baseUrl: string, token: string) {
 
                     await updatePerformances(year, i, matchDetailed.Home);
                     await updatePerformances(year, i, matchDetailed.Away);
+
+                    // On rajoute les variances, median, etc...
+                    // Vu que ça peut évoluer en fonction de la réattribution des buts
+                    await addVariance(fixture.home);
+                    await addVariance(fixture.away);
+
+                    fixture.depopulate('performances');
+                    await fixture.save();
                 }
             }
         }
     }
 
     // Basically we are done.
+}
+
+/*
+    Basiquement, on va précalculer les performances globales d'une équipe sur un match.
+    Parce qu'on est un peu au bon endroit pour faire ça. Globalement on veut la moyenne des joueurs sur ce
+    match, le median de note, et la variance de la performance. Derrière du coup on pourra faire de jolies graphes
+    et surtout voir si un mec surperforme par rapport à son équipe.
+
+    La grande interrogation reste quand même de savoir si on ne calcule qu'avec les titulaires ou pas. Parce que
+    le pauvre gars que tu fais toujours rentrer à la 89mn il risque d'avoir toujours son 5 syndical. En même temps
+    c'est bien ça qu'on veut.
+ */
+async function addVariance(fixtureSide: IFixtureSide) {
+    const ratings = Array<number>();
+    let sum = 0;
+
+    // On récupère les notes pour les gens où ça existe. On inclus tous ceux qui ont joué
+    for (const performance of fixtureSide.performances) {
+        if (performance.rate > 0) {
+            ratings.push(performance.rate);
+            sum += performance.rate;
+        }
+    }
+
+    // On trie par ordre croissant de note
+    ratings.sort((a,b) => a - b);
+    const amount = ratings.length;
+
+    fixtureSide.average = sum / amount;
+    fixtureSide.median = ratings[ Math.floor( amount / 2 )];
+    fixtureSide.variance = ratings.reduce((accumulator, value) =>
+        Math.pow(value - fixtureSide.average, 2), 0) / amount;
 }
 
 async function handler(args: IArgs): Promise<void> {

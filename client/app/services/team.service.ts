@@ -43,6 +43,9 @@ export class TeamService {
                                 goalFor
                                 goalAgainst
                             }
+                            average
+                            median
+                            variance
                             team {
                                 name
                             }
@@ -53,6 +56,9 @@ export class TeamService {
                                 goalFor
                                 goalAgainst
                             }
+                            average
+                            median
+                            variance
                             team {
                                 name
                             }

@@ -10,12 +10,18 @@ const FixtureSchema = new Schema({
     home: {
         team: { type: Schema.Types.ObjectId, ref: "Team" },
         formation: { type: String },
-        performances: [ { type: Schema.Types.ObjectId, ref: "Performance" }]
+        performances: [ { type: Schema.Types.ObjectId, ref: "Performance" }],
+        median: { type: Number },
+        variance: { type: Number },
+        average: { type: Number }
     },
     away: {
         team: { type: Schema.Types.ObjectId, ref: "Team" },
         formation: { type: String },
-        performances: [ { type: Schema.Types.ObjectId, ref: "Performance" }]
+        performances: [ { type: Schema.Types.ObjectId, ref: "Performance" }],
+        median: { type: Number },
+        variance: { type: Number },
+        average: { type: Number }
     }
 });
 
