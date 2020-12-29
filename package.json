@@ -69,7 +69,7 @@
     "@angular-redux/router": "^9.0.0",
     "@angular-redux/store": "^9.0.0",
     "@angular/animations": "^7.0.2",
-    "@angular/cli": "^7.0.4",
+    "@angular/cli": "^11.0.5",
     "@angular/common": "^7.0.2",
     "@angular/compiler": "^7.0.2",
     "@angular/compiler-cli": "^7.0.2",
