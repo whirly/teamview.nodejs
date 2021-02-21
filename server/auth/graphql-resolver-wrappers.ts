@@ -1,5 +1,5 @@
-import { Resolver, ResolveParams as GqlComposeResolveParams } from 'graphql-compose';
-import { IMongooseUserRole } from '../models/user-role';
+import { Resolver, ResolverResolveParams as GqlComposeResolveParams } from 'graphql-compose';
+import { IMongooseUserRole } from '../models';
 import { getUserFromJwtToken, IJwtToken } from './index';
 import { NoAnonymousAccessError, UnmetPermissionsError } from './auth-errors';
 

@@ -1,8 +1,13 @@
-import express from 'express';
-import { GraphQLError } from 'graphql';
-import { GQC } from 'graphql-compose';
-import { graphqlExpress, graphiqlExpress } from 'graphql-server-express';
-import { AuthenticationError } from '../auth/auth-errors';
+import {formatError, GraphQLError, GraphQLFormattedError} from 'graphql';
+import { schemaComposer } from 'graphql-compose';
+import { ApolloError, ApolloServer, SyntaxError, ValidationError } from 'apollo-server-express';
+import {
+    InternalError,
+    StandardError,
+    SyntaxError as StandardSyntaxError,
+    ValidationError as StandardValidationError
+} from './errors';
+import { printError } from 'graphql';
 import logger from '../logger';
 import * as account from './graphql-account';
 import * as user from './graphql-user';
@@ -11,51 +16,101 @@ import * as team from './graphql-team';
 import * as player from './graphql-player';
 import * as performance from './graphql-performance';
 import * as fixture from './graphql-fixture';
+import * as util from "util";
+import {Application} from "express";
 
-const router = express.Router();
-
-GQC.rootQuery().addFields({
+schemaComposer.Query.addFields({
     ...account.QUERIES,
     ...user.QUERIES, ...userRole.QUERIES,
     ...team.QUERIES, ...player.QUERIES,
     ...performance.QUERIES, ...fixture.QUERIES
 });
 
-GQC.rootMutation().addFields({
+schemaComposer.Mutation.addFields({
     ...account.MUTATIONS,
     ...user.MUTATIONS, ...userRole.MUTATIONS,
     ...team.MUTATIONS, ...player.MUTATIONS,
     ...performance.MUTATIONS, ...fixture.MUTATIONS
 });
 
-const schema = GQC.buildSchema();
+const schema = schemaComposer.buildSchema();
 
-//=> Configure the GraphQL API
-router.use('/graphql', graphqlExpress(req => {
-    return {
-        schema,
-        debug: false,
-        formatError,
-        context: { jwt: req.user }
-    };
-}));
+const server = new ApolloServer({
+    schema,
+    introspection: true,
+    playground: {
+        settings: {
+            'editor.theme': 'light'
+        }
+    },
+    debug: process.env.NODE_ENV === 'development',
+    tracing: process.env.NODE_ENV === 'development',
+    plugins: [
+        {
+            requestDidStart(requestContext) {
+                logger.debug(`graphql:`, {
+                    query: requestContext.request.query,
+                    operationName: requestContext.request.operationName,
+                    variables: requestContext.request.variables
+                });
+            }
+        }
+    ],
+    formatError(error: GraphQLError): GraphQLFormattedError {
+        //=> Generate a formatted error and copy its immutable properties in a mutable object
+        const gqlFormattedError = formatError(error);
+        const formattedError = {
+            ...gqlFormattedError,
+            message: gqlFormattedError.message,
+            location: gqlFormattedError.locations,
+            path: gqlFormattedError.path,
+            extensions: gqlFormattedError.extensions ?? {}
+        };
 
-//=> Configure GraphiQL (GUI tool to play with the API)
-router.use('/graphiql', graphiqlExpress({
-    endpointURL: '/graphql',
-    passHeader: `'Authorization': 'Bearer ' + localStorage.jwt`
-}));
+        //=> Log the original error to the console for debug
+        const errorToInspect = error instanceof ApolloError ? error : error.originalError;
+        const originalErrorStr = util.inspect(errorToInspect, { colors: true, depth: 2 });
 
-function formatError(error: GraphQLError): GraphQLError {
-    (error as any).type = error.originalError.constructor.name;
+        logger.error(`graphql: ${printError(error)}\n\n${originalErrorStr}`);
 
-    if (error.originalError instanceof AuthenticationError) {
-        logger.verbose(`graphql: ${error.originalError.constructor.name}:`, error.originalError.message);
-    } else {
-        logger.error('graphql:', error);
+        //=> Format based on the error type
+        if (error instanceof SyntaxError) {
+            //=> Apollo GraphQL syntax error, showable, but transform to Standard Error
+            const graphQLError = new StandardSyntaxError({ apolloError: error.originalError as SyntaxError });
+
+            formattedError.message = graphQLError.message;
+            formattedError.extensions.code = graphQLError.code;
+        } else if (error instanceof ValidationError) {
+            //=> Apollo GraphQL validation error, showable, but transform to Standard Error
+            const graphQLError = new StandardValidationError({ apolloError: error.originalError as ValidationError});
+
+            formattedError.message = graphQLError.message;
+            formattedError.extensions.code = graphQLError.code;
+        } else if (error.originalError instanceof StandardError) {
+            //=> Standard Errors have exploitable code and context data
+            formattedError.extensions.code = error.originalError.code;
+            formattedError.extensions.context = error.originalError.context;
+        } else {
+            //=> We don't know the error type, send back an opaque "internal server error" so we don't leak any
+            //   potentially sensible technical data.
+            const internalServerError = new InternalError();
+
+            formattedError.message = process.env.NODE_ENV == 'development'
+                ? `${error.message} [Unknown error type: this message will be redacted in production mode]`
+                : internalServerError.message;
+
+            formattedError.extensions.code = internalServerError.code;
+        }
+
+        //=> In production, remove all details about the original error as that could leak technical data
+        if (process.env.NODE_ENV != 'development') {
+            delete formattedError.extensions.exception;
+        }
+
+        return formattedError;
     }
+});
 
-    return error;
+export function attachGraphQlServerOnApp(app: Application, path: string) {
+    server.applyMiddleware({ app, path });
 }
-
-export default router;

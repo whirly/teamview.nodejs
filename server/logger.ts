@@ -1,14 +1,14 @@
 import * as winston from 'winston';
 import { StreamOptions } from 'morgan';
 
-const logger = new winston.Logger({
+const logger = winston.createLogger({
+    level: 'info',
+    format: winston.format.combine(
+        winston.format.colorize(),
+        winston.format.simple()
+    ),
     transports: [
-        new winston.transports.Console({
-            level: 'info',
-            json: false,
-            colorize: true,
-            timestamp: process.env.NODE_ENV == 'production'
-        })
+        new winston.transports.Console({})
     ]
 });
 

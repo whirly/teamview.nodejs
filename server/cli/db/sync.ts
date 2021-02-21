@@ -1,6 +1,5 @@
-﻿import request from 'request-promise';
-import { CommandModule } from 'yargs';
-import {IFixtureSide, IPerformance, PlayerPosition} from '../../../shared/models';
+﻿import { CommandModule } from 'yargs';
+import {IFixture, IFixtureSide, IPerformance, PlayerPosition} from '../../../shared/models';
 import logger from '../../logger';
 import * as models from '../../models';
 import { connectDatabase, disconnectFromDatabase } from '../../mongoose';
@@ -23,15 +22,16 @@ const command: CommandModule = {
 export default command;
 
 async function processPlayer(baseUrl: string, token: string) {
-    const options: any = {
-        uri: baseUrl + 'mercato/1',
+    const config: any = {
+        method: 'get',
+        url: baseUrl + 'mercato/1',
         headers: {
             'Authorization': token
         }
     };
 
-    const response = await request(options);
-    const players = JSON.parse(response).players;
+    const response = await axios.request(config);
+    const players = JSON.parse(response.data).players;
     let numberOfPlayers: number = 0;
 
     // On commence par s'occuper des joueurs
@@ -48,7 +48,7 @@ async function processPlayer(baseUrl: string, token: string) {
             // On a trouvé la team en question, on va donc rajouter notre joueur
             if (team) {
                 // Est ce que notre joueur n'est pas déjà dans cette équipe ?
-                if (team.players.findIndex(item => item.equals(player.teamid)) == -1) {
+                if (team.players.findIndex((item: any) => item.equals(player.teamid)) == -1) {
                     // On l'ajoute
                     team.players.push(existingPlayer);
                     await team.save();
@@ -73,7 +73,7 @@ async function processPlayer(baseUrl: string, token: string) {
                 // Si cette équipe existe encore.
                 if (teamPrevious) {
                     teamPrevious.players.splice(
-                        teamPrevious.players.findIndex(item => item.equals(existingPlayer._id)), 1);
+                        teamPrevious.players.findIndex((item: any) => item.equals(existingPlayer._id)), 1);
 
                     // On sauvegarde l'équipe modifié
                     await teamPrevious.save();
@@ -225,8 +225,8 @@ async function processPlayers(year: number, day: number, data: any): Promise<IPe
 
 async function processMatches(baseUrl: string, token: string) {
     for (let i = 1; i < 39; i++) {
-        const queryDay = await request(baseUrl + 'championship/1/calendar/' + i.toString() );
-        const day = JSON.parse(queryDay);
+        const queryDay = await axios.get(baseUrl + 'championship/1/calendar/' + i.toString() );
+        const day = JSON.parse(queryDay.data);
         const year = 2020;
 
         logger.info('Traitement jour ' + i);
@@ -242,8 +242,8 @@ async function processMatches(baseUrl: string, token: string) {
                 logger.info(line);
 
                 // Process each match
-                const matchInfos = await request(baseUrl + 'championship/match/' + match.id);
-                const matchDetailed = JSON.parse(matchInfos);
+                const matchInfos = await axios.get(baseUrl + 'championship/match/' + match.id);
+                const matchDetailed = JSON.parse(matchInfos.data);
 
                 // Là sur le coup, je n'ai pas compris pourquoi les ids sont préfixés de "match_" ... bon ben on le vire
                 matchDetailed.id = matchDetailed.id.slice(6);
@@ -261,21 +261,23 @@ async function processMatches(baseUrl: string, token: string) {
                 let fixture = await models.Fixture.findOne({ idMpg: matchDetailed.id })
                     .populate('home.performances').populate('away.performances').exec();
 
+                let document: IFixture = {
+                    year,
+                    day: i,
+                    idMpg: matchDetailed.id.toString(),
+                    home: {
+                        team: teamHome,
+                        formation: findTactic(matchDetailed.Home)
+                    },
+                    away: {
+                        team: teamAway,
+                        formation: findTactic(matchDetailed.Away)
+                    }
+                };
+
                 // Fixture does not exists yet
                 if (!fixture) {
-                    fixture = await models.Fixture.create({
-                        year,
-                        day: i,
-                        idMpg: matchDetailed.id.toString(),
-                        home: {
-                            team: teamHome,
-                            formation: findTactic(matchDetailed.Home)
-                        },
-                        away: {
-                            team: teamAway,
-                            formation: findTactic(matchDetailed.Away)
-                        }
-                    });
+                    fixture = await models.Fixture.create( document );
 
                     // Populate players and their performance
                     fixture.home.performances = await processPlayers(year, i, matchDetailed.Home);

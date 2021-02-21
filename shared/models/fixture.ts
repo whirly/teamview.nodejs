@@ -4,16 +4,16 @@ import {IPerformance} from "./performance";
 export interface IFixtureSide {
     team?: ITeam;
     formation?: string;
-    performances: IPerformance[];
+    performances?: IPerformance[];
 
-    median: number;
-    average: number;
-    variance: number;
+    median?: number;
+    average?: number;
+    variance?: number;
 }
 
 export interface IFixture {
-    day: number;
     year: number;
+    day: number;
     idMpg?: number;
     home?: IFixtureSide;
     away?: IFixtureSide;

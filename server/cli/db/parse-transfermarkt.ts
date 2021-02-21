@@ -6,6 +6,7 @@ import * as models from '../../models';
 import { connectDatabase, disconnectFromDatabase } from '../../mongoose';
 import axios from 'axios';
 import * as cheerio from 'cheerio';
+import TagElement = cheerio.TagElement;
 
 interface IArgs {
     force?: boolean;
@@ -34,13 +35,13 @@ async function processTeams(url: string): Promise<void> {
     const table = $('div.responsive-table').first();
 
     // Puis on énumère les TD qui contiennent le lien qui nous intéresse
-    let items = table.find('td.zentriert.no-border-rechts').toArray();
+    let items = table.find('td.zentriert.no-border-rechts').toArray() as TagElement[];
 
     for (let i = 0; i < items.length; i++)
     {
         // On choppe le lien vers la page d'équipe et on le traite.
-        logger.info('Traitement ' + items[i].firstChild.attribs['href'] );
-        await processTeam( protocol + '//' + site + items[i].firstChild.attribs['href'] );
+        logger.info('Traitement ' + (items[i].firstChild as TagElement).attribs['href'] );
+        await processTeam( protocol + '//' + site + (items[i].firstChild as TagElement).attribs['href'] );
     }
 
     logger.info("Impossible de traiter : " + totalUnknown.toString() + ' joueurs');
@@ -56,7 +57,7 @@ async function processTeam(url: string): Promise<void> {
     let items = $('img.bilderrahmen-fixed').toArray();
 
     for (let i = 0; i < items.length; i++ ) {
-        await processPlayer( items[i].attribs['title'], items[i].attribs['data-src'] )
+        await processPlayer( (items[i] as TagElement).attribs['title'], (items[i] as TagElement).attribs['data-src'] )
     }
 }
 

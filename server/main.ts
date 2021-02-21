@@ -7,8 +7,7 @@ import logger, { morganStreamWriter } from './logger';
 import { connectDatabase } from './mongoose';
 import { forwardToGzippedScripts, serveStaticAssets, routeEverythingToIndex } from './static-assets';
 import authRouter from './auth';
-import { attachJwtToken } from './auth/express-middlewares';
-import graphqlRouter from './graphql';
+import {attachGraphQlServerOnApp} from './graphql';
 
 import './bootstrap';
 
@@ -37,8 +36,8 @@ app.use(bodyParser.json());
 //=> Serve authentication endpoints
 app.use('/auth', authRouter);
 
-//=> Serve the GraphQL API & GraphiQL
-app.use(attachJwtToken(), graphqlRouter);
+// Attach GraphQL API
+attachGraphQlServerOnApp(app, '/graphql');
 
 //=> Serve static assets
 if (process.env.NODE_ENV == 'production') {

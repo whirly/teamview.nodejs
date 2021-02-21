@@ -1,7 +1,7 @@
 import * as models from "../../models";
 import {CommandModule} from "yargs";
 import {connectDatabase, disconnectFromDatabase} from "../../mongoose";
-import {ComputedType, ITeam} from "../../../shared/models";
+import {ComputedType, IPerformance, ITeam} from "../../../shared/models";
 import {
     getAveragePerformance,
     getGoalFor,
@@ -33,14 +33,14 @@ export async function crunchPlayersData(): Promise<void> {
 
     for (let player of players) {
 
-        player.performances = player.performances.filter( performance => performance.year == 2020 );
+        player.performances = player.performances.filter( (performance: IPerformance) => performance.year == 2020 );
 
         // On vérifie si c'est un joueur actif, pour ça on regarde s'il est dans le roster de l'équipe
         // qu'il considère comme la sienne et en premier lieu s'il en a une.
         let team: ITeam;
 
         if( player.team ) {
-            team = teams.find( team => team._id.equals( player.team._id ));
+            team = teams.find( (team: ITeam) => team._id.equals( player.team._id ));
         }
 
         if (team && player.performances.length > 0) {

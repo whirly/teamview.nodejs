@@ -3,13 +3,14 @@ import {Fixture} from "../models";
 import { TYPE_COMPOSER as teamType } from './graphql-team';
 import { TYPE_COMPOSER as performanceType } from './graphql-performance';
 import {IFixtureSide} from "../../shared/models/fixture";
+import {ObjectTypeComposer} from "graphql-compose";
 
 const type = composeWithMongoose(Fixture);
 
 export const TYPE_COMPOSER = type;
 
-const typeHomeTC = type.getFieldTC('home');
-const typeAwayTC = type.getFieldTC('away');
+const typeHomeTC = type.getFieldTC('home') as ObjectTypeComposer;
+const typeAwayTC = type.getFieldTC('away') as ObjectTypeComposer;
 
 typeHomeTC.addRelation('team', {
     resolver: () => teamType.getResolver('findById'),

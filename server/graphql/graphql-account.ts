@@ -1,5 +1,5 @@
 import { GraphQLNonNull, GraphQLString, GraphQLObjectType } from 'graphql';
-import { Resolver } from 'graphql-compose';
+import {Resolver, schemaComposer} from 'graphql-compose';
 import { forgeJwtTokenFor, getUserFromEmailAndPassword, getUserFromJwtToken } from '../auth';
 import { ResolveParams } from '../auth/graphql-resolver-wrappers';
 import { TYPE_COMPOSER as userTypeComposer } from './graphql-user';
@@ -21,8 +21,9 @@ const tokenAuthResultType = new GraphQLObjectType({
 
 export const QUERIES = {};
 
+
 export const MUTATIONS = {
-    loginWithPassword: new Resolver({
+    loginWithPassword: schemaComposer.createResolver({
         name: 'loginWithPassword',
         type: passwordAuthResultType,
         args: {
@@ -31,7 +32,7 @@ export const MUTATIONS = {
         },
         resolve: loginWithPasswordResolver
     }),
-    loginWithToken: new Resolver({
+    loginWithToken: schemaComposer.createResolver({
         name: 'loginWithToken',
         type: tokenAuthResultType,
         args: {

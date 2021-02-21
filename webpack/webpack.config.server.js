@@ -1,5 +1,5 @@
 const webpack = require('webpack');
-const webpackMerge = require('webpack-merge');
+const { merge } = require('webpack-merge');
 const webpackNodeExternals = require('webpack-node-externals');
 const { mode, isProductionBuild, fromRoot } = require('./environment');
 const agnosticConfig = require('./webpack.config.agnostic');
@@ -61,13 +61,8 @@ const envAgnosticConfig = {
 
     node: {
         global: true,
-        crypto: 'empty',
         __dirname: false,  // false, to avoid the variable replacement by Webpack,
         __filename: false, // and keep the original Node __dirname/__filename globals.
-        process: true,
-        Buffer: true,
-        clearImmediate: true,
-        setImmediate: true
     }
 };
 
@@ -75,7 +70,7 @@ const developmentConfig = {};
 
 const productionConfig = {};
 
-module.exports = webpackMerge(
+module.exports = merge(
     agnosticConfig,
     envAgnosticConfig,
     isProductionBuild ? productionConfig : developmentConfig

@@ -2,28 +2,24 @@ import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
-import { HttpClientModule } from "@angular/common/http";
+import {HttpClient, HttpClientModule} from "@angular/common/http";
 
-import { NgReduxModule } from '@angular-redux/store';
-import { NgReduxRouterModule } from '@angular-redux/router';
-
-import { ApolloModule } from 'apollo-angular';
+import {APOLLO_OPTIONS} from 'apollo-angular';
 import { SuiModule } from 'ng2-semantic-ui';
 
 import { AppComponent } from './app.component';
 import { APP_ROUTES } from './app.routes';
-import { ApolloInitializer } from './apollo-client';
 
 import { TeamSelectorComponent } from './team-selector-component/team-selector-component';
 import { TeamService } from "./services/team.service";
 import { PlayersViewerComponent } from "./playersviewer-component/playersviewer-component";
 import { PlayerService } from "./services/player.service";
 import { PlayerViewerComponent } from "./playerviewer-component/playerviewer-component";
-import { ChartistModule } from "ng-chartist";
 import { PelouseService } from "./services/pelouse.service";
-import { HttpLinkModule } from "apollo-angular-link-http";
 import { MercatoAnalyserComponent } from "./mercato-analyser-component/mercato-analyser-component";
 import { AboutComponent } from "./about-component/about-component";
+import {ApolloLink} from "@apollo/client/core";
+import {provideApolloClientOptions, provideApolloLink} from "./apollo";
 
 @NgModule({
     declarations: [
@@ -42,19 +38,22 @@ import { AboutComponent } from "./about-component/about-component";
         FormsModule, HttpClientModule,
 
         //=> Third-party modules
-        NgReduxModule, NgReduxRouterModule, HttpLinkModule,
-        ApolloModule,
-        SuiModule,
-        ChartistModule
+        SuiModule
     ],
-    providers: [TeamService, PlayerService, PelouseService, ApolloInitializer],
+    providers: [TeamService, PlayerService, PelouseService,
+        {
+            provide: ApolloLink,
+            useFactory: provideApolloLink,
+            deps: [HttpClient]
+        },
+        {
+            provide: APOLLO_OPTIONS,
+            useFactory: provideApolloClientOptions,
+            deps: [ApolloLink],
+        },
+    ],
     bootstrap: [AppComponent]
 })
 
 export class AppModule {
-    constructor(
-        apollo: ApolloInitializer
-    ) {
-        apollo.init();
-    }
 }

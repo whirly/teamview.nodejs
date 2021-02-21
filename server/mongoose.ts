@@ -3,9 +3,6 @@ import logger from './logger';
 
 // tslint:disable:only-arrow-functions
 
-//=> Tell Mongoose to use native V8 promises
-mongoose.Promise = Promise;
-
 //=> Setup logging of queries
 mongoose.set('debug', function(this: Collection, collection: string, method: string, ...methodArgs: any[]) {
     // Basically extracted from https://goo.gl/OYCxAV (otherwise, Mongoose writes directly to stderr).

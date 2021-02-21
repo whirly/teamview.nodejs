@@ -1,13 +1,11 @@
 import {Component, OnInit} from "@angular/core";
 import {PlayerService} from "../services/player.service";
 import {ActivatedRoute, ParamMap} from "@angular/router";
-import {IPlayer, IPlayerExtended} from "../../../shared/models/player";
 import * as player_helpers from "../../../shared/models/player_helpers";
 import * as fixture_helpers from "../../../shared/models/fixture_helpers";
 import _ from "lodash";
 import {TeamService} from "../services/team.service";
-import {ITeam} from "../../../shared/models/team";
-import {IFixture} from "../../../shared/models/fixture";
+import {ITeam, IFixture, IPlayer, IPlayerExtended} from "../../../shared/models";
 
 import { switchMap } from "rxjs/operators";
 

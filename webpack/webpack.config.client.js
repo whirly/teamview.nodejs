@@ -1,10 +1,13 @@
 const webpack = require('webpack');
-const webpackMerge = require('webpack-merge');
+const { merge } = require('webpack-merge');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CompressionPlugin = require('compression-webpack-plugin');
 const { AngularCompilerPlugin } = require('@ngtools/webpack');
 const { mode, isProductionBuild, fromRoot } = require('./environment');
 const agnosticConfig = require('./webpack.config.agnostic');
+
+const history = require('connect-history-api-fallback');
+const convert = require('koa-connect');
 
 
 // Make available a defined subset of process.env variables to the client
@@ -40,24 +43,21 @@ const envAgnosticConfig = {
             tsConfigPath: fromRoot('tsconfig.json'),
             entryModule: fromRoot('client/app/app.module#AppModule'),
             sourceMap: true
+        }),
+        new webpack.LoaderOptionsPlugin({
+            serve: {
+                port: 3000,
+                clipboard: false,
+
+                add(app, middleware, options) {
+                    app.use(convert(history()));
+                }
+            }
         })
     ],
 
     module: {
         rules: [
-            //=> Disable any linking with server code!
-            {
-                test: /(\\|\/)server(\\|\/)/,
-                loader: function(context) {
-                    const msg =
-                        `Attempted to link server code from client code!\n` +
-                        `File ${context.issuer} requires ${context.resource}.\n` +
-                        `We can't permit that!\n`;
-
-                    console.error(`\n\n${msg}`);
-                    process.exit(1);
-                }
-            },
             //=> Preloaders
             {
                 enforce: 'pre',
@@ -74,19 +74,15 @@ const envAgnosticConfig = {
             },
             {
                 test: /(?:\.ngfactory\.js|\.ngstyle\.js|\.ts)$/,
-                loader: '@ngtools/webpack'
+                use: '@ngtools/webpack'
             },
             {
-                test: /\.global\.scss$/,
-                loaders: ['style-loader?sourceMap', 'css-loader?sourceMap', 'resolve-url-loader', 'sass-loader?sourceMap']
-            },
-            {
-                test: /^(?!.*global).*\.scss$/,
-                loaders: ['exports-loader?module.exports.toString()', 'css-loader?sourceMap', 'resolve-url-loader', 'sass-loader?sourceMap']
+                test: /\.scss$/,
+                use: ['style-loader', 'css-loader', 'resolve-url-loader', 'sass-loader']
             },
             {
                 test: /node_modules.*\.css$/,
-                loaders: ['style-loader', 'css-loader', 'resolve-url-loader']
+                use: ['style-loader', 'css-loader', 'resolve-url-loader']
             },
             {
                 test: /\.(jpe?g|png|gif|svg)$/i,
@@ -108,13 +104,13 @@ const envAgnosticConfig = {
             },
             {
                 test: /\.(ttf|eot|svg|ico)(\?v=[0-9]\.[0-9]\.[0-9])?$/,
-                loader: 'file-loader'
+                use: 'file-loader'
             }
         ]
     },
 
     resolve: {
-        extensions: ['.ts', '.js', '.json'],
+        extensions: ['.ts', '.mjs', '.js', '.json'],
         modules: [fromRoot('node_modules')]
     }
 };
@@ -129,7 +125,7 @@ const productionConfig = {
     ]
 };
 
-module.exports = webpackMerge(
+module.exports = merge(
     agnosticConfig,
     envAgnosticConfig,
     isProductionBuild ? productionConfig : developmentConfig
