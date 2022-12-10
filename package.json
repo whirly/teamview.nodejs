@@ -95,7 +95,7 @@
     "core-js": "^2.5.3",
     "cors": "^2.8.4",
     "dotenv-extended": "^2.0.1",
-    "express": "^4.16.2",
+    "express": "^4.17.3",
     "express-jwt": "^5.3.0",
     "graphql": "^14.0.2",
     "graphql-compose": "^7.23.0",
