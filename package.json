@@ -103,7 +103,7 @@
     "graphql-compose-mongoose": "^9.0.0",
     "graphql-tag": "^2.11.0",
     "image-webpack-loader": "^7.0.1",
-    "jsonwebtoken": "^8.5.1",
+    "jsonwebtoken": "^9.0.0",
     "latinize": "^0.4.1",
     "lodash": "^4.17.20",
     "mongoose": "^5.11.9",
